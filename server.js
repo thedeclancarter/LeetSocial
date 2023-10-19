@@ -5,15 +5,15 @@ const cors = require('cors');
 
 //MERN B
 const path = require('path');
-const PORT = process.env.PORT || 5102;
 
+const PORT = process.env.PORT || 5102;
 //MERN A
 const app = express();
 
-//MERN B
+
 app.set('port', (process.env.PORT || 5102));
 
-//MERN B
+
 if (process.env.NODE_ENV === 'production') {
     // Set static folder
     app.use(express.static('frontend/build'));
@@ -74,25 +74,24 @@ app.post('/api/signup', async (req, res) => {
         return res.status(400).json({ error: 'Username already exists' });
     }
 
-    // If the username is unique, create a new user in the database.
     const newUser = {
         login,
-        password, // You should hash and salt the password for security.
+        password, // Assuming 'password' is a plain text password
         firstName,
         lastName
-    };
-
-    // Insert the new user into the 'Users' collection.
-    const result = await db.collection('Users').insertOne(newUser);
-
-    if (result.insertedCount === 1) {
-        // User registration was successful.
-        res.status(201).json({ message: 'User registered successfully' });
-    } else {
-        // If the insertion failed, return an error.
-        res.status(500).json({ error: 'User registration failed' });
-    }
-});
+      };
+      
+      try {
+        // Insert the new user into the 'Users' collection.
+        const result = await db.collection('Users').insertOne(newUser);
+      
+        return res.status(201).json({ message: "Added to register Successfully" });
+      } catch (err) {
+        return res.status(500).json({ error: "failed to register data" });
+      }
+      
+  });
+  
 
 
 //MERN B
