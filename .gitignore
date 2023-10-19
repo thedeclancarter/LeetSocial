@@ -1,0 +1,9 @@
+# Ignore build output
+node_modules/
+build/
+
+# Ignore Jest test results
+coverage/
+
+# Ignore .env files
+.env*
