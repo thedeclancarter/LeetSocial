@@ -1,9 +1,11 @@
 # Ignore build output
 node_modules/
-build/
 
 # Ignore Jest test results
 coverage/
 
 # Ignore .env files
 .env*
+
+# Ignore DS_Store files
+.DS_Store
