@@ -1,12 +1,12 @@
 import './LoginCard.css';
-import Register from '../register/Register';
+import Login from '../login/Login';
 
 export default function LoginCard() 
 {
     
     return(
         <div>            
-            <Register />
+            <Login />
         </div>
     );
 }

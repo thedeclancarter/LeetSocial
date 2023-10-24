@@ -5,21 +5,31 @@
     margin: 0;
 }
 
-body 
-{
+#loginRegister {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-#inner-title 
-{
-    font-size: large;
+.loginDiv, .hidden {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    width: 300px;
+    background-color: #f4f4f4;
+    transition: opacity 0.5s;
 }
 
-.loginDiv 
-{
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
+.loginDiv {
+    opacity: 1;
+}
+
+.hidden {
+    opacity: 0;
+    display: none;
 }
 
 .loginDiv form 
@@ -37,33 +47,38 @@ body
     align-items: center;
 }
 
-#loginName
+.inputText
 {
     border: 2px solid #b4b4b4;
     border-radius: 10px;
     padding: 10px;
 }
 
-#loginPassword 
+#registerBlock
 {
-    border: 2px solid #b4b4b4;
-    border-radius: 10px;
-    padding: 10px;
+    padding-top: 2rem;
 }
 
-#loginButton
-{
+.buttons {
+    background-color: #007bff;
+    color: #fff;
     border: none;
-    background-color: #9df0ff;
-    border-radius: 10px;
-    padding: 5px;
-    width: 5rem;
+    padding: 10px 20px;
+    border-radius: 5px;
     cursor: pointer;
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.4s;
 }
 
-#loginButton:hover
+.buttons:hover
 {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.15), 0 17px 50px 0 rgba(0,0,0,0.15);
+}
+
+#inner-title, #inner-titleR {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#loginResult, #registerResult {
+    color: red;
+    margin-top: 10px;
 }

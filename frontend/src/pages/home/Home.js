@@ -1,11 +1,11 @@
 import React from 'react';
-import Navbar from '../../components/navbar/Navbar';
+import LoginCard from '../../components/login_card/LoginCard';
 
 const Home = () =>
 {
     return(
         <div>
-            <Navbar />
+            <LoginCard />
         </div>
     );
 };

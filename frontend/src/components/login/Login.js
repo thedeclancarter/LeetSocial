@@ -1,54 +1,95 @@
 import React, { useState } from 'react';
 import './Login.css';
 
-
-// function toggleSignUp(e){
-    
-//     var script = document.createElement('script');
-//     script.src = 'https://code.jquery.com/jquery-3.6.3.min.js'; // Check https://jquery.com/ for the current version
-//     document.getElementsByTagName('head')[0].appendChild(script);
-//     e.preventDefault();
-//     $('#loginRegister .loginDiv').toggle(); // display:block or none
-//     $('#loginRegister .registerDiv').toggle(); // display:block or none
-// }
-
 function Login()
 { 
-    var loginName;
-    var loginPassword;
-
+    var login;
+    var password;
     var firstName;
     var lastName;
-    var email;
+    var newLogin;
+    var newPassword;
 
     const [message,setMessage] = useState('');
+    const [isLogin,setIsLogin] = useState(true);
+
+    const toggleSignUp = () =>
+    {
+        setIsLogin(!isLogin);
+    }
+
+    const handleButtonClick = event => {
+        event.preventDefault();
+        const buttonName = event.target.name;
+    
+        if (buttonName === 'login') {
+            doLogin(event);
+        } else if (buttonName === 'register') {
+            doSignup(event);
+        }
+    };
 
     const doLogin = async event => 
     {
         event.preventDefault();
 
-        var obj = {login:loginName.value,password:loginPassword.value};
+        var obj = {login:login.value,password:password.value};
         var js = JSON.stringify(obj);
 
         try
         {    
-            const response = await fetch('http://localhost:5000/api/login',
+            const response = await fetch('http://leet-social-2e5f98883d68.herokuapp.com/api/login',
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             var res = JSON.parse(await response.text());
 
-            if( res.id <= 0 )
+            if( res.id === -1 )
             {
                 setMessage('User/Password combination incorrect');
             }
             else
             {
-                var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
+                var user = {firstName:res.firstName,lastName:res.lastName}
                 localStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
-                window.location.href = '/cards';
+                window.location.href = '/profile';
             }
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }    
+    };
+
+    const doSignup = async event => 
+    {
+        event.preventDefault();
+
+        var obj = {login:newLogin.value,password:newPassword.value, firstName:firstName.value, lastName:lastName.value};
+        var js = JSON.stringify(obj);
+
+        try
+        {    
+            const response = await fetch('http://leet-social-2e5f98883d68.herokuapp.com/api/signup',
+                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+
+            setMessage('Account created! Please login.');
+            // if( res.id <= 0 )
+            // {
+            //     setMessage('User/Password combination incorrect');
+            // }
+            // else
+            // {
+            //     var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
+            //     localStorage.setItem('user_data', JSON.stringify(user));
+
+            //     setMessage('');
+            //     window.location.href = '/cards';
+            // }
         }
         catch(e)
         {
@@ -60,38 +101,38 @@ function Login()
 
     return(
     <div id="loginRegister">
-        <div className="loginDiv">
-            <form onSubmit={doLogin}>
+        <div className={isLogin ? "loginDiv" : "hidden"}>
+            <form>
                 <span id="inner-title">LOGIN</span><br />
-                <input type="text" id="loginName" placeholder="Username" 
-                    ref={(c) => loginName = c} />
-                <input type="password" id="loginPassword" placeholder="Password" 
-                    ref={(c) => loginPassword = c} />
-                <input type="submit" id="loginButton" class="buttons" value = "Login"
-                    onClick={doLogin} />
+                <input type="text" className="inputText" placeholder="Username" 
+                    ref={(c) => login = c} />
+                <input type="password" className="inputText" placeholder="Password" 
+                    ref={(c) => password = c} />
+                <input type="submit" id="loginButton" class="buttons" value = "Login" name="login"
+                    onClick={handleButtonClick} />
             </form>
-            <span id="loginResult">{message}</span>
+            <span id="loginResult">{message}</span><br></br>
+            <button onClick={toggleSignUp}>Switch to Sign Up</button>
         </div>
-        <div className="registerDiv">
-        <form>
-            <span id="inner-title">REGISTER</span><br />
-            <div className="inputFields">
-                <input type="text" id="firstName" placeholder="First Name" 
-                    ref={(c) => firstName = c} />
-                <input type="text" id="lastName" placeholder="Last Name" 
-                    ref={(c) => lastName = c} />
-                <input type="text" id="email" placeholder="Email" 
-                    ref={(c) => email = c} />                                
-                <input type="text" id="loginNameR" placeholder="Username" 
-                    ref={(c) => loginName = c} />
-                <input type="password" id="loginPasswordR" placeholder="Password" 
-                    ref={(c) => loginPassword = c} />
-            </div>
-            <input type="submit" id="registerButton" class="buttons" value = "Register"
-                />
-                
-        </form>
-        <span id="registerResult">{message}</span>
+
+        <div className={!isLogin ? "loginDiv" : "hidden"}>
+            <form>
+                <span id="inner-titleR">REGISTER</span><br />
+                <div className="inputFields">
+                    <input type="text" className="inputText" placeholder="First Name" 
+                        ref={(c) => firstName = c} />
+                    <input type="text" className="inputText" placeholder="Last Name" 
+                        ref={(c) => lastName = c} />
+                    <input type="text" className="inputText" placeholder="Username" 
+                        ref={(c) => newLogin = c} />
+                    <input type="password" className="inputText" placeholder="Password" 
+                        ref={(c) => newPassword = c} />
+                </div>
+                <input type="submit" id="registerButton" class="buttons" value = "Register" name="register"
+                    onClick={handleButtonClick}/>              
+            </form>
+            <span id="registerResult">{message}</span><br></br>
+            <button onClick={toggleSignUp}>Switch to Login</button>
         </div>
     </div>
     );
