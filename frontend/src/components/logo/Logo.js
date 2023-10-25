@@ -18,7 +18,7 @@ class TextAnimation extends Component {
                 displayText: this.state.displayText + this.state.text.charAt(this.state.index),
                 index: this.state.index + 1
             });
-            setTimeout(this.typeText, 50); // Adjust the typing speed here
+            setTimeout(this.typeText, 150); // Adjust the typing speed here
         }
     };
 
