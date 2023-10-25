@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './Login.css';
 
+var bp = require('../path.js');
+
 function Login()
-{ 
+{
     var login;
     var password;
     var firstName;
@@ -21,7 +23,7 @@ function Login()
     const handleButtonClick = event => {
         event.preventDefault();
         const buttonName = event.target.name;
-    
+
         if (buttonName === 'login') {
             doLogin(event);
         } else if (buttonName === 'register') {
@@ -29,7 +31,7 @@ function Login()
         }
     };
 
-    const doLogin = async event => 
+    const doLogin = async event =>
     {
         event.preventDefault();
 
@@ -37,8 +39,8 @@ function Login()
         var js = JSON.stringify(obj);
 
         try
-        {    
-            const response = await fetch('http://leet-social-2e5f98883d68.herokuapp.com/api/login',
+        {
+            const response = await fetch(bp.buildPath('api/login'),
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             var res = JSON.parse(await response.text());
@@ -60,10 +62,10 @@ function Login()
         {
             alert(e.toString());
             return;
-        }    
+        }
     };
 
-    const doSignup = async event => 
+    const doSignup = async event =>
     {
         event.preventDefault();
 
@@ -71,8 +73,8 @@ function Login()
         var js = JSON.stringify(obj);
 
         try
-        {    
-            const response = await fetch('http://leet-social-2e5f98883d68.herokuapp.com/api/signup',
+        {
+            const response = await fetch(bp.buildPath('api/signup'),
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             var res = JSON.parse(await response.text());
@@ -95,7 +97,7 @@ function Login()
         {
             alert(e.toString());
             return;
-        }    
+        }
     };
 
 
@@ -104,9 +106,9 @@ function Login()
         <div className={isLogin ? "loginDiv" : "hidden"}>
             <form>
                 <span id="inner-title">LOGIN</span><br />
-                <input type="text" className="inputText" placeholder="Username" 
+                <input type="text" className="inputText" placeholder="Username"
                     ref={(c) => login = c} />
-                <input type="password" className="inputText" placeholder="Password" 
+                <input type="password" className="inputText" placeholder="Password"
                     ref={(c) => password = c} />
                 <input type="submit" id="loginButton" class="buttons" value = "Login" name="login"
                     onClick={handleButtonClick} />
@@ -119,17 +121,17 @@ function Login()
             <form>
                 <span id="inner-titleR">REGISTER</span><br />
                 <div className="inputFields">
-                    <input type="text" className="inputText" placeholder="First Name" 
+                    <input type="text" className="inputText" placeholder="First Name"
                         ref={(c) => firstName = c} />
-                    <input type="text" className="inputText" placeholder="Last Name" 
+                    <input type="text" className="inputText" placeholder="Last Name"
                         ref={(c) => lastName = c} />
-                    <input type="text" className="inputText" placeholder="Username" 
+                    <input type="text" className="inputText" placeholder="Username"
                         ref={(c) => newLogin = c} />
-                    <input type="password" className="inputText" placeholder="Password" 
+                    <input type="password" className="inputText" placeholder="Password"
                         ref={(c) => newPassword = c} />
                 </div>
                 <input type="submit" id="registerButton" class="buttons" value = "Register" name="register"
-                    onClick={handleButtonClick}/>              
+                    onClick={handleButtonClick}/>
             </form>
             <span id="registerResult">{message}</span><br></br>
             <button onClick={toggleSignUp}>Switch to Login</button>
