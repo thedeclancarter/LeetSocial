@@ -13,7 +13,7 @@ exports.setApp = function (app, client) {
         var fn = '';
         var ln = '';
         if (results.length > 0) {
-            id = results[0].id;
+            id = results[0]._id;
             fn = results[0].firstName;
             ln = results[0].lastName;
         }
@@ -43,8 +43,8 @@ exports.setApp = function (app, client) {
 
         try {
             // Insert the new user into the 'Users' collection.
-            const result = await db.collection('Users').insertOne(newUser);
-
+            await db.collection('Users').insertOne(newUser);
+            var ret = {}
             return res.status(201).json({ message: "Added to register Successfully" });
         } catch (err) {
             return res.status(500).json({ error: "failed to register data" });

@@ -51,7 +51,7 @@ function Login()
             }
             else
             {
-                var user = {firstName:res.firstName,lastName:res.lastName}
+                var user = {id:res.id, firstName:res.firstName, lastName:res.lastName}
                 localStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
