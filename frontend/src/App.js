@@ -15,7 +15,7 @@ function App() {
     <>
       {isLogin && (<Navbar setHome={setHome}/>)}
       <div className="container">
-        {isHome && <Leaderboard isLogin={isLogin} /> }
+        {isHome && (<Leaderboard isLogin={isLogin} />) }
         <Routes>
           <Route path="/" element={<Login isLogin={isLogin} setLogin={setLogin} />} />
           <Route path="/home" element={<Home />} />
