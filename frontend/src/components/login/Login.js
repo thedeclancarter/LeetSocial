@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import decode from "jwt-decode";
 import './Login.css';
 
-var bp = require('../path.js');
+var bp = require('../../path.js');
 
 function Login()
 {
@@ -43,15 +44,26 @@ function Login()
             const response = await fetch(bp.buildPath('api/login'),
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
+            // Store/Decode the incoming JWT token
             var res = JSON.parse(await response.text());
+            var storage = require('../../tokenStorage.js');
+            storage.storeToken(res);
+            const { accessToken } = res;
+            const decoded = decode(accessToken,{complete:true});
 
-            if( res.id === -1 )
+            // Assign Local Vars
+            var ud = decoded;
+            var userId = ud.userId;
+            var firstName = ud.firstName;
+            var lastName = ud.lastName;
+
+            if( userId === -1 )
             {
                 setMessage('User/Password combination incorrect');
             }
             else
             {
-                var user = {id:res.id, firstName:res.firstName, lastName:res.lastName}
+                var user = {id:userId, firstName:firstName, lastName:lastName}
                 localStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');

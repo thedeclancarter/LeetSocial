@@ -17,7 +17,11 @@ exports.setApp = function (app, client) {
             fn = results[0].firstName;
             ln = results[0].lastName;
         }
-        var ret = { id: id, firstName: fn, lastName: ln, error: '' };
+
+        // Create a JWT token to store login data
+        const token = require("./createJWT.js");
+        ret = token.createToken( fn, ln, id );
+
         res.status(200).json(ret);
     });
 
