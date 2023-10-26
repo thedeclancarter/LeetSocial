@@ -4,8 +4,8 @@
     align-items: center;
     position: absolute;
     height: 100%;
-    padding-bottom: 150px;
-    transition: width 1s;
+    padding-bottom: 0px;
+    transition: width 2s;
     border: solid black;
 }
 
@@ -17,7 +17,7 @@
     width: 100vw;
 }
 
-.leaderboard {  
+.leaderboard {
     background-color: #4F518C;
     color: white;
     /* border: solid #000000; */

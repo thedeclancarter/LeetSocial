@@ -1,17 +1,10 @@
 import './Home.css';
-import React, { useState } from 'react';
-import Login from '../../components/login/Login';
-import Logo from '../../components/logo/Logo';
-import Leaderboard from '../../components/leaderboard/Leaderboard';
+import React from 'react';
 
-export default function Home(props) {
-    const { isLogin, setLogin } = props;
+export default function Home() {
 
     return (
         <div className="">
-            {!isLogin && (<Logo />)}
-            <Login isLogin={isLogin} setLogin={setLogin} />
-            <Leaderboard isLogin={isLogin} />
-        </div>   
+        </div>
     );
 }
