@@ -5,15 +5,15 @@
     margin: 0;
 }
 
-#loginRegister {
+.loginRegister, .hideRegister {
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
-    width: 60%;
-    padding-top: 80px;
+    width: 50%;
+    padding-bottom: 150px;
     right: 0;  
-    height: 100vh;
+    height: 100%;
 }
 
 .loginDiv, .hidden {
@@ -27,11 +27,11 @@
     transition: opacity 0.5s;
 }
 
-.loginDiv {
+.loginDiv, .loginRegister {
     opacity: 1;
 }
 
-.hidden {
+.hidden, .hideRegister {
     opacity: 0;
     display: none;
 }

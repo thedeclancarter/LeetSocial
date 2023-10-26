@@ -1,0 +1,42 @@
+.tableContainer, .tableContainerExt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    height: 100%;
+    padding-bottom: 150px;
+    transition: width 1s;
+    border: solid black;
+}
+
+.tableContainer {
+    width: 50vw;
+}
+
+.tableContainerExt {
+    width: 100vw;
+}
+
+.leaderboard {  
+    background-color: #4F518C;
+    color: white;
+    /* border: solid #000000; */
+    border-spacing: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    width: 95%;
+}
+
+.row {
+    background-color: #2C2A4A;
+    /* border: solid #000000; */
+    border-collapse: separate;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-width: 0.4rem;
+}
+
+td {
+    text-align: center;
+    border-radius: 0.5rem;
+}

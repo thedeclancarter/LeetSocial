@@ -4,13 +4,12 @@
     padding-top: 50px;
     display: flex;
     justify-content: center;
-    height: 100vh;
+    height: auto;
     font-family: 'Orbitron', sans-serif;
     font-size: 45px;
     font-weight: 400;
     color: #e4e4e4;
     overflow: hidden;
-
 
     color: #fff; /* Text color (white) */
     text-shadow:
@@ -22,27 +21,27 @@
         0 0 35px #ffaa00, /* Duplicate biggest outer glow */
         0 0 50px #ffaa00; /* Even bigger outer glow */
         animation: breathe 1.5s infinite alternate; /* Breathing animation */
+}
+
+@keyframes breathe {
+    0% {
+        text-shadow:
+            0 0 5px #e9e9e972,
+            0 0 10px #e9e9e972,
+            0 0 15px #e9e9e972,
+            0 0 20px #e9e9e972,
+            0 0 35px #e9e9e972,
+            0 0 35px #e9e9e972,
+            0 0 50px #e9e9e972,;
     }
-    
-    @keyframes breathe {
-        0% {
-            text-shadow:
-                0 0 5px #e9e9e972,
-                0 0 10px #e9e9e972,
-                0 0 15px #e9e9e972,
-                0 0 20px #e9e9e972,
-                0 0 35px #e9e9e972,
-                0 0 35px #e9e9e972,
-                0 0 50px #e9e9e972,;
-        }
-        100% {
-            text-shadow:
-                0 0 20px #ffaa00,
-                0 0 25px #ffaa00,
-                0 0 30px #ffaa00,
-                0 0 35px #ffaa00,
-                0 0 50px #ffaa00,
-                0 0 50px #ffaa00,
-                0 0 90px #ffaa00;
-        }
+    100% {
+        text-shadow:
+            0 0 20px #ffaa00,
+            0 0 25px #ffaa00,
+            0 0 30px #ffaa00,
+            0 0 35px #ffaa00,
+            0 0 50px #ffaa00,
+            0 0 50px #ffaa00,
+            0 0 90px #ffaa00;
     }
+}
