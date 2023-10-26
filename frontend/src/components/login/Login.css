@@ -9,17 +9,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: absolute;
+    width: 60%;
+    padding-top: 80px;
+    right: 0;  
     height: 100vh;
 }
 
 .loginDiv, .hidden {
     text-align: center;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #2a2a2a;
     border-radius: 5px;
     margin: 10px;
     width: 300px;
-    background-color: #f4f4f4;
+    background-color: #2a2a2a;
     transition: opacity 0.5s;
 }
 
@@ -60,8 +64,9 @@
 }
 
 .buttons {
-    background-color: #007bff;
+    background-color: #fa9e17;
     color: #fff;
+    font-size: medium;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -75,7 +80,7 @@
 
 #inner-title, #inner-titleR {
     font-size: 24px;
-    font-weight: bold;
+    color: #f3f3f3;
 }
 
 #loginResult, #registerResult {
