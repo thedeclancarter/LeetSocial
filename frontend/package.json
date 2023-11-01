@@ -13,6 +13,8 @@
     "bootstrap": "^5.3.2",
     "dotenv": "^16.3.1",
     "gsap-trial": "^3.12.2",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^3.1.2",
     "loaders.css": "^0.1.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.0",
