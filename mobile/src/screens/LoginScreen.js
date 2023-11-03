@@ -1,26 +1,57 @@
 import React, {useState} from "react";
-import { SafeAreaView, View, StyleSheet, StatusBar , TextInput, Button,TouchableOpacity, Text} from "react-native";
+import { SafeAreaView, View, StyleSheet, StatusBar , TextInput, Button,TouchableOpacity, Text, Alert} from "react-native";
 import TextAnimation from "../components/logo"; // Make sure the path is correct
+import { navigate } from "../../App";
+
+const apiBaseUrl = 'http://www.leetsocial.com';
+
+const goToHomePage = () => {
+    navigate('HomePage');
+    };
+
 
 const LoginScreen = () => {
-    const [isSignUp, setIsSignUp] = useState(false); // State to toggle between login and sign up
-    const [email, setEmail] = useState('');
+    const [isSignUp, setIsSignUp] = useState(false);
+    //const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState(''); // State for sign-up fields
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     // ... additional state fields as needed
 
-    const [username, setUsername] = useState('');
+    const [login, setLogin] = useState('');
 
     const handleLogin = () => {
-        // Implement your login logic here
-        console.log(username, password);
-    };
-    const handleSignUp = () => {
-        //Sign up logic
+        goToHomePage();
+      };
     
-    };
+      const handleSignUp = async () => {
+        const endpoint = `http://www.leetsocial.com/api/signup`;
+        const payload = { Login:login, Password:password, FirstName:firstName, LastName:lastName };
+    
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
+    
+          const data = await response.json();
+          if (data.error) {
+            Alert.alert('Signup Failed', data.error);
+          } else {
+            // Handle successful signup here
+            // For example, show a success message and toggle to the login screen
+            Alert.alert('Signup Success', 'Account created! Please login.');
+            //navigation.navigate('HomePage');
+          }
+        } catch (error) {
+          Alert.alert('Signup Error', error.message);
+        }
+      };
+    
 
 
     return (
@@ -39,12 +70,14 @@ const LoginScreen = () => {
                 <TextInput
                     style={styles.input}
                     placeholder="First Name"
+                    placeholderTextColor={'#fff'}
                     value={firstName}
                     onChangeText={setFirstName}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Last Name"
+                    placeholderTextColor={'#fff'}
                     value={lastName}
                     onChangeText={setLastName}
                 />
@@ -52,13 +85,15 @@ const LoginScreen = () => {
             )}
                 <TextInput
                     style={styles.input}
-                    placeholder="username"
-                    value={username}
-                    onChangeText={setUsername}
+                    placeholder="Login"
+                    placeholderTextColor={'#fff'}
+                    value={login}
+                    onChangeText={setLogin}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
+                    placeholderTextColor={'#fff'}
                     secureTextEntry
                     value={password}
                     onChangeText={setPassword}
@@ -67,6 +102,7 @@ const LoginScreen = () => {
                     <TextInput
                     style={styles.input}
                     placeholder="Confirm Password"
+                    placeholderTextColor={'#fff'}
                     secureTextEntry
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}

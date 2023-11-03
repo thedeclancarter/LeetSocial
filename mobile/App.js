@@ -39,13 +39,20 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="Home" component={HomePage} />
+        <Stack.Screen name="HomePage" component={HomePage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
+}
+export const navigationRef = React.createRef();
+
+export function navigate(name, params) {
+  if (navigationRef.current) {
+    navigationRef.current.navigate(name, params);
+  }
 }
 
 export default App;
