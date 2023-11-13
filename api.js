@@ -1,5 +1,7 @@
 require('express');
 require('mongodb');
+const axios = require('axios');
+const { graphql, buildSchema } = require('graphql');
 
 exports.setApp = function (app, client) {
     // Define the database to be used
@@ -165,4 +167,110 @@ exports.setApp = function (app, client) {
     //         .then(msg => console.log(msg)) // logs response data
     //         .catch(err => console.log(err)); // logs any error
     // });
-}
+
+
+    //---------------------------------------------------------------------------------------------------------------------\\
+    // Define your GraphQL schema
+    const leetcodeAPI = 'https://leetcode.com/graphql/';
+    
+    app.post('/api/query', async (req, res) => {
+        try {
+            // Get the username from the request body
+            const { username } = req.body;
+    
+            // Prepare the GraphQL query
+            const graphqlQuery = `
+                query languageStats($username: String!) {
+                    matchedUser(username: $username) {
+                        languageProblemCount {
+                            languageName
+                            problemsSolved
+                        }
+                    }
+                }
+            `;
+    
+            // Make a request to the other API with the provided username and query
+            const response = await axios.post(leetcodeAPI, {
+                query: graphqlQuery,
+                variables: { username },
+            });
+    
+            const languageStats = response.data.data.matchedUser.languageProblemCount;
+            const maxSolved = Math.max(...languageStats.map(lang => lang.problemsSolved));
+            const maxSolvedLanguage = languageStats.find(lang => lang.problemsSolved === maxSolved);
+    
+            res.json(maxSolvedLanguage);
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Failed to query the API' });
+        }
+    });
+    
+
+    app.post('/api/userSolvedCount', async (req, res) => {
+        try {
+            const { username } = req.body;
+    
+            const graphqlQuery = `
+                query userProblemsSolved($username: String!) {
+                    allQuestionsCount {
+                        difficulty
+                        count
+                    }
+                    matchedUser(username: $username) {
+                        problemsSolvedBeatsStats {
+                            difficulty
+                            percentage
+                        }
+                        submitStatsGlobal {
+                            acSubmissionNum {
+                                difficulty
+                                count
+                            }
+                        }
+                    }
+                }
+            `;
+    
+            const response = await axios.post(leetcodeAPI, {
+                query: graphqlQuery,
+                variables: { username },
+            });
+    
+            const problemCounts = response.data.data.matchedUser.submitStatsGlobal.acSubmissionNum;
+    
+            const answer = {
+                all: 0,
+                easy: 0, // Set the initial count to 0 for each difficulty level
+                medium: 0,
+                hard: 0
+            };
+    
+            // Update counts based on the response
+            problemCounts.forEach((difficultyCount) => {
+                const { difficulty, count } = difficultyCount;
+                if (difficulty === 'Easy') {
+                    answer.easy = count;
+                } else if (difficulty === 'Medium') {
+                    answer.medium = count;
+                } else if (difficulty === 'Hard') {
+                    answer.hard = count;
+                } else if (difficulty === "All") {
+                    answer.all = count;
+                }
+            });
+    
+            res.json(answer);
+    
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Failed to query the API' });
+        }
+    });
+    
+
+    };
+
+    
