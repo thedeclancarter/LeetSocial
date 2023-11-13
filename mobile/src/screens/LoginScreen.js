@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import { SafeAreaView, View, StyleSheet, StatusBar , TextInput, Button,TouchableOpacity, Text, Alert} from "react-native";
 import TextAnimation from "../components/logo"; // Make sure the path is correct
 import { navigate } from "../../App";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const apiBaseUrl = 'http://www.leetsocial.com';
 
@@ -12,22 +14,30 @@ const goToHomePage = () => {
 
 const LoginScreen = () => {
     const [isSignUp, setIsSignUp] = useState(false);
-    //const [email, setEmail] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     // ... additional state fields as needed
 
-    const [login, setLogin] = useState('');
-
-    const handleLogin = () => {
-        goToHomePage();
-      };
+    const handleLogin = async (email, password) => {
+        try {
+            // const response = await axios.post('http://localhost:5102/api/login', { email:email, password:password });
+            const js = JSON.stringify({email:email, password:password});
+            const response = await fetch('http://localhost:5102/api/login', {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+            const { token } = response.data;
+            await AsyncStorage.setItem('userToken', token);
+            goToHomePage();
+        } catch (error) {
+            console.log(error.message);
+            Alert.alert('Login Failed', error.message);
+        }
+    };
     
       const handleSignUp = async () => {
         const endpoint = `http://www.leetsocial.com/api/signup`;
-        const payload = { Login:login, Password:password, FirstName:firstName, LastName:lastName };
+        const payload = { email:email, Password:password, FirstName:firstName, LastName:lastName };
     
         try {
           const response = await fetch(endpoint, {
@@ -85,10 +95,11 @@ const LoginScreen = () => {
             )}
                 <TextInput
                     style={styles.input}
-                    placeholder="Login"
+                    placeholder="Email"
                     placeholderTextColor={'#fff'}
-                    value={login}
-                    onChangeText={setLogin}
+                    value={email}
+                    onChangeText={setEmail}
+                    autoCapitalize="none"
                 />
                 <TextInput
                     style={styles.input}
@@ -97,6 +108,7 @@ const LoginScreen = () => {
                     secureTextEntry
                     value={password}
                     onChangeText={setPassword}
+                    autoCapitalize="none"
                 />
                 {isSignUp && (
                     <TextInput
