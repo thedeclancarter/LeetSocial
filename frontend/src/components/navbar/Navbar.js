@@ -1,6 +1,7 @@
 import './Navbar.css';
 import React from 'react';
 import { Link, useMatch, useResolvedPath } from 'react-router-dom';
+import Logo from '../logo/Logo'
 
 export default function Navbar(props) {
     var _ud = localStorage.getItem('user_data');
@@ -18,14 +19,16 @@ export default function Navbar(props) {
                 className="site-title"
                 onClick={() => setHome(true)}
             >
-                Leet Social
+                LeetSocial
             </Link>
+            
             <ul>
                 <CustomLink
                     to="/profile"
                     onClick={() => setHome(false)}
+                    style={{ color: '#FFFFFF', textDecoration: 'none' }}
                 >
-                    {firstName + " " + lastName}
+                    Profile
                 </CustomLink>
             </ul>
         </nav>

@@ -40,7 +40,7 @@ export default function Login(props)
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             var res = JSON.parse(await response.text());
-
+            console.log(res);
             if( res.id === -1 )
             {
                 setMessage('User/Password combination incorrect');

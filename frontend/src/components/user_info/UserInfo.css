@@ -1,0 +1,39 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 50%;
+    padding-bottom: 280px;
+    left: 0;
+    height: 100%;
+}
+
+.userInfo {
+    padding: 30px; /* Adjust this value according to your preference */
+    border: 1px solid #2a2a2a;
+    border-radius: 5px;
+    margin: 10px;
+    width: 500px;
+    background-color: #2a2a2a;
+}
+
+.loginClass {
+    font-size: 24px;
+    color: #f3f3f3;
+    text-align: center;
+    /* padding-left: 0; Remove or set to zero */
+}
+
+.info {
+    text-align: left;
+    font-size: 16px;
+    color: #f3f3f3;
+    /* padding: 30px; */
+}
