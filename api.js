@@ -91,8 +91,8 @@ exports.setApp = function (app, client) {
             var htmlContent = `
                 <h1> Hello, ${firstName}!</h1>
                 Please click on the following link to verify your email:
-                <a href="http://localhost:3000/verify?token=${hash}">Verify Email</a>`;
-                // <a href="http://XXX.com/verify?token=${hash}">Verify Email</a>;
+                <a href="http://LeetSocial.com/verify?token=${hash}">Verify Email</a>`;
+            // <a href="http://localhost:3000/verify?token=${hash}">Verify Email</a>`;
 
             mg.messages.create('leetsocial.com', {
                 from: "Post Master General <postmaster@leetsocial.com>",
