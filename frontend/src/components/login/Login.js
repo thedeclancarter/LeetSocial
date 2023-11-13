@@ -6,7 +6,7 @@ var bp = require('../../path.js');
 
 function Login()
 {
-    var email;
+    var login;
     var password;
     var firstName;
     var lastName;
@@ -36,7 +36,7 @@ function Login()
     {
         event.preventDefault();
 
-        var obj = {email:email.value,password:password.value};
+        var obj = {login:login.value,password:password.value};
         var js = JSON.stringify(obj);
 
         try
@@ -119,7 +119,7 @@ function Login()
             <form>
                 <span id="inner-title">LOGIN</span><br />
                 <input type="text" className="inputText" placeholder="Username"
-                    ref={(c) => email = c} />
+                    ref={(c) => login = c} />
                 <input type="password" className="inputText" placeholder="Password"
                     ref={(c) => password = c} />
                 <input type="submit" id="loginButton" class="buttons" value = "Login" name="login"
