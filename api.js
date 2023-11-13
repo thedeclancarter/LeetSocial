@@ -1,58 +1,279 @@
 require('express');
 require('mongodb');
+const axios = require('axios');
+const { graphql, buildSchema } = require('graphql');
 
 exports.setApp = function (app, client) {
+    // Define the database to be used
+    const db = client.db('leetsocial_db');
+    const crypto = require('crypto');
+
+    // *===========================================================*
+    // |                            LOGIN                          |
+    // *===========================================================*
+    // Incoming: { email, password }
+    // Outgoing: { firstName, lastName, id }
     app.post('/api/login', async (req, res, next) => {
-        // incoming: login, password
-        // outgoing: id, firstName, lastName, error
-        var error = '';
-        const { login, password } = req.body;
-        const db = client.db('Test');
-        const results = await db.collection('Users').find({ login: login, password: password }).toArray();
-        var id = -1;
-        var fn = '';
-        var ln = '';
-        if (results.length > 0) {
-            id = results[0]._id;
-            fn = results[0].firstName;
-            ln = results[0].lastName;
-        }
+        const { email, password } = req.body;
 
-        // Create a JWT token to store login data
-        const token = require("./createJWT.js");
-        ret = token.createToken( fn, ln, id );
+        const user = await db.collection('loginInfo').findOne({ email, password });
 
-        res.status(200).json(ret);
+        // Return Error in the case of invalid credentials/failure to verify
+        if (!user)
+            return res.status(401).json({ error: 'Invalid credentials' });
+        else if (!user.verified)
+            return res.status(401).json({ error: 'Account not verified' });
+
+        // Set the response header to include the JWT token
+        const { _id: id, firstName, lastName } = user;
+        const token = require("./createJWT.js").createToken(firstName, lastName, id);
+
+        res.status(200).json(token);
     });
 
+    // *===========================================================*
+    // |                            Sign-Up                        |
+    // *===========================================================*
+    // Incoming: { email, password, firstName, lastName }
+    // Outgoing: { status }
     app.post('/api/signup', async (req, res) => {
-        // Incoming: username, password, firstName, lastName
-        const { login, password, firstName, lastName } = req.body;
+        const { email, password, firstName, lastName } = req.body;
 
-        const db = client.db('Test');
-        // Check if the username already exists in the database (assuming you want unique usernames).
-        const existingUser = await db.collection('Users').findOne({ login });
+        // Check if the email already exists in the database (assuming you want unique usernames).
+        const existingUser = await db.collection('loginInfo').findOne({ email });
 
-        if (existingUser) {
-            // If a user with the same username already exists, return an error.
-            return res.status(400).json({ error: 'Username already exists' });
-        }
+        // If a user with the same email already exists, return an error.
+        if (existingUser)
+            return res.status(409).json({ error: 'Email already exists' });
+
+        // Generate a random set of bytes
+        const randomBytes = crypto.randomBytes(16);
+
+        // Create a SHA-256 hash of the random bytes
+        const hash = crypto.createHash('sha256').update(randomBytes).digest('hex');
 
         const newUser = {
-            login,
+            email,
             password, // Assuming 'password' is a plain text password
-            firstName,
-            lastName
+            "verified": false,
+            "verificationToken": hash
         };
 
         try {
-            // Insert the new user into the 'Users' collection.
-            await db.collection('Users').insertOne(newUser);
-            var ret = {}
-            return res.status(201).json({ message: "Added to register Successfully" });
+            // Insert the new user into the 'loginInfo' collection.
+            const result = await db.collection('loginInfo').insertOne(newUser);
+            const loginInfoId = result.insertedId.toString();
+
+            // Archetype for the 'userInfo' collection
+            const userInfo =
+            {
+                loginInfoId,
+                firstName,
+                lastName,
+                following: [],
+                leetCodeUsername: "",
+            };
+
+            // Insert the new user into the 'userInfo' collection.
+            await db.collection('userInfo').insertOne(userInfo);
         } catch (err) {
             return res.status(500).json({ error: "failed to register data" });
         }
 
+        try{
+            // Send a Verification email to the user
+            const formData = require('form-data');
+            const Mailgun = require('mailgun.js');
+            const mailgun = new Mailgun(formData);
+            const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY });
+
+            // Format the email content
+            var htmlContent = `
+                <h1> Hello, ${firstName}!</h1>
+                Please click on the following link to verify your email:
+                <a href="http://LeetSocial.com/verify?token=${hash}">Verify Email</a>`;
+            // <a href="http://localhost:3000/verify?token=${hash}">Verify Email</a>`;
+
+            mg.messages.create('leetsocial.com', {
+                from: "Post Master General <postmaster@leetsocial.com>",
+                to: [email],
+                subject: "Verification Email",
+                html: htmlContent
+            });
+
+            return res.status(201).json({ message: "Added to register Successfully / Email Verification Sent" });
+        } catch (err) {
+            return res.status(500).json({ error: "failed to send verification email" });
+        }
+
     });
-}
+
+    // *===========================================================*
+    // |                     Verify Sign-up Hash API               |
+    // *===========================================================*
+    // Incoming: { token }
+    // Outgoing: { status }
+    app.post('/api/verify', async (req, res) => {
+        const { token, leetCodeUsername } = req.body;
+        let loginInfo;
+
+        try {
+            // Fetch the user's loginInfo
+            loginInfo = await db.collection('loginInfo').findOne({ "verificationToken": token }, { projection: { _id: 1, verified: 1 } });
+            if (!loginInfo) {
+                return res.status(500).json({ error: "Failed to Find Verification Hash" });
+            }
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Database error occurred" });
+        }
+
+        if (loginInfo.verified === true) {
+            return res.status(500).json({ error: "User Already Authenticated" });
+        }
+
+        try {
+            // Update the user's leetCodeUsername
+            await db.collection('userInfo').updateOne({ "loginInfoId": loginInfo._id.toString() }, { $set: { leetCodeUsername } });
+
+            // Update the user's verification status
+            await db.collection('loginInfo').updateOne({ _id: loginInfo._id }, { $set: { "verified": true } });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Failed to Update User Data" });
+        }
+
+        // **** TO-DO: Update leetCodeInfo collection with user's leetCodeUsername and info ****
+
+        res.status(200).json({ message: "Successfully Verified!" });
+    });
+
+
+    // *===========================================================*
+    // |                     Test Email API                        |
+    // *===========================================================*
+    // app.post('/api/testEmail', async (req, res) => {
+    //     const formData = require('form-data');
+    //     const Mailgun = require('mailgun.js');
+    //     const mailgun = new Mailgun(formData);
+    //     const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY });
+    //     mg.messages.create('leetsocial.com', {
+    //         from: "Post Master General <postmaster@leetsocial.com>",
+    //         to: ["XXX@gmail.com"],
+    //         subject: "Verification Email",
+    //         text: "Testing some Mailgun awesomeness!",
+    //         html: "<h1>Testing some Mailgun awesomeness!</h1>"
+    //     })
+    //         .then(msg => console.log(msg)) // logs response data
+    //         .catch(err => console.log(err)); // logs any error
+    // });
+
+
+    //---------------------------------------------------------------------------------------------------------------------\\
+    // Define your GraphQL schema
+    const leetcodeAPI = 'https://leetcode.com/graphql/';
+    
+    app.post('/api/query', async (req, res) => {
+        try {
+            // Get the username from the request body
+            const { username } = req.body;
+    
+            // Prepare the GraphQL query
+            const graphqlQuery = `
+                query languageStats($username: String!) {
+                    matchedUser(username: $username) {
+                        languageProblemCount {
+                            languageName
+                            problemsSolved
+                        }
+                    }
+                }
+            `;
+    
+            // Make a request to the other API with the provided username and query
+            const response = await axios.post(leetcodeAPI, {
+                query: graphqlQuery,
+                variables: { username },
+            });
+    
+            const languageStats = response.data.data.matchedUser.languageProblemCount;
+            const maxSolved = Math.max(...languageStats.map(lang => lang.problemsSolved));
+            const maxSolvedLanguage = languageStats.find(lang => lang.problemsSolved === maxSolved);
+    
+            res.json(maxSolvedLanguage);
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Failed to query the API' });
+        }
+    });
+    
+
+    app.post('/api/userSolvedCount', async (req, res) => {
+        try {
+            const { username } = req.body;
+    
+            const graphqlQuery = `
+                query userProblemsSolved($username: String!) {
+                    allQuestionsCount {
+                        difficulty
+                        count
+                    }
+                    matchedUser(username: $username) {
+                        problemsSolvedBeatsStats {
+                            difficulty
+                            percentage
+                        }
+                        submitStatsGlobal {
+                            acSubmissionNum {
+                                difficulty
+                                count
+                            }
+                        }
+                    }
+                }
+            `;
+    
+            const response = await axios.post(leetcodeAPI, {
+                query: graphqlQuery,
+                variables: { username },
+            });
+    
+            const problemCounts = response.data.data.matchedUser.submitStatsGlobal.acSubmissionNum;
+    
+            const answer = {
+                all: 0,
+                easy: 0, // Set the initial count to 0 for each difficulty level
+                medium: 0,
+                hard: 0
+            };
+    
+            // Update counts based on the response
+            problemCounts.forEach((difficultyCount) => {
+                const { difficulty, count } = difficultyCount;
+                if (difficulty === 'Easy') {
+                    answer.easy = count;
+                } else if (difficulty === 'Medium') {
+                    answer.medium = count;
+                } else if (difficulty === 'Hard') {
+                    answer.hard = count;
+                } else if (difficulty === "All") {
+                    answer.all = count;
+                }
+            });
+    
+            res.json(answer);
+    
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Failed to query the API' });
+        }
+    });
+    
+
+ 
+    
+
+    };
+
+    
