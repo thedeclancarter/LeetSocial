@@ -17,6 +17,7 @@ exports.setApp = function (app, client) {
         const { email, password } = req.body;
 
         const user = await db.collection('loginInfo').findOne({ email, password });
+        const name = await db.collection('userInfo').findOne({ loginInfoId: user._id.toString() });
 
         // Return Error in the case of invalid credentials/failure to verify
         if (!user)
@@ -25,7 +26,8 @@ exports.setApp = function (app, client) {
             return res.status(401).json({ error: 'Account not verified' });
 
         // Set the response header to include the JWT token
-        const { _id: id, firstName, lastName } = user;
+        const { _id: id } = user;
+        const { firstName, lastName } = name;
         const token = require("./createJWT.js").createToken(firstName, lastName, id);
 
         res.status(200).json(token);
@@ -172,12 +174,12 @@ exports.setApp = function (app, client) {
     //---------------------------------------------------------------------------------------------------------------------\\
     // Define your GraphQL schema
     const leetcodeAPI = 'https://leetcode.com/graphql/';
-    
+
     app.post('/api/query', async (req, res) => {
         try {
             // Get the username from the request body
             const { username } = req.body;
-    
+
             // Prepare the GraphQL query
             const graphqlQuery = `
                 query languageStats($username: String!) {
@@ -189,17 +191,17 @@ exports.setApp = function (app, client) {
                     }
                 }
             `;
-    
+
             // Make a request to the other API with the provided username and query
             const response = await axios.post(leetcodeAPI, {
                 query: graphqlQuery,
                 variables: { username },
             });
-    
+
             const languageStats = response.data.data.matchedUser.languageProblemCount;
             const maxSolved = Math.max(...languageStats.map(lang => lang.problemsSolved));
             const maxSolvedLanguage = languageStats.find(lang => lang.problemsSolved === maxSolved);
-    
+
             res.json(maxSolvedLanguage);
 
         } catch (error) {
@@ -207,12 +209,12 @@ exports.setApp = function (app, client) {
             res.status(500).json({ error: 'Failed to query the API' });
         }
     });
-    
+
 
     app.post('/api/userSolvedCount', async (req, res) => {
         try {
             const { username } = req.body;
-    
+
             const graphqlQuery = `
                 query userProblemsSolved($username: String!) {
                     allQuestionsCount {
@@ -233,21 +235,21 @@ exports.setApp = function (app, client) {
                     }
                 }
             `;
-    
+
             const response = await axios.post(leetcodeAPI, {
                 query: graphqlQuery,
                 variables: { username },
             });
-    
+
             const problemCounts = response.data.data.matchedUser.submitStatsGlobal.acSubmissionNum;
-    
+
             const answer = {
                 all: 0,
                 easy: 0, // Set the initial count to 0 for each difficulty level
                 medium: 0,
                 hard: 0
             };
-    
+
             // Update counts based on the response
             problemCounts.forEach((difficultyCount) => {
                 const { difficulty, count } = difficultyCount;
@@ -261,19 +263,19 @@ exports.setApp = function (app, client) {
                     answer.all = count;
                 }
             });
-    
+
             res.json(answer);
-    
+
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Failed to query the API' });
         }
     });
-    
 
- 
-    
+
+
+
 
     };
 
-    
+

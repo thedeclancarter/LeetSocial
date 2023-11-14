@@ -64,7 +64,7 @@ function Login()
             else
             {
                 var user = {id:userId, firstName:firstName, lastName:lastName}
-                localStorage.setItem('user_data', JSON.stringify(user));
+                window.sessionStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
                 window.location.href = '/profile';
