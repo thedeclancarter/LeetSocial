@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Logo.css';
 
+// Logo on front page - glow and breathing effect
 class TextAnimation extends Component {
     state = {
         text: "LeetSocial",

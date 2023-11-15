@@ -47,13 +47,17 @@ export default function Login(props)
             }
             else
             {
-                var user = {firstName:res.firstName,lastName:res.lastName}
-                localStorage.setItem('user_data', JSON.stringify(user));
+                // ADD BACK IN WHEN API IS READY :)
+
+                // var user = {firstName:res.firstName,lastName:res.lastName}
+                // sessionStorage.setItem('userInfo', JSON.stringify(user));
+
+                // REMOVE
+                sessionStorage.setItem('userInfo', JSON.stringify({ id: "654ff2f4c63d62079896ea4b", firstName: "John", lastName: "Doe" }));
 
                 setLogin(true);
                 setMessage('');
                 navigate('/home');
-                // window.location.href = '/profile';
             }
         }
         catch(e)
@@ -76,20 +80,6 @@ export default function Login(props)
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             var res = JSON.parse(await response.text());
-
-            setMessage('Account created! Please login.');
-            // if( res.id <= 0 )
-            // {
-            //     setMessage('User/Password combination incorrect');
-            // }
-            // else
-            // {
-            //     var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
-            //     localStorage.setItem('user_data', JSON.stringify(user));
-
-            //     setMessage('');
-            //     window.location.href = '/cards';
-            // }
         }
         catch(e)
         {

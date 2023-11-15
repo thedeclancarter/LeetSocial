@@ -1,6 +1,7 @@
 import './Search.css';
 import React from 'react';
 
+// ADD IN SEARCH ALGORITHMS
 function performSearch() {
 
   }

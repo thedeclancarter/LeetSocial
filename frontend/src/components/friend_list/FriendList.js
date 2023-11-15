@@ -1,6 +1,7 @@
 import './FriendList.css';
 import React from 'react';
 
+// Temporary list while we wait for API
 const data = [
     { name: "Anom"},
     { name: "Megha"},
@@ -18,6 +19,7 @@ const data = [
 
 export default function FriendList() {
 
+    // As soon as API is ready, add in the array of friends
     return (
         <div className="friendList">
             <table className="friendTable" >

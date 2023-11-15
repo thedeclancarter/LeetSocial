@@ -4,14 +4,15 @@ import { Link, useMatch, useResolvedPath } from 'react-router-dom';
 import Logo from '../logo/Logo'
 
 export default function Navbar(props) {
-    var _ud = localStorage.getItem('user_data');
+    var _ud = sessionStorage.getItem('userInfo');
     var ud = JSON.parse(_ud);
-    var userId = ud.id;
+    // var userId = ud.id;
     var firstName = ud.firstName;
     var lastName = ud.lastName;
 
     const { setHome } = props;
 
+    // Populate navbar with title and links to profile and add friend
     return (
         <nav className="nav">
             <Link
@@ -20,8 +21,7 @@ export default function Navbar(props) {
                 onClick={() => setHome(true)}
             >
                 LeetSocial
-            </Link>
-            
+            </Link>        
             <ul>
                 <CustomLink
                     to="/addfriend"

@@ -1,31 +1,71 @@
 import './UserInfo.css';
-import React from 'react';
-
+import React, { useEffect } from 'react';
 
 export default function UserInfo() {
-    var _ud = localStorage.getItem('user_data');
-    var ud = JSON.parse(_ud);
-    var login = ud.login;
-    var userId = ud.id;
-    var firstName = ud.firstName;
-    var lastName = ud.lastName;
+    var firstName;
+    var lastName;
+    var username;
+    var problemsSolved;
+    var topLanguage;
 
+  // ADD IN WHEN API IS READY :)
+  
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     var _ud = localStorage.getItem('userInfo');
+  //     var ud = JSON.parse(_ud);
+  //     var id = ud.id;
+  //     var obj = { id: id.value };
+  //     var js = JSON.stringify(obj);
 
-    return (
-        <div className="user">
-            <div className="userInfo">
-                <div className="loginClass"> 
-                <span id="login">User Information </span><br></br><br></br>
-                </div>
-                <div className="info">
-                    <span id="firstName">First Name: {firstName}</span><br></br><br></br>
-                    <span id="lastName">Last Name: {lastName}</span><br></br><br></br>
-                    <span id="email">Email: </span>          
-                </div> 
-            </div>
-            <div className="userStats">   
-            {/* determine the stats */}         
-            </div>
+  //     try {
+  //       const response = await fetch('INSERTLINK', {
+  //         method: 'POST',
+  //         body: js,
+  //         headers: { 'Content-Type': 'application/json' },
+  //       });
+
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //       }
+
+  //       const res = await response.json();
+  //       console.log(res);
+
+  //       var user = { firstName: res.firstName, lastName: res.lastName, username: res.username, problemsSolved: res.problemsSolved, topLanguage: res.topLanguage};
+  //       firstName = res.firstName;
+  //       lastName = res.lastName;
+  //       username = res.username;
+  //       problemsSolved = res.problemsSolved;
+  //       topLanguage = res.topLanguage;
+  //       sessionStorage.setItem('userInfo', JSON.stringify(user));
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //       alert(error.toString());
+  //     }
+  //   };
+
+  //   fetchData(); // Call the asynchronous function when the component mounts
+  // }, []); // The empty dependency array ensures that this effect runs once after the initial render
+
+  return (
+    <div className="user">
+      <div className="userInfo">
+        <div className="loginClass">
+          <span id="login">User Information </span>
+          <br></br>
+          <br></br>
         </div>
-    );
-};
+        <div className="info">
+          <span id="firstName">First Name: {firstName}</span>
+          <br></br>
+          <br></br>
+          <span id="lastName">Last Name: {lastName}</span>
+          <br></br>
+          <br></br>
+          <span id="email">Email: </span>
+        </div>
+      </div>
+    </div>
+  );
+}
