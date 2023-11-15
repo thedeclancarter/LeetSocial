@@ -5,6 +5,7 @@ import Navbar from './components/navbar/Navbar';
 import Home from './pages/home/Home';
 import Login from './pages/login/Login';
 import Profile from './pages/profile/Profile';
+import AddFriend from './pages/add_friend/AddFriend';
 import Leaderboard from './components/leaderboard/Leaderboard';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<Login isLogin={isLogin} setLogin={setLogin} />} />
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/addfriend" element={<AddFriend />} />
         </Routes>
       </div>
     </>

@@ -1,8 +1,16 @@
 import './FriendList.css';
 import React from 'react';
-import {useTable} from 'react-table';
 
 const data = [
+    { name: "Anom"},
+    { name: "Megha"},
+    { name: "Subham"},
+    { name: "Anom"},
+    { name: "Megha"},
+    { name: "Subham"},
+    { name: "Anom"},
+    { name: "Megha"},
+    { name: "Subham"},
     { name: "Anom"},
     { name: "Megha"},
     { name: "Subham"},
@@ -12,10 +20,10 @@ export default function FriendList() {
 
     return (
         <div className="friendList">
-            <table>
+            <table className="friendTable" >
                 <tr className="titles">
                     <th>Friend Name</th>
-                    {/* <th>Settings</th> */}
+                    <th>Remove</th>
                 </tr>
                 {data.map((val, key) => {
                     return (

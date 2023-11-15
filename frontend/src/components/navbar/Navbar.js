@@ -24,6 +24,13 @@ export default function Navbar(props) {
             
             <ul>
                 <CustomLink
+                    to="/addfriend"
+                    onClick={() => setHome(false)}
+                    style={{ color: '#FFFFFF', textDecoration: 'none' }}
+                >
+                    Add Friend
+                </CustomLink>
+                <CustomLink
                     to="/profile"
                     onClick={() => setHome(false)}
                     style={{ color: '#FFFFFF', textDecoration: 'none' }}
