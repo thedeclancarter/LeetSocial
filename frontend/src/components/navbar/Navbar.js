@@ -11,7 +11,7 @@ export default function Navbar(props) {
     var lastName = ud.lastName;
 
     const { setHome } = props;
-
+    const { setLogin } = props;
     // Populate navbar with title and links to profile and add friend
     return (
         <nav className="nav">
@@ -36,6 +36,17 @@ export default function Navbar(props) {
                     style={{ color: '#FFFFFF', textDecoration: 'none' }}
                 >
                     Profile
+                </CustomLink>
+                <CustomLink
+                    to="/"
+                    onClick={() => {
+                        setHome(true);
+                        setLogin(true);
+                        sessionStorage.clear();
+                    }}
+                    style={{ color: '#FFFFFF', textDecoration: 'none' }}
+                >
+                    Logout
                 </CustomLink>
             </ul>
         </nav>
