@@ -1,67 +1,140 @@
 import React, {useState} from "react";
-import { SafeAreaView, View, StyleSheet, StatusBar , TextInput, Button,TouchableOpacity, Text, Alert} from "react-native";
+import { SafeAreaView, View, StyleSheet, StatusBar , TextInput, Button,TouchableOpacity, Text, Alert, LogBox} from "react-native";
 import TextAnimation from "../components/logo"; // Make sure the path is correct
 import { navigate } from "../../App";
 import axios from "axios";
+
+import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const apiBaseUrl = 'http://www.leetsocial.com';
 
-const goToHomePage = () => {
-    navigate('HomePage');
-    };
-
-
+   
 const LoginScreen = () => {
     const [isSignUp, setIsSignUp] = useState(false);
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    // ... additional state fields as needed
+    const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+        // ... additional state fields as needed
 
-    const handleLogin = async (email, password) => {
-        try {
-            // const response = await axios.post('http://localhost:5102/api/login', { email:email, password:password });
-            const js = JSON.stringify({email:email, password:password});
-            const response = await fetch('http://localhost:5102/api/login', {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-            const { token } = response.data;
-            await AsyncStorage.setItem('userToken', token);
-            goToHomePage();
-        } catch (error) {
-            console.log(error.message);
-            Alert.alert('Login Failed', error.message);
+            // const handleLogin = async (email, password) => {
+            //     const endpoint = `http://localhost:5102/api/login`;
+            //     const payload = { email:email, password:password };
+            //     const js = JSON.stringify(payload);
+            //     Alert.alert('Login Attempted', 'email: ' + email + ' pw: ' + password);
+            //     try
+            //     {
+            //         LogBox.log('attempting to fetch');
+            //         const response = await fetch(endpoint,
+            //             {method:'POST', body:js, headers:{'Content-Type': 'application/json'}});
+                    
+            //         if(!response.ok){
+            //             throw new Error('HTTP error, status = ${response.status}');
+            //         }
+            //         // Store/Decode the incoming JWT token
+            //         const data = await response.json();
+            //         LogBox.log('Response Data', data);
+            //         //store the token
+            //         if( data.userId === -1 )
+            //         {
+            //             setMessage('User/Password combination incorrect');
+            //         }
+            //         else
+            //         {
+            //             goToHomePage();
+            //         }
+            //     }
+            //     catch(e)
+            //     {
+            //         LogBox.log('Error in catch block', e);
+            //         Alert.alert(e.toString());
+            //     }
+
+            //     //AsyncStorage.setItem('userToken', userToken);
+
+            // };
+        const handleLogin = () => {
+                const payload = {
+                    email:email,
+                    password:password,
+                };
+                fetch('http://localhost:5102/api/login',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                })
+                .then (async res => {
+                    try{
+                        const jsonRes = await res.json();
+                        if (res.status != 200){
+                            setIsError(true);
+                            setMessage(jsonRes.error);
+                        }
+                        else {
+                            navigate('HomePage', {data: jsonRes});
+                        }
+                    }catch (err){
+                        console.log(err);
+                    };
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            };
+    
+    
+    const handleSignUp = () => {
+        if (password !== confirmPassword) {
+            setMessage("Passwords don't match");
+            setIsError(true);
+        } else {
+
+        const payload = {
+            email:email,
+            password:password,
+            firstName:firstName,
+            lastName:lastName,
+            };
+            fetch('http://localhost:5102/api/signup',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+            .then (async res => {
+                try{
+                    const jsonRes = await res.json();
+                    if (res.status != 201){
+                        setIsError(true);
+                        setMessage('Error: ' + jsonRes.error);
+                    }
+                    else {
+                        setIsError(false);
+                        navigate('HomePage', {data: jsonRes});
+                    }
+                }catch (err){
+                    console.log(err);
+                }  
+            })
+            .catch(err => {
+                console.log(err);
+            });
         }
-    };
-    
-      const handleSignUp = async () => {
-        const endpoint = `http://www.leetsocial.com/api/signup`;
-        const payload = { email:email, Password:password, FirstName:firstName, LastName:lastName };
-    
-        try {
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-          });
-    
-          const data = await response.json();
-          if (data.error) {
-            Alert.alert('Signup Failed', data.error);
-          } else {
-            // Handle successful signup here
-            // For example, show a success message and toggle to the login screen
-            Alert.alert('Signup Success', 'Account created! Please login.');
-            //navigation.navigate('HomePage');
-          }
-        } catch (error) {
-          Alert.alert('Signup Error', error.message);
-        }
-      };
-    
+        };
+
+
+
+    const getMessage = () => {
+        const status = isError ? 'Error: ' : 'Success: ';
+        return status + message;
+    }
 
 
     return (
@@ -75,6 +148,7 @@ const LoginScreen = () => {
                 <TextAnimation />
             </View>
             <View style={styles.loginContainer}>
+            <Text style={[styles.message, {color: isError ? 'red' : 'green'}]}>{message ? getMessage() : null}</Text>
             {isSignUp && (
                 <>
                 <TextInput
@@ -98,16 +172,16 @@ const LoginScreen = () => {
                     placeholder="Email"
                     placeholderTextColor={'#fff'}
                     value={email}
-                    onChangeText={setEmail}
+                    onChangeText={newText => setEmail(newText)}
                     autoCapitalize="none"
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
                     placeholderTextColor={'#fff'}
-                    secureTextEntry
+                    // secureTextEntry
                     value={password}
-                    onChangeText={setPassword}
+                    onChangeText={newText => setPassword(newText)}
                     autoCapitalize="none"
                 />
                 {isSignUp && (
@@ -119,6 +193,7 @@ const LoginScreen = () => {
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
                     />
+                
                 )}
                 <Button
                     title={isSignUp ? "Sign Up" : "Login"}

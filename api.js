@@ -28,7 +28,8 @@ exports.setApp = function (app, client) {
         const { _id: id, firstName, lastName } = user;
         const token = require("./createJWT.js").createToken(firstName, lastName, id);
 
-        res.status(200).json(token);
+        // res.status(200).json(token);
+        res.status(200).json({ user });
     });
 
     // *===========================================================*

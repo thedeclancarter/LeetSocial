@@ -1,18 +1,19 @@
-// HomePage.js
+// Login successful screen
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 
-const HomePage = ({ route, navigation }) => {
-  const { data } = route.params;
-  const handleLogout = () => {
-    // Perform logout logic, like clearing user data, tokens, etc.
-    navigation.navigate('Login'); // Navigate back to the login screen
-  };
+
+const LoginSuccess = ({ route, navigation }) => {
+    const { data } = route.params;
+    const handleLogout = () => {
+        // Perform logout logic, like clearing user data, tokens, etc.
+        navigation.navigate('Login'); // Navigate back to the login screen
+    };
 
   return (
       <View style={styles.container}>
         <Header />
-        <Text style={styles.text}>Sign Up Success!</Text>
+        <Text style={styles.text}>Login Successful!</Text>
         <Text>{JSON.stringify(data)}</Text>
         <Button title="Logout" onPress={handleLogout} />
     </View>
@@ -41,4 +42,4 @@ const Header = () => {
 };
 
 
-export default HomePage;
+export default LoginSuccess;
