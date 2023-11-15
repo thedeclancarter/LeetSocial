@@ -18,7 +18,6 @@ exports.setApp = function (app, client) {
         const { email, password } = req.body;
 
         const user = await db.collection('loginInfo').findOne({ email, password });
-        const name = await db.collection('userInfo').findOne({ loginInfoId: user._id.toString() });
 
         // Return Error in the case of invalid credentials/failure to verify
         if (!user)
@@ -26,9 +25,13 @@ exports.setApp = function (app, client) {
         else if (!user.verified)
             return res.status(401).json({ error: 'Account not verified' });
 
+        const nameInfo = await db.collection('userInfo').findOne({ loginInfoId: user._id.toString() });
+        if (!nameInfo)
+            return res.status(404).json({ error: 'User information not found' });
+
         // Set the response header to include the JWT token
         const { _id: id } = user;
-        const { firstName, lastName } = name;
+        const { firstName, lastName } = nameInfo;
         const token = require("./createJWT.js").createToken(firstName, lastName, id);
 
         res.status(200).json(token);
