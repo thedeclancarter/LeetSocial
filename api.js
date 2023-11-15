@@ -2,6 +2,7 @@ require('express');
 require('mongodb');
 const axios = require('axios');
 const { graphql, buildSchema } = require('graphql');
+const { ObjectId } = require('mongodb');
 
 exports.setApp = function (app, client) {
     // Define the database to be used
@@ -41,18 +42,27 @@ exports.setApp = function (app, client) {
     app.post('/api/signup', async (req, res) => {
         const { email, password, firstName, lastName } = req.body;
 
-        // Check if the email already exists in the database (assuming you want unique usernames).
+        // Check if the email already exists in the database
         const existingUser = await db.collection('loginInfo').findOne({ email });
 
         // If a user with the same email already exists, return an error.
         if (existingUser)
             return res.status(409).json({ error: 'Email already exists' });
 
-        // Generate a random set of bytes
-        const randomBytes = crypto.randomBytes(16);
+        // Loop until a unique hash is generated
+        let hash;
+        let existingHash;
+        do
+        {
+            // Generate a random set of bytes
+            const randomBytes = crypto.randomBytes(16);
 
-        // Create a SHA-256 hash of the random bytes
-        const hash = crypto.createHash('sha256').update(randomBytes).digest('hex');
+            // Create a SHA-256 hash of the random bytes
+            hash = crypto.createHash('sha256').update(randomBytes).digest('hex');
+
+            // Check if the hash exists in the database
+            existingHash = await db.collection('loginInfo').findOne({ "verificationToken": hash });
+        } while (existingHash);
 
         const newUser = {
             email,
@@ -96,7 +106,7 @@ exports.setApp = function (app, client) {
                 <a href="http://LeetSocial.com/verify?token=${hash}">Verify Email</a>`;
             // <a href="http://localhost:3000/verify?token=${hash}">Verify Email</a>`;
 
-            mg.messages.create('leetsocial.com', {
+            await mg.messages.create('leetsocial.com', {
                 from: "Post Master General <postmaster@leetsocial.com>",
                 to: [email],
                 subject: "Verification Email",
@@ -113,7 +123,7 @@ exports.setApp = function (app, client) {
     // *===========================================================*
     // |                     Verify Sign-up Hash API               |
     // *===========================================================*
-    // Incoming: { token }
+    // Incoming: { token, leetCodeUsername }
     // Outgoing: { status }
     app.post('/api/verify', async (req, res) => {
         const { token, leetCodeUsername } = req.body;
@@ -150,6 +160,92 @@ exports.setApp = function (app, client) {
         res.status(200).json({ message: "Successfully Verified!" });
     });
 
+    // *===========================================================*
+    // |                Request Password Change API                |
+    // *===========================================================*
+    // Incoming: { loginInfoId }
+    // Outgoing: { status }
+    app.post('/api/requestPasswordChange', async (req, res) => {
+        const { loginInfoId } = req.body;
+
+        let document;
+
+        try {
+            // Verify the user's exists
+            document = await db.collection('loginInfo').findOne({ _id: new ObjectId(loginInfoId) });
+            if (!document) {
+                return res.status(500).json({ error: "Failed to Find Verification Hash" });
+            }
+        } catch (err) {
+            return res.status(500).json({ error: "Database error occurred" });
+        }
+
+        if (document.verified === false) {
+            return res.status(500).json({ error: "User Not Verified" });
+        }
+
+        try{
+            // Send a Forgot Password email to the user
+            const formData = require('form-data');
+            const Mailgun = require('mailgun.js');
+            const mailgun = new Mailgun(formData);
+            const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY });
+
+            // Format the email content
+            var htmlContent = `
+                <h1> Hello! </h1>
+                Please click on the following link to reset your password:
+                <a href="http://LeetSocial.com/forgotPassword?token=${document.verificationToken}">Verify Email</a>`;
+            // <a href="http://localhost:3000/verify?token=${hash}">Verify Email</a>`;
+
+            await mg.messages.create('leetsocial.com', {
+                from: "Post Master General <postmaster@leetsocial.com>",
+                to: [document.email],
+                subject: "Forgot Password; LeetSocial",
+                html: htmlContent
+            });
+
+            return res.status(200).json({ message: "Added to Password Reset Sent" });
+        } catch (err) {
+            return res.status(500).json({ error: "failed to send verification email" });
+        }
+    });
+
+    // *===========================================================*
+    // |                     Forgot Password API                   |
+    // *===========================================================*
+    // Incoming: { token, newPassword}
+    // Outgoing: { status }
+    app.post('/api/changePassword', async (req, res) => {
+        const { token, newPassword } = req.body;
+        let loginInfo;
+
+        try {
+            // Fetch the user's loginInfo
+            loginInfo = await db.collection('loginInfo').findOne({ "verificationToken": token }, { projection: { _id: 1, verified: 1 } });
+            if (!loginInfo) {
+                return res.status(500).json({ error: "Failed to Find Verification Hash" });
+            }
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Database error occurred" });
+        }
+
+        if (loginInfo.verified === false) {
+            return res.status(500).json({ error: "User Not Verified" });
+        }
+
+        try {
+            // Update the user's password
+            await db.collection('loginInfo').updateOne({ _id: loginInfo._id }, { $set: { "password": newPassword } });
+
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Failed to Update User Data" });
+        }
+
+        res.status(200).json({ message: "Successfully Updated Password!" });
+    });
 
     // *===========================================================*
     // |                     Test Email API                        |
