@@ -51,19 +51,29 @@ export default function UserInfo() {
   return (
     <div className="user">
       <div className="userInfo">
-        <div className="loginClass">
-          <span id="login">User Information </span>
-          <br></br>
-          <br></br>
-        </div>
         <div className="info">
+          <br></br>
           <span id="firstName">First Name: {firstName}</span>
+          <br></br>
+          <br></br>
           <br></br>
           <br></br>
           <span id="lastName">Last Name: {lastName}</span>
           <br></br>
           <br></br>
+          <br></br>
+          <br></br>
           <span id="email">Email: </span>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <span id="lcUsername">LeetCode Username: </span>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <span id="problemsSolved">Problems Solved: </span>
         </div>
       </div>
     </div>

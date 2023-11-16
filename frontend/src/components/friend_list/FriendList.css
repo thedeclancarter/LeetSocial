@@ -6,12 +6,12 @@
 
 .friendList {
     /* display: flex; */
-    border: 2px solid rgba(34, 139, 34, 0);
+    border: 2px solid rgb(225, 225, 225);
     background-color: #2a2a2a;
     color: white;
     border-radius: 5px;
-    margin: 100px;
-    margin-right: 300px;
+    margin: 80px;
+    margin-top: 80px;
     justify-content: center;
     align-items: center;
     position: absolute;
@@ -19,6 +19,8 @@
     overflow-y: auto;
     max-height: 50%;
     min-height: 50%;
+    max-width: 50%;
+    min-width: 50%;
     font-family: 'Arial', sans-serif;
 }
 
@@ -52,7 +54,7 @@ td {
 }
 
 #removeButton {
-    background-color: rgb(77, 77, 77);
+    background-color: #b06c27;
     font-size: 14px;
     color: white;
     border: none;
@@ -63,6 +65,6 @@ td {
 }
 
 #removeButton:hover {
-    background-color: rgb(57, 57, 57);
+    background-color: #de9348;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
