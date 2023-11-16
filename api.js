@@ -251,6 +251,231 @@ exports.setApp = function (app, client) {
     });
 
     // *===========================================================*
+    // |                     View Profile API                      |
+    // *===========================================================*
+    // Incoming: { userId }
+    // Outgoing: { firstName, lastName, leetCodeUsername, following, topLanguages, solvedCount }
+    app.post('/api/viewProfile', async (req, res) => {
+        const { userId } = req.body;
+
+        let userInfo;
+
+        try {
+            // Fetch the user's userInfo
+            userInfo = await db.collection('userInfo').findOne({ "loginInfoId": userId });
+            if (!userInfo) {
+                return res.status(500).json({ error: "Failed to Find User Info" });
+            }
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Database error occurred" });
+        }
+
+        // Fetch the user's leetCodeInfo
+        // axios.defaults.baseURL = 'http://localhost:5102'; // Uncomment this section for local testing
+        const leetCodeInfo = await axios.post('/api/query', { "username": userInfo.leetCodeUsername });
+        if (!leetCodeInfo) {
+            return res.status(500).json({ error: "Failed to Find LeetCode Info" });
+        }
+        const leetCodeProblems = await axios.post('/api/userSolvedCount', { "username": userInfo.leetCodeUsername });
+        if (!leetCodeProblems) {
+            return res.status(500).json({ error: "Failed to Find LeetCode Info" });
+        }
+
+        // Fetch the user's following
+        const following = userInfo.following;
+
+        // Fetch the user's topLanguages
+        const topLanguage = leetCodeInfo.data.languageName;
+        const topLanguageCount = leetCodeInfo.data.problemsSolved;
+
+        // Fetch the user's solvedCount
+        const solvedCount = leetCodeProblems.data;
+
+        // Format the response
+        const response = {
+            firstName: userInfo.firstName,
+            lastName: userInfo.lastName,
+            leetCodeUsername: userInfo.leetCodeUsername,
+            following,
+            topLanguage,
+            topLanguageCount,
+            solvedCount
+        };
+
+        res.status(200).json(response);
+    });
+
+    // *===========================================================*
+    // |                     Add Friend API                        |
+    // *===========================================================*
+    // Incoming: { userId, friendId }
+    // Outgoing: { status }
+    app.post('/api/addFriend', async (req, res) => {
+        const { userId, friendId } = req.body;
+
+        let userInfo;
+
+        try {
+            // Fetch the user's userInfo
+            userInfo = await db.collection('userInfo').findOne({ "loginInfoId": userId });
+            if (!userInfo) {
+                return res.status(500).json({ error: "Failed to Find User Info" });
+            }
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Database error occurred" });
+        }
+
+        // Fetch the user's following
+        const following = userInfo.following;
+
+        // If the friend is already in the user's following, return an error
+        if (following.includes(friendId)) {
+            return res.status(500).json({ error: "Friend Already Added" });
+        }
+
+        try {
+            // Update the user's following
+            await db.collection('userInfo').updateOne({ "loginInfoId": userId }, { $push: { following: friendId } });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Failed to Update User Data" });
+        }
+
+        res.status(200).json({ message: "Successfully Added Friend!" });
+    });
+
+    // *===========================================================*
+    // |                     Search Friend API                     |
+    // *===========================================================*
+    // Incoming: { userId, searchString } (FirstName, lastName, or leetCodeUsername)
+    // Outgoing: { Array of { firstName, lastName, leetCodeUsername, userId } }
+    app.post('/api/searchFriends', async (req, res) => {
+        const { userId, searchString } = req.body;
+
+        let userInfo;
+
+        try {
+            // Fetch the user's userInfo
+            userInfo = await db.collection('userInfo').findOne({ "loginInfoId": userId });
+            if (!userInfo) {
+                return res.status(500).json({ error: "Failed to Find User Info" });
+            }
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Database error occurred" });
+        }
+
+        // Fetch the user's following
+        const following = userInfo.following;
+        let response;
+
+        // If the searchString is empty, return the user's following
+        if (!searchString || searchString === "") {
+            // Fetch the user's friends' info
+            const friendsInfo = await db.collection('userInfo').find({ loginInfoId: { $in: following } }).toArray();
+
+            // Format the response
+            response = friendsInfo.map((friend) => {
+                return {
+                    firstName: friend.firstName,
+                    lastName: friend.lastName,
+                    leetCodeUsername: friend.leetCodeUsername,
+                    userId: friend.loginInfoId
+                };
+            });
+        }
+        // If the searchString is not empty, return the user's following that match the searchString
+        else {
+            // Fetch the user's friends' info
+            const friendsInfo = await db.collection('userInfo').find({ $and: [{ $or: [{ firstName: { $regex: searchString, $options: 'i' } }, { lastName: { $regex: searchString, $options: 'i' } }, { leetCodeUsername: { $regex: searchString, $options: 'i' } }] }, { loginInfoId: { $in: following } }] }).toArray();
+
+            // Format the response
+            response = friendsInfo.map((friend) => {
+                return {
+                    firstName: friend.firstName,
+                    lastName: friend.lastName,
+                    leetCodeUsername: friend.leetCodeUsername,
+                    userId: friend.loginInfoId
+                };
+            });
+        }
+
+        res.status(200).json(response);
+    });
+
+
+    // *===========================================================*
+    // |                     Remove Friend API                     |
+    // *===========================================================*
+    // Incoming: { userId, friendId }
+    // Outgoing: { status }
+    app.post('/api/removeFriend', async (req, res) => {
+        const { userId, friendId } = req.body;
+
+        let userInfo;
+
+        try {
+            // Fetch the user's userInfo
+            userInfo = await db.collection('userInfo').findOne({ "loginInfoId": userId });
+            if (!userInfo) {
+                return res.status(500).json({ error: "Failed to Find User Info" });
+            }
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Database error occurred" });
+        }
+
+        // Fetch the user's following
+        const following = userInfo.following;
+
+        // If the friend is not in the user's following, return an error
+        if (!following.includes(friendId)) {
+            return res.status(500).json({ error: "Friend Not Found" });
+        }
+
+        try {
+            // Update the user's following
+            await db.collection('userInfo').updateOne({ "loginInfoId": userId }, { $pull: { following: friendId } });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Failed to Update User Data" });
+        }
+
+        res.status(200).json({ message: "Successfully Removed Friend!" });
+    });
+
+    // *===========================================================*
+    // |                     Search Users API                      |
+    // *===========================================================*
+    // Incoming: { searchString } (FirstName, lastName, or leetCodeUsername)
+    // Outgoing: { Array of { firstName, lastName, leetCodeUsername, userId } }
+    app.post('/api/searchUsers', async (req, res) => {
+        const { searchString } = req.body;
+        // If String is empty, return empty array
+        if (!searchString || searchString === "") {
+            res.status(500).json({ error: "No Search String" });
+            return;
+        }
+
+        // Fetch the user's userInfo
+        const userInfo = await db.collection('userInfo').find({ $or: [{ firstName: { $regex: searchString, $options: 'i' } }, { lastName: { $regex: searchString, $options: 'i' } }, { leetCodeUsername: { $regex: searchString, $options: 'i' } }] }).toArray();
+
+        // Format the response
+        const response = userInfo.map((user) => {
+            return {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                leetCodeUsername: user.leetCodeUsername,
+                userId: user.loginInfoId
+            };
+        });
+
+        res.status(200).json(response);
+    });
+
+    // *===========================================================*
     // |                     Test Email API                        |
     // *===========================================================*
     // app.post('/api/testEmail', async (req, res) => {
