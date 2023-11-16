@@ -10,8 +10,7 @@ export default function Navbar(props) {
     var firstName = ud.firstName;
     var lastName = ud.lastName;
 
-    const { setHome } = props;
-    const { setLogin } = props;
+    const { setHome, setLogin } = props;
     // Populate navbar with title and links to profile and add friend
     return (
         <nav className="nav">
@@ -21,7 +20,7 @@ export default function Navbar(props) {
                 onClick={() => setHome(true)}
             >
                 LeetSocial
-            </Link>        
+            </Link>
             <ul>
                 <CustomLink
                     to="/home"
@@ -60,7 +59,7 @@ export default function Navbar(props) {
     );
 };
 
-function CustomLink ({ to, children, ...props} ) {
+function CustomLink({ to, children, ...props }) {
     const resolvedPath = useResolvedPath(to);
     const isActive = useMatch({ path: resolvedPath.pathname, end: true });
 

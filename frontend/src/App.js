@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
-import Navbar from './components/navbar/Navbar';
-import Home from './pages/home/Home';
 import Login from './pages/login/Login';
 import Profile from './pages/profile/Profile';
-import AddFriend from './pages/add_friend/AddFriend';
+import Verify from './pages/verify/Verify';
 import Leaderboard from './components/leaderboard/Leaderboard';
+import Navbar from './components/navbar/Navbar';
+import AddFriend from './pages/add_friend/AddFriend';
 
 function App() {
   const [isLogin, setLogin] = useState(false);
@@ -14,16 +14,16 @@ function App() {
 
   return (
     <>
-      {isLogin && (<Navbar setHome={setHome}/>)}
-      <div className="container">
-        {isHome && (<Leaderboard isLogin={isLogin} />) }
+      {isLogin && (<Navbar setHome={setHome} setLogin={setLogin} />)}
+      <BrowserRouter>
+        {isHome && (<Leaderboard isLogin={isLogin} />)}
         <Routes>
           <Route path="/" element={<Login isLogin={isLogin} setLogin={setLogin} />} />
-          <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/verify" element={<Verify />} />
           <Route path="/addfriend" element={<AddFriend />} />
         </Routes>
-      </div>
+      </BrowserRouter>
     </>
   );
 }

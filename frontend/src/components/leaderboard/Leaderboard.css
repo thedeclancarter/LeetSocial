@@ -6,7 +6,9 @@
     height: 100%;
     padding-bottom: 0px;
     transition: width 2s;
-    border: solid black;
+    /* border: solid black; */
+    margin-top: 12.5rem;
+    padding-left: 2rem;
 }
 
 .tableContainer {
@@ -18,7 +20,7 @@
 }
 
 .leaderboard {
-    background-color: #4F518C;
+    background-color: #b06c27;
     color: white;
     /* border: solid #000000; */
     border-spacing: 0.5rem;
@@ -28,7 +30,7 @@
 }
 
 .row {
-    background-color: #2C2A4A;
+    background-color: #3c3b39;
     /* border: solid #000000; */
     border-collapse: separate;
     border-radius: 0.5rem;

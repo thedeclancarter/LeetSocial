@@ -33,8 +33,8 @@ export default function Leaderboard(prop) {
     const { isLogin } = prop;
 
     return (
-        <div 
-            className={isLogin ? "tableContainerExt" : "tableContainer"}   
+        <div
+            className={isLogin ? "tableContainerExt" : "tableContainer"}
         >
             <table className="leaderboard">
                 <tr className="row">
@@ -56,7 +56,7 @@ export default function Leaderboard(prop) {
                             </td>
                         </tr>
                     ))
-                }  
+                }
             </table>
         </div>
     );
