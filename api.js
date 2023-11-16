@@ -1,6 +1,7 @@
 require('express');
 require('mongodb');
 const axios = require('axios');
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 const { graphql, buildSchema } = require('graphql');
 const { ObjectId } = require('mongodb');
 
@@ -272,7 +273,6 @@ exports.setApp = function (app, client) {
         }
 
         // Fetch the user's leetCodeInfo
-        // axios.defaults.baseURL = 'http://localhost:5102'; // Uncomment this section for local testing
         const leetCodeInfo = await axios.post('/api/query', { "username": userInfo.leetCodeUsername });
         if (!leetCodeInfo) {
             return res.status(500).json({ error: "Failed to Find LeetCode Info" });
