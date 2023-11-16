@@ -8,7 +8,7 @@ export default function Login(props) {
     const { isLogin, setLogin } = props;
 
     return (
-        <div className="">
+        <div className="grid-background">
             {!isLogin && (<Logo />)}
             <Register isLogin={isLogin} setLogin={setLogin} />
             {/* <Leaderboard isLogin={isLogin} /> */}
