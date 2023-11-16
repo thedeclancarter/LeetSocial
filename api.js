@@ -5,6 +5,8 @@ axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 const { graphql, buildSchema } = require('graphql');
 const { ObjectId } = require('mongodb');
 
+
+
 exports.setApp = function (app, client) {
     // Define the database to be used
     const db = client.db('leetsocial_db');
@@ -595,11 +597,37 @@ exports.setApp = function (app, client) {
             res.status(500).json({ error: 'Failed to query the API' });
         }
     });
+    
 
+    app.post('/api/isValid', async (req, res) => {
 
-
-
-
+        try {
+            const { username } = req.body;
+    
+            const isValidQuery = `
+                query getUserProfile($username: String!) {
+                    matchedUser(username: $username) {
+                        username
+                    }
+                }
+            `;
+    
+            const response = await axios.post(leetcodeAPI, {
+                query: isValidQuery,
+                variables: { username },
+            });
+    
+            if (!response.data.errors) {
+                // No errors, assume the username is valid
+                res.status(200).json({ message: 'Valid Leetcode Username' });
+            } else if (response.data.errors.length > 0) {
+                // There are errors, assume the username is invalid
+                res.status(400).json({ message: 'Invalid Leetcode Username' });
+            }
+    
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Failed to query the API' });
+        }
+    });
     };
-
-
