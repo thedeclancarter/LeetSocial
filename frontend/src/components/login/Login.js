@@ -64,7 +64,7 @@ function Login()
             else
             {
                 var user = {id:userId, firstName:firstName, lastName:lastName}
-                localStorage.setItem('user_data', JSON.stringify(user));
+                window.sessionStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
                 window.location.href = '/profile';
@@ -81,9 +81,10 @@ function Login()
     {
         event.preventDefault();
 
-        var obj = {login:newLogin.value,password:newPassword.value, firstName:firstName.value, lastName:lastName.value};
+        var obj = {"email":newLogin.value,"password":newPassword.value, "firstName":firstName.value, "lastName":lastName.value};
         var js = JSON.stringify(obj);
 
+        console.log(js);
         try
         {
             const response = await fetch(bp.buildPath('api/signup'),
