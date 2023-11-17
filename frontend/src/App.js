@@ -14,9 +14,9 @@ function App() {
   const [isHome, setHome] = useState(true);
 
   return (
-    <>
+    <BrowserRouter>
       {isLogin && (<Navbar setHome={setHome} setLogin={setLogin} />)}
-      <BrowserRouter>
+      <>
         {isHome && (<Leaderboard isLogin={isLogin} />)}
         <Routes>
           <Route path='/' element={<Login isLogin={isLogin} setLogin={setLogin} />} />
@@ -25,8 +25,8 @@ function App() {
           <Route path='/verify' element={<Verify />} />
           <Route path='/addfriend' element={<AddFriend />} />
         </Routes>
-      </BrowserRouter>
-    </>
+      </>
+    </BrowserRouter>
   );
 }
 
