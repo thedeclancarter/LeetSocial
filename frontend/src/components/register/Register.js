@@ -138,23 +138,17 @@ export default function Register(props) {
 
         var obj = { email: email.value, password: password.value };
         var js = JSON.stringify(obj);
-        console.log(obj);
+
         try {
-            console.log(141);
             const response = await fetch(bp.buildPath('api/login'),
                 { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } });
 
             // Store/Decode the incoming JWT token
             var res = JSON.parse(await response.text());
-            console.log(res);
-            console.log(res.status);
             var storage = require('../../tokenStorage.js');
-            console.log(148);
             storage.storeToken(res);
             const { accessToken } = res;
-            console.log(151);
             const decoded = decode(accessToken, { complete: true });
-            console.log(153);
 
             // Assign Local Vars
             var ud = decoded;
@@ -171,7 +165,7 @@ export default function Register(props) {
 
                 setMessage('');
                 setLogin(true);
-                window.location.href = '/home';
+                setTimeout(() => navigate('/home'), 2000);
             }
         }
         catch (e) {

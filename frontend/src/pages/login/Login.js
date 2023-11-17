@@ -8,7 +8,7 @@ export default function Login(props) {
 
     return (
         <div className='grid-background loginPage'>
-            <div className='logoContainer'>
+            <div className={isLogin ? 'logoContainer hide': 'logoContainer show'}>
                 <Logo />
             </div>
             <div className='registerContainer'>

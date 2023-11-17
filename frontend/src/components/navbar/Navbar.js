@@ -4,16 +4,16 @@ import { Link, useMatch, useResolvedPath } from 'react-router-dom';
 import Logo from '../logo/Logo'
 
 export default function Navbar(props) {
-    var _ud = sessionStorage.getItem('userInfo');
+    var _ud = sessionStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
     var userId = ud.id;
     var firstName = ud.firstName;
     var lastName = ud.lastName;
 
-    const { setHome, setLogin } = props;
+    const { isLogin, setLogin, setHome } = props;
     // Populate navbar with title and links to profile and add friend
     return (
-        <nav className="nav">
+        <nav className={isLogin ? 'nav show': 'nav hide'}>
             <Link
                 to="/home"
                 className="site-title"
@@ -47,7 +47,7 @@ export default function Navbar(props) {
                     to="/"
                     onClick={() => {
                         setHome(true);
-                        setLogin(true);
+                        setLogin(false);
                         sessionStorage.clear();
                     }}
                     style={{ color: '#FFFFFF', textDecoration: 'none' }}

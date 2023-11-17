@@ -7,16 +7,16 @@
     padding-bottom: 0px;
     transition: width 2s;
     /* border: solid black; */
-    margin-top: 12.5rem;
-    padding-left: 2rem;
+    margin-top: 8rem;
 }
 
 .tableContainer {
     width: 50vw;
+    padding-left: 2rem;
 }
 
 .tableContainerExt {
-    width: 100vw;
+    width: 100%;
 }
 
 .leaderboard {

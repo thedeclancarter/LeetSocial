@@ -15,7 +15,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      {isLogin && (<Navbar setHome={setHome} setLogin={setLogin} />)}
+      <Navbar isLogin={isLogin} setLogin={setLogin} setHome={setHome} />
       <>
         {isHome && (<Leaderboard isLogin={isLogin} />)}
         <Routes>
