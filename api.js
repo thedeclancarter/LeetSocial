@@ -420,37 +420,26 @@ exports.setApp = function (app, client) {
         // Fetch the user's following
         const following = userInfo.following;
         let response;
+        let friendsInfo;
 
         // If the searchString is empty, return the user's following
         if (!searchString || searchString === "") {
-            // Fetch the user's friends' info
-            const friendsInfo = await db.collection('userInfo').find({ loginInfoId: { $in: following } }).toArray();
-
-            // Format the response
-            response = friendsInfo.map((friend) => {
-                return {
-                    firstName: friend.firstName,
-                    lastName: friend.lastName,
-                    leetCodeUsername: friend.leetCodeUsername,
-                    userId: friend.loginInfoId
-                };
-            });
+            friendsInfo = await db.collection('userInfo').find({ loginInfoId: { $in: following } }).toArray();
         }
         // If the searchString is not empty, return the user's following that match the searchString
         else {
-            // Fetch the user's friends' info
-            const friendsInfo = await db.collection('userInfo').find({ $and: [{ $or: [{ firstName: { $regex: searchString, $options: 'i' } }, { lastName: { $regex: searchString, $options: 'i' } }, { leetCodeUsername: { $regex: searchString, $options: 'i' } }] }, { loginInfoId: { $in: following } }] }).toArray();
-
-            // Format the response
-            response = friendsInfo.map((friend) => {
-                return {
-                    firstName: friend.firstName,
-                    lastName: friend.lastName,
-                    leetCodeUsername: friend.leetCodeUsername,
-                    userId: friend.loginInfoId
-                };
-            });
+            friendsInfo = await db.collection('userInfo').find({ $and: [{ $or: [{ firstName: { $regex: searchString, $options: 'i' } }, { lastName: { $regex: searchString, $options: 'i' } }, { leetCodeUsername: { $regex: searchString, $options: 'i' } }] }, { loginInfoId: { $in: following } }] }).toArray();
         }
+
+        // Format the response
+        response = friendsInfo.map((friend) => {
+            return {
+                firstName: friend.firstName,
+                lastName: friend.lastName,
+                leetCodeUsername: friend.leetCodeUsername,
+                userId: friend.loginInfoId
+            };
+        });
 
         res.status(200).json(response);
     });
