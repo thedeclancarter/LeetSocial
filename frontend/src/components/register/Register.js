@@ -74,24 +74,50 @@ export default function Register(props) {
         const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (firstName.value === "")
+        {
+            hasFirstName = false;
             setFirstName(false);
+        }
         else
+        {
+            hasFirstName = true;
             setFirstName(true);
+        }
 
         if (lastName.value === "")
+        {
+            hasLastName = false;
             setLastName(false);
+        }
         else
+        {
+            hasLastName = true;
             setLastName(true);
+        }
 
         if (!emailRegEx.test(email.value))
+        {
+            hasEmail = false;
             setEmail(false);
+        }
         else
+        {
+            hasEmail = true;
             setEmail(true);
+        }
 
         if (!hasCapital || !hasSpecialChar || !hasNum || !has8)
+        {
+            hasPassword = false;
             setPassword(false);
+        }
         else
+        {
+            hasPassword = true;
             setPassword(true);
+        }
+
+        console.log(hasFirstName, hasLastName, hasEmail, hasPassword);
 
         if (!hasFirstName || !hasLastName || !hasEmail || !hasPassword)
             return;
@@ -113,12 +139,10 @@ export default function Register(props) {
                 });
 
             var res = JSON.parse(await response.text());
-            console.log(res);
             var statusCode = response.status;
-
+console.log(response.status);
             if (statusCode === 201) {
-                setMessage("");
-                navigate('/verify');
+                setMessage("Check email for verification");
             }
             else if (statusCode === 409) {
                 setMessage("Email is already registered")
@@ -178,7 +202,7 @@ export default function Register(props) {
         <div className={isLogin ? "container hide" : "container show"}>
             <div className='login'>
                 <div className="header">
-                    <div className="text">{action}</div>
+                    <div className={action === "Login" ? 'loginTxt': 'signUpTxt'}>{action}</div>
                     <div className="underline"></div>
                 </div>
                 <div className="inputs">
@@ -242,7 +266,7 @@ export default function Register(props) {
                             <p>
                                 <FontAwesomeIcon
                                     icon={hasCapital ? faCheck : faTimes}
-                                    className={hasCapital ? "faCheck" : "faTimes"}
+                                    className={hasCapital ? "faCheck circle" : "faTimes circle"}
                                 />
                                 <span className={hasCapital ? "orange100" : "orange50"}>
                                     Capital Letters
@@ -251,7 +275,7 @@ export default function Register(props) {
                             <p>
                                 <FontAwesomeIcon
                                     icon={hasSpecialChar ? faCheck : faTimes}
-                                    className={hasSpecialChar ? "faCheck" : "faTimes"}
+                                    className={hasSpecialChar ? "faCheck circle" : "faTimes circle"}
                                 />
                                 <span className={hasSpecialChar ? "orange100" : "orange50"}>
                                     Special Characters
@@ -260,7 +284,7 @@ export default function Register(props) {
                             <p>
                                 <FontAwesomeIcon
                                     icon={hasNum ? faCheck : faTimes}
-                                    className={hasNum ? "faCheck" : "faTimes"}
+                                    className={hasNum ? "faCheck circle" : "faTimes circle"}
                                 />
                                 <span className={hasNum ? "orange100" : "orange50"}>
                                     Numbers
@@ -269,7 +293,7 @@ export default function Register(props) {
                             <p>
                                 <FontAwesomeIcon
                                     icon={has8 ? faCheck : faTimes}
-                                    className={has8 ? "faCheck" : "faTimes"}
+                                    className={has8 ? "faCheck circle" : "faTimes circle"}
                                 />
                                 <span className={has8 ? "orange100" : "orange50"}>
                                     8+ Characters

@@ -1,6 +1,8 @@
 import "./Leaderboard.css";
 import React, { useState } from 'react';
 
+var bp = require('../../path.js');
+
 const sampleData = [
     {
         pos: "1st",
@@ -48,14 +50,54 @@ export default function Leaderboard(prop) {
     const { isLogin } = prop;
     var [activeButton, setActiveButton] = useState(0);
 
-    const getFriends = async event => {
-        event.preventDefault();
+    const getFriendStats = async () => {
 
         var _ud = sessionStorage.getItem('user_data');
         var ud = JSON.parse(_ud);
-        var userId = ud.id;
 
+        var obj = {userId: ud.id, searchString: ""};
+        var body = JSON.stringify(obj);
 
+        try {
+            var response = await fetch(bp.buildpath('api/searchFriends'),
+            {
+                method: 'POST',
+                body: body,
+                headers: {'Content-Type': 'application/json'}
+            });
+
+            var res = JSON.parse(await response.text());
+
+            for (var i = 0; i < res.length; i++)
+            {
+                var obj = {username: res[i].leetCodeUsername};
+                var body = JSON.stringify(obj);
+
+                try {
+                    var stats = await fetch(bp.buildpath('/api/userSolvedCount'),
+                    {
+                        method: 'POST',
+                        body: body,
+                        headers: {'Content-Type': 'application/json'}
+                    });
+
+                    var probs = JSON.parse(await stats.text());
+
+                    var merge = {...res[i], ...probs};
+
+                    res[i] = merge;
+                }
+                catch (e) {
+                    alert(e.toString());
+                    return;
+                }
+            }
+            console.log(res);
+            return res;
+        }
+        catch (e) {
+            alert(e.toString());
+        }
     };
 
     const filterTable = event => {
@@ -71,6 +113,11 @@ export default function Leaderboard(prop) {
         else
             setActiveButton(3);
     };
+
+    function sortObjects(infoArr, activeButton)
+    {
+
+    }
 
     return (
         <div
@@ -123,6 +170,13 @@ export default function Leaderboard(prop) {
                     </td>
                 </tr>
                 {
+                    // isLogin ?
+                    // () => {
+                    //     var infoArr = getFriendStats;
+
+                    //     sortObjects(infoArr, activeButton);
+                    // }
+                    // :
                     sampleData.map(sample => (
                         <tr className="row">
                             <td className="position">

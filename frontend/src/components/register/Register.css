@@ -21,7 +21,7 @@
 .login {
     height: auto;
     width: 120%;
-    margin-top: 30%;
+    margin-top: 3.6rem;
     margin-right: 100%;
     padding: 2.5%;
     background-color: #3c3b39;
@@ -34,19 +34,31 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    height: auto;
     margin-top: 2rem;
     margin-right: 100%;
-    /* border: solid #fff; */
 }
 
-.text {
+.signUpTxt {
+    position: relative;
+    margin-left: 8rem;
+    color: #fff;
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.loginTxt {
+    position: relative;
+    margin-left: 9.5rem;
     color: #fff;
     font-size: 48px;
     font-weight: 700;
 }
 
 .underline {
-    margin-top: 0.5rem;
+    position: absolute;
+    margin-top: 5rem;
+    margin-left: 12rem;
     width: 4rem;
     height: 0.5rem;
     background: #fff;
@@ -58,7 +70,6 @@
     flex-direction: column;
     margin-top: 1.5rem;
     gap: 1.5rem;
-    /* border: solid #000000; */
 }
 
 .input,
@@ -112,11 +123,15 @@ input::placeholder {
 .faTimes {
     color: rgba(176, 108, 39, 0.5);
     font-size: 1.5rem;
+    border-radius: 40%;
+    border: solid 0.1rem rgba(176, 108, 39, 0.5);
 }
 
 .faCheck {
     color: rgba(176, 108, 39, 1);
     font-size: 1.5rem;
+    border-radius: 40%;
+        border: solid 0.1rem rgba(176, 108, 39, 1);
 }
 
 .submit-container {
