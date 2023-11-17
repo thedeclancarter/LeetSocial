@@ -34,8 +34,8 @@ exports.setApp = function (app, client) {
 
         // Set the response header to include the JWT token
         const { _id: id } = user;
-        const { firstName, lastName } = nameInfo;
-        const token = require("./createJWT.js").createToken(firstName, lastName, id);
+        const { firstName, lastName, leetCodeUsername } = nameInfo;
+        const token = require("./createJWT.js").createToken(firstName, lastName, id, leetCodeUsername);
 
         res.status(200).json(token);
     });
@@ -597,13 +597,13 @@ exports.setApp = function (app, client) {
             res.status(500).json({ error: 'Failed to query the API' });
         }
     });
-    
+
 
     app.post('/api/isValid', async (req, res) => {
 
         try {
             const { username } = req.body;
-    
+
             const isValidQuery = `
                 query getUserProfile($username: String!) {
                     matchedUser(username: $username) {
@@ -611,12 +611,12 @@ exports.setApp = function (app, client) {
                     }
                 }
             `;
-    
+
             const response = await axios.post(leetcodeAPI, {
                 query: isValidQuery,
                 variables: { username },
             });
-    
+
             if (!response.data.errors) {
                 // No errors, assume the username is valid
                 res.status(200).json({ message: 'Valid Leetcode Username' });
@@ -624,7 +624,7 @@ exports.setApp = function (app, client) {
                 // There are errors, assume the username is invalid
                 res.status(400).json({ message: 'Invalid Leetcode Username' });
             }
-    
+
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Failed to query the API' });

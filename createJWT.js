@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-exports.createToken = function (fn, ln, id) {
-    return _createToken(fn, ln, id);
+exports.createToken = function (fn, ln, id, lc) {
+    return _createToken(fn, ln, id, lc);
 }
-_createToken = function (fn, ln, id) {
+_createToken = function (fn, ln, id, lc) {
     try {
-        const user = { userId: id, firstName: fn, lastName: ln };
+        const user = { userId: id, firstName: fn, lastName: ln , leetCodeUsername: lc};
 
         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '24h'} );
         var ret = { accessToken: accessToken };
