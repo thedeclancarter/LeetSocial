@@ -7,7 +7,7 @@ export default function Login(props) {
     const { isLogin, setLogin } = props;
 
     return (
-        <div className='grid-background loginPage'>
+        <div className='loginPage'>
             <div className={isLogin ? 'logoContainer hide': 'logoContainer show'}>
                 <Logo />
             </div>

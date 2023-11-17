@@ -15,17 +15,17 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Navbar isLogin={isLogin} setLogin={setLogin} setHome={setHome} />
-      <>
+      <div className='grid-background'>
+        {isLogin && (<Navbar isLogin={isLogin} setLogin={setLogin} setHome={setHome} />)}
         {isHome && (<Leaderboard isLogin={isLogin} />)}
-        <Routes>
-          <Route path='/' element={<Login isLogin={isLogin} setLogin={setLogin} />} />
-          <Route path='/home' element={<Home />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/verify' element={<Verify />} />
-          <Route path='/addfriend' element={<AddFriend />} />
-        </Routes>
-      </>
+      </div>
+      <Routes>
+        <Route path='/' element={<Login isLogin={isLogin} setLogin={setLogin} />} />
+        <Route path='/home' element={<Home />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/verify' element={<Verify />} />
+        <Route path='/addfriend' element={<AddFriend />} />
+      </Routes>
     </BrowserRouter>
   );
 }
