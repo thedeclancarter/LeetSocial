@@ -1,12 +1,10 @@
+import './Home.css';
 import React from 'react';
-import LoginCard from '../../components/login_card/LoginCard';
 
-const Home = () =>
-{
-    return(
-        <div>
-            <LoginCard />
+export default function Home() {
+
+    return (
+        <div className="">
         </div>
     );
-};
-export default Home;
+}

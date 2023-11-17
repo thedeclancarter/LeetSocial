@@ -1,0 +1,23 @@
+.userTitle span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* font-family: 'Orbitron', sans-serif; */
+    font-size: 35px;
+    font-weight: 400;
+    padding-top: 50px;
+    padding-right: 50%;
+    color: #e4e4e4;
+    overflow: hidden;
+}
+
+/* .userTitle::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 74%;
+    left: 12%;
+    width: 25%;
+    height: 2px;
+    background-color: #b06c27;
+} */
