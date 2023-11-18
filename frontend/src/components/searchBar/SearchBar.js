@@ -1,9 +1,30 @@
 import React, { useState } from 'react';
 import './SearchBar.css'; // Make sure to create this CSS file
+import addFriendIcon from '../../assets/add-friend.png'; // Path to your add-friend icon
+import checkMarkIcon from '../../assets/white-checkmark-in-circle-md.png'; // Path to your checkmark icon
 
 function SearchBar({ onSearch }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [showResults, setShowResults] = useState(false);
+    const [isMouseInside, setIsMouseInside] = useState(false);
+
+    // Initialize searchData with objects containing name and clicked properties
+    const [searchData, setSearchData] = useState([
+        { name: "Profile", clicked: false },
+        { name: "Home", clicked: false },
+        { name: "Settings", clicked: false },
+        { name: "Friends", clicked: false },
+        { name: "Logout", clicked: false },
+        { name: "Log1", clicked: false },
+        { name: "Log2", clicked: false },
+        { name: "Log3", clicked: false },
+        { name: "Log4", clicked: false },
+        { name: "Log5", clicked: false },
+        { name: "Log6", clicked: false },
+        { name: "Log7", clicked: false },
+        { name: "Log8", clicked: false },
+        { name: "Log9", clicked: false },
+    ]);
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -13,13 +34,37 @@ function SearchBar({ onSearch }) {
         }
     };
 
-    const handleBlur = () => {
-        setSearchTerm(''); // Clear the search term
-        setShowResults(false); // Optionally, hide the results when the input loses focus
+    const handleFocus = () => {
+        if (searchTerm.trim().length > 0) {
+            setShowResults(true);
+        }
     };
 
-    // Dummy data for demonstration, replace with your actual data source
-    const searchData = ["Profile", "Home", "Settings", "Friends", "Logout", "Log1", "Log2", "Log3", "Log4", "Log5", "Log6", "Log7", "Log8", "Log9", "Log10", "Log11", "Log12"];
+    const handleBlur = () => {
+        // Only hide results if the mouse is not over the results
+        if (!isMouseInside) {
+            setShowResults(false);
+        }
+    };
+
+    const handleMouseEnter = () => {
+        setIsMouseInside(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsMouseInside(false);
+        // if (!searchTerm) {
+        //     setShowResults(false);
+        // }
+    };
+
+    const handleIconClick = (itemName) => {
+        const updatedSearchData = searchData.map(item =>
+            item.name === itemName ? { ...item, clicked: !item.clicked } : item
+        );
+        setSearchData(updatedSearchData);
+        // Here you can also call your API
+    };
 
     return (
         <div className="search-container">
@@ -28,14 +73,26 @@ function SearchBar({ onSearch }) {
                 placeholder="Search Users..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="search-input"
+                onFocus={handleFocus}
                 onBlur={handleBlur}
+                className="search-input"
             />
             {showResults && (
-                <div className="search-results">
-                    {searchData.filter(item => item.toLowerCase().includes(searchTerm.toLowerCase()))
+                <div
+                    className="search-results"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                >
+                    {searchData.filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
                                .map((item, index) => (
-                                   <div key={index} className="search-item">{item}</div>
+                                   <div key={index} className="search-item" onClick={() => handleIconClick(item.name)}>
+                                       <span>{item.name}</span>
+                                       <img
+                                           src={item.clicked ? checkMarkIcon : addFriendIcon}
+                                           alt="icon"
+                                           className="icon"
+                                       />
+                                   </div>
                                ))
                     }
                 </div>
