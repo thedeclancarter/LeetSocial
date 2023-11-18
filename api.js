@@ -397,47 +397,52 @@ exports.setApp = function (app, client) {
     });
 
     // *===========================================================*
-    // |                     Search Friend API                     |
+    // |                     Search Users API                      |
     // *===========================================================*
-    // Incoming: { userId, searchString } (FirstName, lastName, or leetCodeUsername)
-    // Outgoing: { Array of { firstName, lastName, leetCodeUsername, userId } }
-    app.post('/api/searchFriends', async (req, res) => {
-        const { userId, searchString } = req.body;
+    // Incoming: { searchString, userID } (FirstName, lastName, or leetCodeUsername, userID of the requester)
+    // Outgoing: { Array of { firstName, lastName, leetCodeUsername, userId, isFriend } }
+    app.post('/api/searchUsers', async (req, res) => {
+        const { searchString, userId } = req.body;
 
-        let userInfo;
+        // // If String is empty, return empty array
+        // if (!searchString || searchString === "") {
+        //     res.status(500).json({ error: "No Search String" });
+        //     return;
+        // }
 
-        try {
-            // Fetch the user's userInfo
-            userInfo = await db.collection('userInfo').findOne({ "loginInfoId": userId });
-            if (!userInfo) {
-                return res.status(500).json({ error: "Failed to Find User Info" });
-            }
-        } catch (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Database error occurred" });
+        // Create the search query with exclusion of the current user
+        let searchQuery = {
+            $and: [
+                { loginInfoId: { $ne: userId } }, // Exclude the current user
+                {
+                    $or: [
+                        { firstName: { $regex: searchString, $options: 'i' } },
+                        { lastName: { $regex: searchString, $options: 'i' } },
+                        { leetCodeUsername: { $regex: searchString, $options: 'i' } }
+                    ]
+                }
+            ]
+        };
+
+        // Fetch the user's userInfo
+        const usersInfo = await db.collection('userInfo').find(searchQuery).toArray();
+
+        // Optionally, fetch the friend list of the requester if userID is provided
+        let requesterFollowing = [];
+        if (userId) {
+            const requesterInfo = await db.collection('userInfo').findOne( {"loginInfoId": userId} );
+            requesterFollowing = requesterInfo ? requesterInfo.following : [];
         }
 
-        // Fetch the user's following
-        const following = userInfo.following;
-        let response;
-        let friendsInfo;
-
-        // If the searchString is empty, return the user's following
-        if (!searchString || searchString === "") {
-            friendsInfo = await db.collection('userInfo').find({ loginInfoId: { $in: following } }).toArray();
-        }
-        // If the searchString is not empty, return the user's following that match the searchString
-        else {
-            friendsInfo = await db.collection('userInfo').find({ $and: [{ $or: [{ firstName: { $regex: searchString, $options: 'i' } }, { lastName: { $regex: searchString, $options: 'i' } }, { leetCodeUsername: { $regex: searchString, $options: 'i' } }] }, { loginInfoId: { $in: following } }] }).toArray();
-        }
 
         // Format the response
-        response = friendsInfo.map((friend) => {
+        const response = usersInfo.map((user) => {
             return {
-                firstName: friend.firstName,
-                lastName: friend.lastName,
-                leetCodeUsername: friend.leetCodeUsername,
-                userId: friend.loginInfoId
+                firstName: user.firstName,
+                lastName: user.lastName,
+                leetCodeUsername: user.leetCodeUsername,
+                userId: user.loginInfoId,
+                isFollowing: requesterFollowing.includes(user.loginInfoId) // Check if the user is a friend
             };
         });
 
