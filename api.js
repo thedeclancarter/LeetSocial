@@ -16,7 +16,7 @@ exports.setApp = function (app, client) {
     // Incoming: { email, password }
     // Outgoing: { firstName, lastName, id }
     app.post('/api/login', async (req, res, next) => {
-        const { email, password } = req.body;
+        let { email, password } = req.body;
 
         // Ensure all lowercase
         email = email.toLowerCase();
