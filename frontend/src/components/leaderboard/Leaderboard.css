@@ -1,0 +1,86 @@
+.tableContainer, .tableContainerExt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    height: 100%;
+    padding-bottom: 0px;
+    transition: width 2s;
+    /* border: solid black; */
+    margin-top: 8rem;
+}
+
+.tableContainer {
+    width: 50vw;
+    padding-left: 2rem;
+}
+
+.tableContainerExt {
+    width: 100%;
+    margin-top: 0rem;
+}
+
+.leaderboard {
+    background-color: #b06c27;
+    color: white;
+    /* border: solid #000000; */
+    border-spacing: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    width: 95%;
+}
+
+.row {
+    background-color: #3c3b39;
+    /* border: solid #000000; */
+    border-collapse: separate;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-width: 0.4rem;
+}
+
+td {
+    text-align: center;
+    border-radius: 0.5rem;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 0;
+}
+
+.header p {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.header ul {
+    padding: 30px;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    font-size: large;
+}
+
+.tableButton {
+    padding: 0.8rem 1.4rem;
+    font-size: 1.2rem;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 1.4rem;
+    background-color: #3c3b39;
+    border: solid 0.1rem #fff;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.tableButton:hover {
+    background-color: #b06c27;
+}
+
+.active {
+    background-color: #b06c27;
+}
