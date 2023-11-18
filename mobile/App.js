@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {Button, Text, View, StatusBar} from 'react-native';
 import LoginScreen from './src/screens/LoginScreen';
-import HomePage from './src/screens/HomePage';
 import LoginSuccess from './src/screens/LoginSuccess';
-
+import SignUpSucces from './src/screens/SignUpSucces';
+import Profile from './src/screens/Profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,8 +14,13 @@ function App() {
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="HomePage" component={HomePage} />
-        <Stack.Screen name="LoginSuccess" component={LoginSuccess} />
+        <Stack.Screen name="SignUpSuccess" component={SignUpSucces} />
+        <Stack.Screen name="LoginSuccess" component={LoginSuccess} options={{headerShown: false}}/>
+        <Stack.Screen 
+          name="Profile" 
+          component={Profile} 
+          options={{ headerShown: false }} // Hide the header for Profile screen
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

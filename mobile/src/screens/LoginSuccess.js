@@ -1,21 +1,16 @@
 // Login successful screen
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
-
+import ProfileButton from '../components/profilebutton';
 
 const LoginSuccess = ({ route, navigation }) => {
     const { data } = route.params;
-    const handleLogout = () => {
-        // Perform logout logic, like clearing user data, tokens, etc.
-        navigation.navigate('Login'); // Navigate back to the login screen
-    };
 
   return (
       <View style={styles.container}>
-        <Header />
+        <ProfileButton navigation={navigation}/>
         <Text style={styles.text}>Login Successful!</Text>
         <Text>{JSON.stringify(data)}</Text>
-        <Button title="Logout" onPress={handleLogout} />
     </View>
   );
 };
@@ -33,13 +28,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const Header = () => {
-    return (
-        <View style={styles.header}>
-            <Text>Welcome!</Text>
-        </View>
-    );
-};
 
 
 export default LoginSuccess;

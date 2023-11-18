@@ -21,42 +21,6 @@ const LoginScreen = () => {
     const [isError, setIsError] = useState(false);
         // ... additional state fields as needed
 
-            // const handleLogin = async (email, password) => {
-            //     const endpoint = `http://localhost:5102/api/login`;
-            //     const payload = { email:email, password:password };
-            //     const js = JSON.stringify(payload);
-            //     Alert.alert('Login Attempted', 'email: ' + email + ' pw: ' + password);
-            //     try
-            //     {
-            //         LogBox.log('attempting to fetch');
-            //         const response = await fetch(endpoint,
-            //             {method:'POST', body:js, headers:{'Content-Type': 'application/json'}});
-                    
-            //         if(!response.ok){
-            //             throw new Error('HTTP error, status = ${response.status}');
-            //         }
-            //         // Store/Decode the incoming JWT token
-            //         const data = await response.json();
-            //         LogBox.log('Response Data', data);
-            //         //store the token
-            //         if( data.userId === -1 )
-            //         {
-            //             setMessage('User/Password combination incorrect');
-            //         }
-            //         else
-            //         {
-            //             goToHomePage();
-            //         }
-            //     }
-            //     catch(e)
-            //     {
-            //         LogBox.log('Error in catch block', e);
-            //         Alert.alert(e.toString());
-            //     }
-
-            //     //AsyncStorage.setItem('userToken', userToken);
-
-            // };
         const handleLogin = () => {
                 const payload = {
                     email:email,
@@ -77,7 +41,8 @@ const LoginScreen = () => {
                             setMessage(jsonRes.error);
                         }
                         else {
-                            navigate('HomePage', {data: jsonRes});
+                            setIsError(false);
+                            navigate('LoginSuccess', {data: jsonRes});
                         }
                     }catch (err){
                         console.log(err);
@@ -117,7 +82,7 @@ const LoginScreen = () => {
                     }
                     else {
                         setIsError(false);
-                        navigate('HomePage', {data: jsonRes});
+                        navigate('SignUpSuccess', {data: jsonRes});
                     }
                 }catch (err){
                     console.log(err);
@@ -143,7 +108,6 @@ const LoginScreen = () => {
                 backgroundColor="#404040" // Dark grey color for the status bar
                 barStyle="light-content" // Light content for dark backgrounds
             />
-            <Header />
             <View style={styles.centeredView}>
                 <TextAnimation />
             </View>
@@ -212,28 +176,7 @@ const LoginScreen = () => {
     );
 };
 
-const Header = () => {
-    return (
-        <View style={styles.header}>
-            <Text>Welcome!</Text>
-        </View>
-    );
-};
-
 const styles = StyleSheet.create({
-    header: {
-        width: '100%',
-        color: '#fff',
-        height: 50, // Set the height of the header
-        backgroundColor: '#404040', // Dark grey color for the header
-        alignItems: 'center',
-        justifyContent: 'center',
-        shadowColor: '#000', // Black color for the shadow
-        shadowOffset: { width: 0, height: 2 }, // Shadow position
-        shadowOpacity: 0.25, // Shadow opacity
-        shadowRadius: 3.84, // Shadow blur radius
-        elevation: 5, // Elevation for Android (adds shadow effect)
-    },
     container: {
         backgroundColor: '#3c4749',
         flex: 1,

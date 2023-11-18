@@ -1,8 +1,8 @@
-// HomePage.js
+// SignUpSuccess.js
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 
-const HomePage = ({ route, navigation }) => {
+const SignUpSucces = ({ route, navigation }) => {
   const { data } = route.params;
   const handleLogout = () => {
     // Perform logout logic, like clearing user data, tokens, etc.
@@ -41,4 +41,4 @@ const Header = () => {
 };
 
 
-export default HomePage;
+export default SignUpSucces;
