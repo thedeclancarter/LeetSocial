@@ -2,6 +2,7 @@ import './Navbar.css';
 import React from 'react';
 import { Link, useMatch, useResolvedPath } from 'react-router-dom';
 import Logo from '../logo/Logo'
+import SearchBar from '../searchBar/SearchBar';
 
 export default function Navbar(props) {
     var _ud = sessionStorage.getItem('user_data');
@@ -29,13 +30,13 @@ export default function Navbar(props) {
                 >
                     Home
                 </CustomLink>
-                <CustomLink
+                {/* <CustomLink
                     to="/addfriend"
                     onClick={() => setHome(false)}
                     style={{ color: '#FFFFFF', textDecoration: 'none' }}
                 >
                     Add Friend
-                </CustomLink>
+                </CustomLink> */}
                 <CustomLink
                     to="/profile"
                     onClick={() => setHome(false)}
@@ -54,7 +55,8 @@ export default function Navbar(props) {
                 >
                     Logout
                 </CustomLink>
-            </ul>
+                </ul>
+                <SearchBar /* onSearch={handleSearch} Uncomment if you have search logic here */ />
         </nav>
     );
 };
