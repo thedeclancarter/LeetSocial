@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import { useState } from 'react';
+import QuestionPieChart from '../components/questionPieChart';
 
 const Profile = ({route, navigation}) => {
     const { id } = route.params;
@@ -45,11 +46,15 @@ const Profile = ({route, navigation}) => {
             });
         };
 
+
     return (
         <View style={styles.container}>
         <Header />
         {isLoading ? (
-            <ActivityIndicator size="large" color="rgba(176, 108, 39, 1)" /> // Customize as needed
+        <>
+            <Text style={styles.text}>Loading...</Text>
+            <ActivityIndicator size="large" color="rgba(176, 108, 39, 1)" />
+        </>
         ) : (
         <>
         {/* back button to home screen (loginsuccess) */}
@@ -63,7 +68,8 @@ const Profile = ({route, navigation}) => {
         <Text style={styles.text}>Top Language: {profileData?.topLanguage}</Text>
         <Text style={styles.text}>Total Questions with Top Language: {profileData?.topLanguageCount}</Text>
         <Text style={styles.text}>Questions Solved: {profileData?.solvedCount.all}</Text>
-        {/* graphic that shows split of question difficulty */}
+        <QuestionPieChart  data={profileData}/>
+        
         {/* rank among friends */}
         </>
         )}
