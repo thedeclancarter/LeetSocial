@@ -22,6 +22,7 @@
     max-height: 40px; /* Sets a maximum height to fit the navbar */
     width: 100%; /* Full width to fill the container */
     box-sizing: border-box; /* Ensures padding doesn't affect the final width */
+    transition: ease-in .15s;
 }
 
 .search-input::placeholder {
@@ -31,6 +32,7 @@
 .search-input:focus {
     border-color: #ff8c00; /* Slightly lighter orange for focus */
     box-shadow: 0 0 8px #ff8c00; /* Glowing effect on focus */
+    transition: ease-in .15s;
 }
 
 /* Dropdown results styling */
