@@ -585,6 +585,10 @@ exports.setApp = function (app, client) {
                 variables: { username },
             });
 
+            if (!response || !response.data || !response.data.data || !response.data.data.matchedUser) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
             const languageStats = response.data.data.matchedUser.languageProblemCount;
             const maxSolved = Math.max(...languageStats.map(lang => lang.problemsSolved));
             const maxSolvedLanguage = languageStats.find(lang => lang.problemsSolved === maxSolved);
