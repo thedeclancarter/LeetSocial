@@ -1,5 +1,5 @@
 import "./Leaderboard.css";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 var bp = require('../../path.js');
 
@@ -44,46 +44,46 @@ const sampleData = [
         medium: "0",
         easy: "1",
     },
-]
+];
 
-export default function Leaderboard(prop) {
-    const { isLogin } = prop;
-    var [activeButton, setActiveButton] = useState(0);
+export default function Leaderboard(props) {
+    const { isLogin, isUpdate } = props;
+    var [difficulty, setDifficulty] = useState(0);
+    var [infoArr, setInfoArr] = useState([]);
+    var [sampleArr, setSampleArr] = useState([...sampleData]);
 
-    const getFriendStats = async () => {
-
+    async function getFriendStats() {
         var _ud = sessionStorage.getItem('user_data');
         var ud = JSON.parse(_ud);
 
-        var obj = {userId: ud.id, searchString: ""};
+        var obj = { userId: ud.id, searchString: "" };
         var body = JSON.stringify(obj);
 
         try {
-            var response = await fetch(bp.buildpath('api/searchFriends'),
-            {
-                method: 'POST',
-                body: body,
-                headers: {'Content-Type': 'application/json'}
-            });
+            var response = await fetch(bp.buildPath('api/searchFriends'),
+                {
+                    method: 'POST',
+                    body: body,
+                    headers: { 'Content-Type': 'application/json' }
+                });
 
             var res = JSON.parse(await response.text());
 
-            for (var i = 0; i < res.length; i++)
-            {
-                var obj = {username: res[i].leetCodeUsername};
+            for (var i = 0; i < res.length; i++) {
+                var obj = { username: res[i].leetCodeUsername };
                 var body = JSON.stringify(obj);
 
                 try {
-                    var stats = await fetch(bp.buildpath('/api/userSolvedCount'),
-                    {
-                        method: 'POST',
-                        body: body,
-                        headers: {'Content-Type': 'application/json'}
-                    });
+                    var stats = await fetch(bp.buildPath('api/userSolvedCount'),
+                        {
+                            method: 'POST',
+                            body: body,
+                            headers: { 'Content-Type': 'application/json' }
+                        });
 
                     var probs = JSON.parse(await stats.text());
 
-                    var merge = {...res[i], ...probs};
+                    var merge = { ...res[i], ...probs };
 
                     res[i] = merge;
                 }
@@ -92,7 +92,7 @@ export default function Leaderboard(prop) {
                     return;
                 }
             }
-            console.log(res);
+
             return res;
         }
         catch (e) {
@@ -100,24 +100,43 @@ export default function Leaderboard(prop) {
         }
     };
 
+    useEffect(() => {
+        if (isLogin === false)
+        {
+            let sortedArr = [...sampleData];
+            difficulty === 0 ? sortedArr.sort((a, b) => b.numSolved - a.numSolved) :
+                difficulty === 1 ? sortedArr.sort((a, b) => b.hard - a.hard) :
+                    difficulty === 2 ? sortedArr.sort((a, b) => b.medium - a.medium) :
+                        sortedArr.sort((a, b) => b.easy - a.easy);
+
+            setSampleArr(sortedArr);
+        }
+        else {
+            getFriendStats().then(response => {
+                let sortedArr = [...response];
+                difficulty === 0 ? sortedArr.sort((a, b) => b.all - a.all) :
+                    difficulty === 1 ? sortedArr.sort((a, b) => b.hard - a.hard) :
+                        difficulty === 2 ? sortedArr.sort((a, b) => b.medium - a.medium) :
+                            sortedArr.sort((a, b) => b.easy - a.easy);
+
+                setInfoArr(sortedArr);
+            });
+        }
+    }, [isLogin, isUpdate, difficulty]);
+
     const filterTable = event => {
         event.preventDefault();
         const buttonName = event.target.name;
 
         if (buttonName === "All")
-            setActiveButton(0);
+            setDifficulty(0);
         else if (buttonName === "Hard")
-            setActiveButton(1);
+            setDifficulty(1);
         else if (buttonName === "Medium")
-            setActiveButton(2);
+            setDifficulty(2);
         else
-            setActiveButton(3);
+            setDifficulty(3);
     };
-
-    function sortObjects(infoArr, activeButton)
-    {
-
-    }
 
     return (
         <div
@@ -131,7 +150,7 @@ export default function Leaderboard(prop) {
                             <ul>
                                 <button
                                     className={
-                                        activeButton === 0 ? 'tableButton active': 'tableButton'
+                                        difficulty === 0 ? 'tableButton active': 'tableButton'
                                     }
                                     name='All'
                                     onClick={filterTable}
@@ -140,7 +159,7 @@ export default function Leaderboard(prop) {
                                 </button>
                                 <button
                                     className={
-                                        activeButton === 1 ? 'tableButton active' : 'tableButton'
+                                        difficulty === 1 ? 'tableButton active' : 'tableButton'
                                     }
                                     name='Hard'
                                     onClick={filterTable}
@@ -149,7 +168,7 @@ export default function Leaderboard(prop) {
                                 </button>
                                 <button
                                     className={
-                                        activeButton === 2 ? 'tableButton active' : 'tableButton'
+                                        difficulty === 2 ? 'tableButton active' : 'tableButton'
                                     }
                                     name='Medium'
                                     onClick={filterTable}
@@ -158,7 +177,7 @@ export default function Leaderboard(prop) {
                                 </button>
                                 <button
                                     className={
-                                        activeButton === 3 ? 'tableButton active' : 'tableButton'
+                                        difficulty === 3 ? 'tableButton active' : 'tableButton'
                                     }
                                     name='Easy'
                                     onClick={filterTable}
@@ -170,26 +189,48 @@ export default function Leaderboard(prop) {
                     </td>
                 </tr>
                 {
-                    // isLogin ?
-                    // () => {
-                    //     var infoArr = getFriendStats;
-
-                    //     sortObjects(infoArr, activeButton);
-                    // }
-                    // :
-                    sampleData.map(sample => (
+                    isLogin ?
+                    infoArr.map((userObj, idx) => (
                         <tr className="row">
                             <td className="position">
-                                <p>{sample.pos}</p>
+                                <p>{
+                                    idx === 0 ? "1st":
+                                    idx === 1 ? "2nd":
+                                    idx === 2 ? "3rd":
+                                    idx + 1 + "th"
+                                }</p>
+                            </td>
+                            <td className="username">
+                                <p>{userObj.leetCodeUsername}</p>
+                            </td>
+                            <td className="numSolved">
+                                <p>{
+                                    difficulty === 0 ? userObj.all :
+                                    difficulty === 1 ? userObj.hard :
+                                    difficulty === 2 ? userObj.medium :
+                                    userObj.easy
+                                }</p>
+                            </td>
+                        </tr>
+                    )):
+                    sampleArr.map((sample, idx) => (
+                        <tr className="row">
+                            <td className="position">
+                                <p>{
+                                    idx === 0 ? "1st" :
+                                        idx === 1 ? "2nd" :
+                                            idx === 2 ? "3rd" :
+                                                idx + 1 + "th"
+                                }</p>
                             </td>
                             <td className="username">
                                 <p>{sample.un}</p>
                             </td>
                             <td className="numSolved">
                                 <p>{
-                                    activeButton === 0 ? sample.numSolved:
-                                    activeButton === 1 ? sample.hard:
-                                    activeButton === 2 ? sample.medium:
+                                    difficulty === 0 ? sample.numSolved:
+                                    difficulty === 1 ? sample.hard:
+                                    difficulty === 2 ? sample.medium:
                                     sample.easy
                                 }</p>
                             </td>
