@@ -3,9 +3,8 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 
-const Profile = ({navigation}) => {
-
-    
+const Profile = ({route, navigation}) => {
+  const { userData } = route.params;
 
 
   return (
@@ -18,7 +17,7 @@ const Profile = ({navigation}) => {
             <Text style={styles.text}>Back</Text>
         </TouchableOpacity>
         <Text style={styles.text}>Profile</Text>
-        <Text style={styles.text}>LeetCode Username: </Text>
+        <Text style={styles.text}>LeetCode Username: {userData.leetCodeUsername}</Text>
         <Text style={styles.text}>Top Language: Java</Text>
         <Text style={styles.text}>Questions Solved: 20</Text>
         {/* graphic that shows split of question difficulty */}
