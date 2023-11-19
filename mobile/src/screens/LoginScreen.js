@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import { SafeAreaView, View, StyleSheet, StatusBar , TextInput, Button,TouchableOpacity, Text, Alert, LogBox} from "react-native";
 import TextAnimation from "../components/logo"; // Make sure the path is correct
 import { navigate } from "../../App";
-import axios from "axios";
 
 import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -104,92 +103,82 @@ const LoginScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar
-                backgroundColor="#404040" // Dark grey color for the status bar
-                barStyle="light-content" // Light content for dark backgrounds
-            />
-            <View style={styles.centeredView}>
-                <TextAnimation />
-            </View>
-            <View style={styles.loginContainer}>
-            <Text style={[styles.message, {color: isError ? 'red' : 'green'}]}>{message ? getMessage() : null}</Text>
-            {isSignUp && (
-                <>
-                <TextInput
-                    style={styles.input}
-                    placeholder="First Name"
-                    placeholderTextColor={'#fff'}
-                    value={firstName}
-                    onChangeText={setFirstName}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Last Name"
-                    placeholderTextColor={'#fff'}
-                    value={lastName}
-                    onChangeText={setLastName}
-                />
-                </>
-            )}
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    placeholderTextColor={'#fff'}
-                    value={email}
-                    onChangeText={newText => setEmail(newText)}
-                    autoCapitalize="none"
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Password"
-                    placeholderTextColor={'#fff'}
-                    // secureTextEntry
-                    value={password}
-                    onChangeText={newText => setPassword(newText)}
-                    autoCapitalize="none"
-                />
-                {isSignUp && (
-                    <TextInput
-                    style={styles.input}
-                    placeholder="Confirm Password"
-                    placeholderTextColor={'#fff'}
-                    secureTextEntry
-                    value={confirmPassword}
-                    onChangeText={setConfirmPassword}
-                    />
-                
-                )}
-                <Button
-                    title={isSignUp ? "Sign Up" : "Login"}
-                    onPress={isSignUp ? handleSignUp : handleLogin}
-                />
-                <TouchableOpacity
-                    onPress={() => setIsSignUp(!isSignUp)}
-                    style={styles.toggleButton}
-                >
-                    <Text style={styles.toggleButtonText}>
-                    {isSignUp ? "Already have an account? Login" : "Don't have an account? Sign Up"}
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        </SafeAreaView>
+                    <TextAnimation />
+                    <View style={styles.loginContainer}>
+                    <Text style={[styles.message, {color: isError ? 'red' : 'green'}]}>{message ? getMessage() : null}</Text>
+                    {isSignUp && (
+                        <>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="First Name"
+                            placeholderTextColor={'black'}
+                            value={firstName}
+                            onChangeText={setFirstName}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Last Name"
+                            placeholderTextColor={'black'}
+                            value={lastName}
+                            onChangeText={setLastName}
+                        />
+                        </>
+                    )}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Email"
+                            placeholderTextColor={'black'}
+                            value={email}
+                            onChangeText={newText => setEmail(newText)}
+                            autoCapitalize="none"
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Password"
+                            placeholderTextColor={'black'}
+                            // secureTextEntry
+                            value={password}
+                            onChangeText={newText => setPassword(newText)}
+                            autoCapitalize="none"
+                        />
+                        {isSignUp && (
+                            <TextInput
+                            style={styles.input}
+                            placeholder="Confirm Password"
+                            placeholderTextColor={'black'}
+                            secureTextEntry
+                            value={confirmPassword}
+                            onChangeText={setConfirmPassword}
+                            />
+                        
+                        )}
+                        <Button
+                            title={isSignUp ? "Sign Up" : "Login"}
+                            onPress={isSignUp ? handleSignUp : handleLogin}
+                        />
+                        <TouchableOpacity
+                            onPress={() => setIsSignUp(!isSignUp)}
+                            style={styles.toggleButton}
+                        >
+                            <Text style={styles.toggleButtonText}>
+                            {isSignUp ? "Already have an account? Login" : "Don't have an account? Sign Up"}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+            </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#3c4749',
         flex: 1,
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: 'transparent',
     },
     loginContainer: {
         margin: 20,
         padding: 20,
-        backgroundColor: '#2e2f38', // Darker grey background for the form
+        // backgroundColor: '#2e2f38', // Darker grey background for the form
+        backgroundColor: 'green', //for testing
         borderRadius: 5,
         elevation: 10, // Elevation for Android (adds shadow effect)
         // For iOS shadow
@@ -205,8 +194,8 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         paddingHorizontal: 10,
         borderRadius: 5,
-        color: 'white', // White text for the inputs
-        backgroundColor: '#696969', // Even darker grey for the input fields
+        color: 'black', // White text for the inputs
+        backgroundColor: 'white', // Even darker grey for the input fields
     },
     toggleButton: {
         marginTop: 20,

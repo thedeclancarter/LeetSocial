@@ -5,6 +5,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import LoginSuccess from './src/screens/LoginSuccess';
 import SignUpSucces from './src/screens/SignUpSucces';
 import Profile from './src/screens/Profile';
+import TestPage from './src/screens/Testing';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,6 +14,7 @@ function App() {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
+        {/* <Stack.Screen name="Test" component={TestPage} options={{headerShown: false}}/> */}
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
         <Stack.Screen name="SignUpSuccess" component={SignUpSucces} />
         <Stack.Screen name="LoginSuccess" component={LoginSuccess} options={{headerShown: false}}/>

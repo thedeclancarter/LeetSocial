@@ -2,6 +2,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
+
 const Profile = ({navigation}) => {
   return (
       <View style={styles.container}>
@@ -13,9 +14,9 @@ const Profile = ({navigation}) => {
             <Text style={styles.text}>Back</Text>
         </TouchableOpacity>
         <Text style={styles.text}>Profile</Text>
-        <Text>LeetCode Username: </Text>
-        <Text>Top Language: Java</Text>
-        <Text>Questions Solved: 20</Text>
+        <Text style={styles.text}>LeetCode Username: </Text>
+        <Text style={styles.text}>Top Language: Java</Text>
+        <Text style={styles.text}>Questions Solved: 20</Text>
         {/* graphic that shows split of question difficulty */}
         {/* rank among friends */}
     </View>
@@ -27,15 +28,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5', // or any color you like
+    backgroundColor: '#3c4749', // or any color you like
+    color: 'white',
   },
   text: {
     fontSize: 24,
     marginBottom: 20,
+    color: 'white',
   },
   button: {
     backgroundColor: 'black',
     borderRadius: 5,
+    textAlign: 'center',
+    color: 'white',
   },
 });
 

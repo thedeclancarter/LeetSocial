@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5', // or any color you like
+    backgroundColor: '#1a1a1a', // or any color you like
   },
   text: {
     fontSize: 24,

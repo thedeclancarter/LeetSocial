@@ -1,7 +1,7 @@
 //Header.js
 import React from 'react';
 import { View, Text, StyleSheet} from 'react-native';
-import ProfileButton from './profilebutton';
+import ProfileButton from './profileButton';
 
 const Header = () => {
     return (

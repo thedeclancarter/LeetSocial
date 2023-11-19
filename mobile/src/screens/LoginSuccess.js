@@ -1,7 +1,7 @@
 // Login successful screen
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
-import ProfileButton from '../components/profilebutton';
+import ProfileButton from '../components/profileButton';
 
 const LoginSuccess = ({ route, navigation }) => {
     const { data } = route.params;
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5', // or any color you like
+    backgroundColor: '#3c4749', // or any color you like
   },
   text: {
     fontSize: 24,
