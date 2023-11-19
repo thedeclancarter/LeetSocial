@@ -77,37 +77,37 @@ describe('Test searchUsers API', () => {
       const response = await supertest(app)
         .post('/api/searchUsers')
         .send({ searchString: 'Declan' });
-  
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual([{ firstName : 'Declan', lastName: 'Parker', leetCodeUsername: 'Ar4mis', userId: "655184bad077fc57debf74ae" }]);
     });
-  
+
     it('should return 500 with an invalid username search', async () => {
       const response = await supertest(app)
         .post('/api/searchUsers')
         .send({ searchString: '' });
-  
+
       expect(response.status).toBe(500);
       expect(response.body).toEqual({ error: "No Search String"});
     });
   });
-  
+
 
   describe('Test login API', () => {
     it('should return 200 with a valid username search', async () => {
       const response = await supertest(app)
         .post('/api/login')
         .send({ email: 'testing@test.com', password: 'password' });
-  
+
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({error: "secretOrPrivateKey must have a value"});
+      expect(response.body).toHaveProperty('accessToken');
     });
-  
+
     it('should return 401 with an invalid username search', async () => {
       const response = await supertest(app)
         .post('/api/login')
         .send({ email: 'notanemail', password: 'notapassword'});
-  
+
       expect(response.status).toBe(401);
       expect(response.body).toEqual({ error: "Invalid credentials"});
     });
@@ -115,7 +115,7 @@ describe('Test searchUsers API', () => {
 
 
 
-  
+
   //<==========================================================================================>//
 
 
@@ -127,11 +127,11 @@ describe('Test searchUsers API', () => {
             userId: "6559724774ef28cdd41db85a",
             friendId: "655985103c8251cfb26bb38e"
           });
-  
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual({"message": "Successfully Added Friend!"});
     });
-  
+
     it('should return 500 with an invalid username search', async () => {
       const response = await supertest(app)
         .post('/api/addFriend')
@@ -139,7 +139,7 @@ describe('Test searchUsers API', () => {
             userId: "6559724774ef28cdd41db85a",
             friendId: "655985103c8251cfb26bb38e"
           });
-  
+
       expect(response.status).toBe(500);
       expect(response.body).toEqual({"error": "Friend Already Added"});
     });
@@ -158,11 +158,11 @@ describe('Test searchUsers API', () => {
             userId: "6559724774ef28cdd41db85a",
             friendId: "655985103c8251cfb26bb38e"
           });
-  
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ message: "Successfully Removed Friend!" });
     });
-  
+
     it('should return 500 with an invalid username search', async () => {
       const response = await supertest(app)
         .post('/api/removeFriend')
@@ -170,7 +170,7 @@ describe('Test searchUsers API', () => {
             userId: "6559724774ef28cdd41db85a",
             friendId: "655985103c8251cfb26bb38e"
           });
-  
+
       expect(response.status).toBe(500);
       expect(response.body).toEqual({error: "Friend Not Found"});
     });
@@ -189,11 +189,11 @@ describe('Test searchUsers API', () => {
             userId: "654ff2f4c63d62079896ea4b",
             searchString: "Declan"
           });
-  
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual([{"firstName": "Declan", "lastName": "Parker", "leetCodeUsername": "Ar4mis", "userId": "655184bad077fc57debf74ae"}]);
     });
-  
+
     it('should return 500  with an invalid username search', async () => {
       const response = await supertest(app)
         .post('/api/searchFriends')
@@ -201,7 +201,7 @@ describe('Test searchUsers API', () => {
             userId: "655184bad077fc57debf74af",
             searchString: "John"
           });
-  
+
       expect(response.status).toBe(500);
       expect(response.body).toEqual({ error: "Failed to Find User Info"});
     });
@@ -223,7 +223,7 @@ describe('Test viewProfile API', () => {
         .send({
             userId: "655184bad077fc57debf74ae"
           });
-  
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         firstName: "Declan",
@@ -241,17 +241,17 @@ describe('Test viewProfile API', () => {
           hard: 0
         }
       });
-    });  
+    });
     it('should return 500 with a valid userid search', async () => {
         const response = await supertest(app)
           .post('/api/viewProfile')
           .send({
               userId: "655184bad077fc57debf74as"
             });
-    
+
         expect(response.status).toBe(500);
         expect(response.body).toEqual({error: "Failed to Find LeetCode Info"});
-      });  
+      });
   });
 
 
