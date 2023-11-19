@@ -18,7 +18,7 @@
     display: none;
 }
 
-.login {
+.inputBox {
     height: auto;
     width: 120%;
     margin-top: 3.6rem;
@@ -39,6 +39,14 @@
     margin-right: 100%;
 }
 
+.loginTxt {
+    position: relative;
+    margin-left: 9.5rem;
+    color: #fff;
+    font-size: 48px;
+    font-weight: 700;
+}
+
 .signUpTxt {
     position: relative;
     margin-left: 8rem;
@@ -47,9 +55,9 @@
     font-weight: 700;
 }
 
-.loginTxt {
+.verifyTxt {
     position: relative;
-    margin-left: 9.5rem;
+    margin-left: 9.75rem;
     color: #fff;
     font-size: 48px;
     font-weight: 700;
@@ -131,7 +139,47 @@ input::placeholder {
     color: rgba(176, 108, 39, 1);
     font-size: 1.5rem;
     border-radius: 40%;
-        border: solid 0.1rem rgba(176, 108, 39, 1);
+    border: solid 0.1rem rgba(176, 108, 39, 1);
+}
+
+.verifyMsg {
+    display: flex;
+    margin-top: 1rem;
+    text-align: center;
+    color: #b06c27;
+}
+
+.code {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.code input {
+    height: 3rem;
+    width: 3rem;
+    border-radius: 15%;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.username {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.username input {
+    margin-left: 1rem;
+    height: 3rem;
+    width: full;
+    outline: none;
+    color: #181817;
+    font-size: 1.5rem;
+    border-radius: 1rem;
+    padding: 0.5rem;
 }
 
 .submit-container {

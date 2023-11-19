@@ -491,28 +491,47 @@ exports.setApp = function (app, client) {
     });
 
     // *===========================================================*
-    // |                     Search Users API                      |
+    // |                     Search Friend API                     |
     // *===========================================================*
-    // Incoming: { searchString } (FirstName, lastName, or leetCodeUsername)
+    // Incoming: { userId, searchString } (FirstName, lastName, or leetCodeUsername)
     // Outgoing: { Array of { firstName, lastName, leetCodeUsername, userId } }
-    app.post('/api/searchUsers', async (req, res) => {
-        const { searchString } = req.body;
-        // If String is empty, return empty array
-        if (!searchString || searchString === "") {
-            res.status(500).json({ error: "No Search String" });
-            return;
+    app.post('/api/searchFriends', async (req, res) => {
+        const { userId, searchString } = req.body;
+
+        let userInfo;
+
+        try {
+            // Fetch the user's userInfo
+            userInfo = await db.collection('userInfo').findOne({ "loginInfoId": userId });
+            if (!userInfo) {
+                return res.status(500).json({ error: "Failed to Find User Info" });
+            }
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Database error occurred" });
         }
 
-        // Fetch the user's userInfo
-        const userInfo = await db.collection('userInfo').find({ $or: [{ firstName: { $regex: searchString, $options: 'i' } }, { lastName: { $regex: searchString, $options: 'i' } }, { leetCodeUsername: { $regex: searchString, $options: 'i' } }] }).toArray();
+        // Fetch the user's following
+        const following = userInfo.following;
+        let response;
+        let friendsInfo;
+
+        // If the searchString is empty, return the user's following
+        if (!searchString || searchString === "") {
+            friendsInfo = await db.collection('userInfo').find({ loginInfoId: { $in: following } }).toArray();
+        }
+        // If the searchString is not empty, return the user's following that match the searchString
+        else {
+            friendsInfo = await db.collection('userInfo').find({ $and: [{ $or: [{ firstName: { $regex: searchString, $options: 'i' } }, { lastName: { $regex: searchString, $options: 'i' } }, { leetCodeUsername: { $regex: searchString, $options: 'i' } }] }, { loginInfoId: { $in: following } }] }).toArray();
+        }
 
         // Format the response
-        const response = userInfo.map((user) => {
+        response = friendsInfo.map((friend) => {
             return {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                leetCodeUsername: user.leetCodeUsername,
-                userId: user.loginInfoId
+                firstName: friend.firstName,
+                lastName: friend.lastName,
+                leetCodeUsername: friend.leetCodeUsername,
+                userId: friend.loginInfoId
             };
         });
 
