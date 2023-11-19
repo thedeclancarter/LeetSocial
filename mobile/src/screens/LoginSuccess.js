@@ -6,7 +6,7 @@ import Leaderboard from '../components/leaderBoard';
 
 const LoginSuccess = ({ route, navigation }) => {
   const { userData } = route.params;
-
+  const id = userData.userId;
   const handleLogout = () =>{
     const remove = require('../functions/storage');
     remove.removeToken();
@@ -17,7 +17,7 @@ const LoginSuccess = ({ route, navigation }) => {
   return (
       <View style={styles.container}>
         <TouchableOpacity onPress={handleLogout}><Text>Logout</Text></TouchableOpacity>
-        <ProfileButton navigation={navigation} route={{ params: { userData } }} />
+        <ProfileButton navigation={navigation} route={{ params: { id } }} />
         <Text style={styles.text}>Welcome {userData.firstName} {userData.lastName}!</Text>
         <Text>{JSON.stringify(userData)}</Text>
         <Leaderboard /> 

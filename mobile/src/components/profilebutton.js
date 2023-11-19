@@ -4,12 +4,12 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 
 const ProfileButton = ({ route, navigation }) => {
-  const { userData } = route.params;
+  const { id } = route.params;
 
   return (
     <TouchableOpacity
       style={styles.button}
-      onPress={() => navigation.navigate('Profile', { userData })}>
+      onPress={() => navigation.navigate('Profile', { id })}>
       <Text style={styles.text}>Go to Profile</Text>
     </TouchableOpacity>
   );
