@@ -1,13 +1,8 @@
 // api.test.js
 
 const supertest = require('supertest');
-const app = require('./server'); // Assuming server.js exports the Express app
-let server;
+const { app, stopServer } = require('./server');
 
-beforeAll((done) => {
-  // Start the server before running tests
-  server = app.listen(3000, done); // Use a different port for testing
-});
 
 describe('Test API userSolvedCount',() => {
     it('Should return 200 with a valid Leetcode json output', async () => {
@@ -17,8 +12,8 @@ describe('Test API userSolvedCount',() => {
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual({ all: 4, easy: 4, medium: 0, hard: 0})
+            
     });
-
     it('Should return 500 with an invalid Leetcode Username', async () => {
         const response = await supertest(app)
         .post('/api/query')
@@ -48,7 +43,6 @@ describe('Test API Query',() => {
         expect(response.body).toEqual({ error: 'Failed to query the API' });
     });
 });
-
 
 
 describe('Test isValid API', () => {
@@ -113,14 +107,12 @@ describe('Test searchUsers API', () => {
     });
   });
 
-
-
-
+  
   //<==========================================================================================>//
 
 
   describe('Test addFriend API', () => {
-    it('should return 200 with a valid username search', async () => {
+    it('should return 200 with a valid friend id', async () => {
       const response = await supertest(app)
         .post('/api/addFriend')
         .send({
@@ -131,8 +123,8 @@ describe('Test searchUsers API', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({"message": "Successfully Added Friend!"});
     });
-
-    it('should return 500 with an invalid username search', async () => {
+  
+    it('should return 500 with a duplicate friend id', async () => {
       const response = await supertest(app)
         .post('/api/addFriend')
         .send({
@@ -149,9 +141,8 @@ describe('Test searchUsers API', () => {
 //<==========================================================================================>//
 
 
-
   describe('Test removeFriend API', () => {
-    it('should return 200 with a valid username search', async () => {
+    it('should return 200 with a valid friend id', async () => {
       const response = await supertest(app)
         .post('/api/removeFriend')
         .send({
@@ -162,8 +153,8 @@ describe('Test searchUsers API', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ message: "Successfully Removed Friend!" });
     });
-
-    it('should return 500 with an invalid username search', async () => {
+  
+    it('should return 500 with an invalid friend id', async () => {
       const response = await supertest(app)
         .post('/api/removeFriend')
         .send({
@@ -178,11 +169,8 @@ describe('Test searchUsers API', () => {
 
 //<==========================================================================================>//
 
-
-
-
   describe('Test searchFriend API', () => {
-    it('should return 200 with a valid username search', async () => {
+    it('should return 200 with a valid friend id', async () => {
       const response = await supertest(app)
         .post('/api/searchFriends')
         .send({
@@ -193,8 +181,8 @@ describe('Test searchUsers API', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual([{"firstName": "Declan", "lastName": "Parker", "leetCodeUsername": "Ar4mis", "userId": "655184bad077fc57debf74ae"}]);
     });
-
-    it('should return 500  with an invalid username search', async () => {
+  
+    it('should return 500  with an invalid friend id', async () => {
       const response = await supertest(app)
         .post('/api/searchFriends')
         .send({
@@ -256,14 +244,7 @@ describe('Test viewProfile API', () => {
 
 
 */
+afterAll( async () => {
+  stopServer();
 
-  afterAll((done) => {
-    // Close the server
-    server.close((err) => {
-      if (err) {
-        console.error(err);
-        done.fail(err);
-      }
-      done();
-    });
-  });
+});

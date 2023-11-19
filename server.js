@@ -51,8 +51,23 @@ var api = require('./api.js');
 api.setApp( app, client );
 
 // Start the server
-app.listen(PORT, () => {
-    // console.log('Server listening on port ' + PORT); // Debugging
+let server = app.listen(PORT, () => {
+
 });
 
-module.exports = app;
+
+
+const stopServer = () => {
+    // Call the close method on the server object, which presumably stops the server.
+    server.close((err) => {
+      // If there is an error while closing the server, log the error to the console.
+      if (err) {
+        console.error(err);
+      }
+    });
+  };
+  
+
+module.exports = {app, stopServer};
+
+
