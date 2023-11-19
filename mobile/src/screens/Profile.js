@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import { useState } from 'react';
 import QuestionPieChart from '../components/questionPieChart';
+import HeaderLogo from '../components/header';
 
 const Profile = ({route, navigation}) => {
     const { id } = route.params;
@@ -49,7 +50,7 @@ const Profile = ({route, navigation}) => {
 
     return (
         <View style={styles.container}>
-        <Header />
+        <HeaderLogo />
         {isLoading ? (
         <>
             <Text style={styles.text}>Loading...</Text>
@@ -63,11 +64,17 @@ const Profile = ({route, navigation}) => {
             onPress={() => navigation.goBack()}>
             <Text style={styles.text}>Back</Text>
         </TouchableOpacity>
+        <View style={styles.ProfileContainer}>
         <Text style={styles.text}>Profile</Text>
-        <Text style={styles.text}>LeetCode Username: {profileData?.leetCodeUsername}</Text>
-        <Text style={styles.text}>Top Language: {profileData?.topLanguage}</Text>
-        <Text style={styles.text}>Total Questions with Top Language: {profileData?.topLanguageCount}</Text>
-        <Text style={styles.text}>Questions Solved: {profileData?.solvedCount.all}</Text>
+        <Text style={styles.text}>
+        <Text style={styles.boldText}>LeetCode Username: </Text>{profileData?.leetCodeUsername}</Text>
+        <Text style={styles.text}>
+        <Text style={styles.boldText}>Top Language:</Text> {profileData?.topLanguage}
+        </Text>
+        <Text style={styles.text}>
+        <Text style={styles.boldText}>Total Questions with Top Language:</Text> {profileData?.topLanguageCount}
+        </Text>
+        </View>
         <QuestionPieChart  data={profileData}/>
         
         {/* rank among friends */}
@@ -85,8 +92,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#3c4749', // or any color you like
     color: 'white',
   },
+    ProfileContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#3c4749', // or any color you like
+        color: 'white',
+        borderWidth: 1,
+        borderColor: 'rgba(176, 108, 39, 1)',
+        borderRadius: 15,
+        padding: 10,
+        marginBottom: 20,
+    },
   text: {
     fontSize: 20,
+    color: 'white',
+  },
+  boldText: {
+    fontSize: 20,
+    fontWeight: 'bold',
     color: 'white',
   },
   button: {
@@ -94,15 +117,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     textAlign: 'center',
     color: 'white',
+    padding: 10,
+    position : 'absolute',
+    top: 50,
+    left: 20,
   },
 });
 
-const Header = () => {
-    return (
-        <View style={styles.header}>
-            <Text>Welcome!</Text>
-        </View>
-    );
-};
 
 export default Profile;

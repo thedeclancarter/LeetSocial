@@ -5,15 +5,14 @@ import GridBackground from "../components/gridBackground";
 import TextAnimation from "../components/logo";
 import Leaderboard from "../components/leaderBoard";
 import QuestionPieChart from "../components/questionPieChart";
+import HeaderLogo from "../components/header";
 
 const TestPage = () => {
     return (
 
             <SafeAreaView style={styles.container}>
-                <TextAnimation />
-                <Text style={styles.text}>what the fuck</Text>
+                <HeaderLogo />
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <QuestionPieChart />
                 </View>
             </SafeAreaView>
 
