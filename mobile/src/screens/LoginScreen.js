@@ -103,7 +103,9 @@ const LoginScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-                    <TextAnimation />
+                    <View style={styles.centeredView}>
+                        <TextAnimation />
+                    </View>
                     <View style={styles.loginContainer}>
                     <Text style={[styles.message, {color: isError ? 'red' : 'green'}]}>{message ? getMessage() : null}</Text>
                     {isSignUp && (
@@ -171,14 +173,17 @@ const LoginScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: '#3c4749',
         flex: 1,
-        backgroundColor: 'transparent',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
     },
     loginContainer: {
         margin: 20,
         padding: 20,
-        // backgroundColor: '#2e2f38', // Darker grey background for the form
-        backgroundColor: 'green', //for testing
+        backgroundColor: '#2e2f38', // Darker grey background for the form
         borderRadius: 5,
         elevation: 10, // Elevation for Android (adds shadow effect)
         // For iOS shadow
