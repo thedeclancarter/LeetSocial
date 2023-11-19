@@ -1,79 +1,84 @@
 import './UserInfo.css';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function UserInfo() {
-    var firstName;
-    var lastName;
-    var username;
-    var problemsSolved;
-    var topLanguage;
+    const [userData, setUserData] = useState({
+        firstName: '',
+        lastName: '',
+        username: '',
+        problemsSolved: '',
+        topLanguage: '',
+    });
 
-    // ADD IN WHEN API IS READY :)
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const _ud = sessionStorage.getItem('user_data');
+                const ud = JSON.parse(_ud);
+                const id = ud.id;
+                const obj = { userId: id };
+                const js = JSON.stringify(obj);
 
-    // useEffect(() => {
-    //   const fetchData = async () => {
-    //     var _ud = localStorage.getItem('userInfo');
-    //     var ud = JSON.parse(_ud);
-    //     var id = ud.id;
-    //     var obj = { id: id.value };
-    //     var js = JSON.stringify(obj);
+                const response = await fetch('https://leet-social-2e5f98883d68.herokuapp.com/api/viewProfile', {
+                    method: 'POST',
+                    body: js,
+                    headers: { 'Content-Type': 'application/json' },
+                });
 
-    //     try {
-    //       const response = await fetch('INSERTLINK', {
-    //         method: 'POST',
-    //         body: js,
-    //         headers: { 'Content-Type': 'application/json' },
-    //       });
+                console.log(response);
 
-    //       if (!response.ok) {
-    //         throw new Error('Network response was not ok');
-    //       }
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
 
-    //       const res = await response.json();
-    //       console.log(res);
+                const res = await response.json();
+                console.log(res);
 
-    //       var user = { firstName: res.firstName, lastName: res.lastName, username: res.username, problemsSolved: res.problemsSolved, topLanguage: res.topLanguage};
-    //       firstName = res.firstName;
-    //       lastName = res.lastName;
-    //       username = res.username;
-    //       problemsSolved = res.problemsSolved;
-    //       topLanguage = res.topLanguage;
-    //       sessionStorage.setItem('userInfo', JSON.stringify(user));
-    //     } catch (error) {
-    //       console.error('Error fetching data:', error);
-    //       alert(error.toString());
-    //     }
-    //   };
+                const user = {
+                    firstName: res.firstName,
+                    lastName: res.lastName,
+                    username: res.leetCodeUsername,
+                    problemsSolved: res.solvedCount.all,
+                    topLanguage: res.topLanguage,
+                };
 
-    //   fetchData(); // Call the asynchronous function when the component mounts
-    // }, []); // The empty dependency array ensures that this effect runs once after the initial render
+                setUserData(user);
+                sessionStorage.setItem('userInfo', JSON.stringify(user));
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                alert(error.toString());
+            }
+        };
+
+        fetchData(); // Call the asynchronous function when the component mounts
+    }, []); // The empty dependency array ensures that this effect runs once after the initial render
 
     return (
         <div className="user">
             <div className="userInfo">
                 <div className="info">
-                    <br></br>
-                    <span id="firstName">First Name: {firstName}</span>
-                    <br></br>
-                    <br></br>
-                    <br></br>
-                    <br></br>
-                    <span id="lastName">Last Name: {lastName}</span>
+                    {/* <br></br> */}
+                    <span id="firstName">First Name: {userData.firstName}</span>
                     <br></br>
                     <br></br>
                     <br></br>
                     <br></br>
-                    <span id="email">Email: </span>
+                    <span id="lastName">Last Name: {userData.lastName}</span>
                     <br></br>
                     <br></br>
                     <br></br>
                     <br></br>
-                    <span id="lcUsername">LeetCode Username: </span>
+                    <span id="leetCode">LeetCode Username: {userData.username}</span>
                     <br></br>
                     <br></br>
                     <br></br>
                     <br></br>
-                    <span id="problemsSolved">Problems Solved: </span>
+                    <span id="topLanguage">Top Language: {userData.topLanguage}</span>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <span id="problemsSolved"># Problems Solved: {userData.problemsSolved}</span>
                 </div>
             </div>
         </div>

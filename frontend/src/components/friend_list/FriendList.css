@@ -10,11 +10,11 @@
     background-color: #2a2a2a;
     color: white;
     border-radius: 5px;
-    margin: 80px;
-    margin-top: 80px;
+    margin-right: 50px;
     justify-content: center;
     align-items: center;
     position: absolute;
+    top: 25%;
     right: 0;
     overflow-y: auto;
     max-height: 50%;
@@ -68,4 +68,32 @@ td {
 #removeButton:hover {
     background-color: #de9348;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Styles the scrollbar track */
+.friendList::-webkit-scrollbar-track {
+    background-color: #2A2A2A;
+    /* A dark track color */
+}
+
+/* Styles the scrollbar thumb */
+.friendList::-webkit-scrollbar-thumb {
+    background-color: white;
+    /* An orange thumb color */
+    border-radius: 10px;
+    /* Rounded corners for the thumb */
+    border: 3px solid #2A2A2A;
+    /* A dark border for the thumb */
+}
+
+/* Styles the scrollbar itself */
+.friendList::-webkit-scrollbar {
+    width: 12px;
+    /* The width of the scrollbar */
+}
+
+/* Optional: Styles the scrollbar buttons */
+.friendList::-webkit-scrollbar-button {
+    background-color: #2A2A2A;
+    /* An orange color */
 }

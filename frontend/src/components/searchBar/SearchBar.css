@@ -1,0 +1,123 @@
+/* Styles for the search bar component */
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    /* margin-left: auto;  */
+    padding: 0 0;
+    margin: 15px 0;
+    flex-grow: 1; /* allows the item to grow to fill available space */
+    flex-shrink: 0; /* prevents the item from shrinking smaller than its content */
+    max-width: 30%; /* prevents the item from growing too large */
+}
+
+.search-input {
+    padding: 0.5rem 1rem;
+    border: 2px solid #ffa500; /* Orange border to match the theme */
+    border-radius: 20px; /* Rounded borders */
+    background-color: #333; /* Dark background to match the navbar */
+    color: white; /* Text color to match the navbar */
+    font-size: 1rem; /* Font size to match the navbar items */
+    outline: none; /* Removes the outline to match the style */
+    max-height: 40px; /* Sets a maximum height to fit the navbar */
+    width: 100%; /* Full width to fill the container */
+    box-sizing: border-box; /* Ensures padding doesn't affect the final width */
+    transition: ease-in .15s;
+}
+
+.search-input::placeholder {
+    color: #aaa; /* Lighter text color for placeholder to match the theme */
+}
+
+.search-input:focus {
+    border-color: #ff8c00; /* Slightly lighter orange for focus */
+    box-shadow: 0 0 8px #ff8c00; /* Glowing effect on focus */
+    transition: ease-in .15s;
+}
+
+/* Dropdown results styling */
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #333; /* Dark background to match the navbar */
+    color: white;
+    border-radius: 8px 8px 8px 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-x: hidden; /* Hide the overflow */
+    overflow-y: auto; /* Enable vertical scrolling */
+    z-index: 5; /* Ensure the dropdown appears on top */
+    max-height: 1000%;
+    justify-content: space-between;
+}
+
+.search-item {
+    padding: 0.5rem 1rem;
+    border-top: 1px solid #444; /* Slightly lighter border for item separation */
+    transition: background-color 0.3s ease; /* Transition for hover effect */
+    display: flex;
+    align-items: center;
+}
+
+.search-item span{
+    flex-grow: 1;
+}
+.icon {
+    height: 20px; /* Adjust as needed */
+    width: 20px; /* Adjust as needed */
+    margin-right: 10px; /* Space between icon and text */
+    margin-left: 10px; /* Space between icon and text */
+    cursor: pointer; /* Changes cursor to pointer on hover */
+    flex-shrink: 0;
+}
+
+.search-item:first-child {
+    border-top: none; /* No border for the first item */
+}
+
+.search-item:hover {
+    background-color: #505050; /* Darker background on hover */
+}
+
+/* Responsiveness for smaller screens */
+@media (max-width: 768px) {
+    .search-input {
+        width: 100%; /* Full width on smaller screens */
+        margin: 0.5rem 0; /* Adjust margin for stacked layout */
+    }
+
+    .search-results {
+        width: calc(100% - 2rem); /* Adjust width to account for padding */
+        margin: 0 1rem; /* Center the dropdown */
+    }
+}
+
+/* Styles the scrollbar track */
+.search-results::-webkit-scrollbar-track {
+    background-color: #2A2A2A;
+    /* A dark track color */
+}
+
+/* Styles the scrollbar thumb */
+.search-results::-webkit-scrollbar-thumb {
+    background-color: white;
+    /* An orange thumb color */
+    border-radius: 10px;
+    /* Rounded corners for the thumb */
+    border: 3px solid #2A2A2A;
+    /* A dark border for the thumb */
+}
+
+/* Styles the scrollbar itself */
+.search-results::-webkit-scrollbar {
+    width: 12px;
+    /* The width of the scrollbar */
+}
+
+/* Optional: Styles the scrollbar buttons */
+.search-results::-webkit-scrollbar-button {
+    background-color: #FFA500;
+    /* An orange color */
+}
+
