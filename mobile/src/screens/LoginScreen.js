@@ -2,20 +2,23 @@ import React, {useState} from "react";
 import { SafeAreaView, View, StyleSheet, StatusBar , TextInput, Button,TouchableOpacity, Text, Alert, LogBox} from "react-native";
 import TextAnimation from "../components/logo"; // Make sure the path is correct
 import { navigate } from "../../App";
-
-import { jwtDecode } from "jwt-decode";
+// import jwtDecode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { storeToken, getToken, removeToken } from "../functions/storage";
+
 
 const apiBaseUrl = 'http://www.leetsocial.com';
-
+const jwtDecode = require('jwt-decode');
    
 const LoginScreen = () => {
     const [isSignUp, setIsSignUp] = useState(false);
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState('testing@test.com'); //remove later this is for testing
+    // const [email, setEmail] = useState(''); 
     const [confirmPassword, setConfirmPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState('password'); //remove later this is for testing
+    // const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
         // ... additional state fields as needed
@@ -25,7 +28,7 @@ const LoginScreen = () => {
                     email:email,
                     password:password,
                 };
-            fetch('http://localhost:5102/api/login',{
+            fetch(apiBaseUrl+'/api/login',{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,7 +44,10 @@ const LoginScreen = () => {
                     }
                     else {
                         setIsError(false);
-                        navigate('LoginSuccess', {data: jsonRes});
+                        const token = jsonRes.accessToken;
+                        await storeToken(token);
+                        const decoded = jwtDecode(token);
+                        navigate('LoginSuccess', {userData:decoded});
                     }
                 }catch (err){
                     console.log(err);
@@ -65,7 +71,7 @@ const LoginScreen = () => {
             firstName:firstName,
             lastName:lastName,
             };
-            fetch('http://localhost:5102/api/signup',{
+            fetch(apiBaseUrl+'/api/signup',{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -131,7 +137,7 @@ const LoginScreen = () => {
                             placeholder="Email"
                             placeholderTextColor={'black'}
                             value={email}
-                            onChangeText={newText => setEmail(newText)}
+                            // onChangeText={newText => setEmail(newText)}
                             autoCapitalize="none"
                         />
                         <TextInput
@@ -140,7 +146,7 @@ const LoginScreen = () => {
                             placeholderTextColor={'black'}
                             // secureTextEntry
                             value={password}
-                            onChangeText={newText => setPassword(newText)}
+                            // onChangeText={newText => setPassword(newText)}
                             autoCapitalize="none"
                         />
                         {isSignUp && (

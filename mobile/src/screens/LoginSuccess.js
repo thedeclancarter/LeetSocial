@@ -1,18 +1,19 @@
 // Login successful screen
 import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import ProfileButton from '../components/profileButton';
 import Leaderboard from '../components/leaderBoard';
 
 const LoginSuccess = ({ route, navigation }) => {
-    const { data } = route.params;
+  const { userData } = route.params;
+  console.log(userData);
+
 
   return (
       <View style={styles.container}>
         <ProfileButton navigation={navigation}/>
-        <Text style={styles.text}>Login Successful!</Text>
-        <Text>{JSON.stringify(data)}</Text>
-        <Text>{data.leetCodeUsername}</Text>
+        <Text style={styles.text}>Hello {userData.firstName}</Text>
+        <Text>{JSON.stringify(userData)}</Text>
         <Leaderboard /> 
     </View>
   );
