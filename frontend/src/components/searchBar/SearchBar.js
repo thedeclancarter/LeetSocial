@@ -5,7 +5,8 @@ import checkMarkIcon from '../../assets/white-checkmark-in-circle-md.png'; // Pa
 import axios from 'axios';
 var bp = require('../../path.js');
 
-function SearchBar({ onSearch }) {
+function SearchBar(props) {
+    const { isUpdate, setUpdate, onSearch } = props;
     const [searchTerm, setSearchTerm] = useState('');
     const [showResults, setShowResults] = useState(false);
     const [isMouseInside, setIsMouseInside] = useState(false);
@@ -46,6 +47,7 @@ function SearchBar({ onSearch }) {
                 item.userId === friendId ? { ...item, isFollowing: !isFollowing } : item
             );
             setSearchData(updatedSearchData);
+            setUpdate(!isUpdate);
         } catch (error) {
             console.error('Error updating friend status', error);
         }

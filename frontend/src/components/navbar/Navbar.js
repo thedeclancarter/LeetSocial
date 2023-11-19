@@ -5,13 +5,13 @@ import Logo from '../logo/Logo'
 import SearchBar from '../searchBar/SearchBar';
 
 export default function Navbar(props) {
+    const { isLogin, setLogin, setHome, isUpdate, setUpdate } = props;
     var _ud = sessionStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
     var userId = ud.id;
     var firstName = ud.firstName;
     var lastName = ud.lastName;
 
-    const { isLogin, setLogin, setHome } = props;
     // Populate navbar with title and links to profile and add friend
     return (
         <nav className={isLogin ? 'nav show': 'nav hide'}>
@@ -56,7 +56,7 @@ export default function Navbar(props) {
                     Logout
                 </CustomLink>
                 </ul>
-                <SearchBar /* onSearch={handleSearch} Uncomment if you have search logic here */ />
+                <SearchBar isUpdate={isUpdate} setUpdate={setUpdate} /* onSearch={handleSearch} Uncomment if you have search logic here */ />
         </nav>
     );
 };
