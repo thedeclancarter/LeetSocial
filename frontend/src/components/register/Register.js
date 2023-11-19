@@ -10,7 +10,6 @@ var bp = require('../../path.js');
 export default function Register(props) {
     const { isLogin, setLogin } = props;
     var [action, setAction] = useState("Login");
-    var [isSignUp, setSignUp] = useState(false);
     var [hasCapital, setCapital] = useState(false);
     var [hasSpecialChar, setSpecialChar] = useState(false);
     var [hasNum, setNum] = useState(false);
@@ -59,20 +58,39 @@ export default function Register(props) {
             if (action === "Login") {
                 doLogin(event);
             } else {
+                setFirstName(true);
+                setLastName(true);
+                setEmail(true);
+                setPassword(true);
+                setCode(true);
+                setUsername(true);
+                setMessage("");
                 setAction("Login");
-                setSignUp(!isSignUp);
             }
         }
         else if (buttonName === "Sign Up") {
             if (action === "Sign Up") {
                 doSignUp(event);
             } else {
+                setEmail(true);
+                setPassword(true);
+                setMessage("");
                 setAction("Sign Up");
-                setSignUp(!isSignUp);
             }
         }
         else if (buttonName === "Verify") {
             doVerify(event);
+        }
+        else if (buttonName === "Send") {
+            if (action === "Send Email") {
+                doSendEmail(event);
+            } else {
+                setMessage("");
+                setAction("Send Email");
+            }
+        }
+        else if (buttonName === "Change") {
+            doPasswordChange(event);
         }
     };
 
@@ -123,8 +141,6 @@ export default function Register(props) {
             setPassword(true);
         }
 
-        console.log(hasFirstName, hasLastName, hasEmail, hasPassword);
-
         if (!hasFirstName || !hasLastName || !hasEmail || !hasPassword)
             return;
 
@@ -159,7 +175,6 @@ export default function Register(props) {
         }
         catch (e) {
             alert(e.toString());
-            return;
         }
     };
 
@@ -199,7 +214,6 @@ export default function Register(props) {
             var storage = require('../../tokenStorage.js');
             storage.storeToken(res);
             const { accessToken } = res;
-            console.log(res);
             const decoded = decode(accessToken, { complete: true });
 
             // Assign Local Vars
@@ -222,7 +236,6 @@ export default function Register(props) {
         }
         catch (e) {
             alert(e.toString());
-            return;
         }
     };
 
@@ -252,7 +265,7 @@ export default function Register(props) {
         if (!hasCode || !hasUsername)
             return;
 
-        var obj = {token: verificationCode, leetCodeUsername: leetCodeUsername.value};
+        var obj = { token: verificationCode, leetCodeUsername: leetCodeUsername.value };
         var body = JSON.stringify(obj);
 
         try {
@@ -275,6 +288,95 @@ export default function Register(props) {
         }
     };
 
+    const doSendEmail = async event => {
+        event.preventDefault();
+
+        if (!emailRegEx.test(email.value)) {
+            hasEmail = false;
+            setEmail(false);
+        }
+        else {
+            hasEmail = true;
+            setEmail(true);
+        }
+
+        if (!hasEmail)
+            return;
+
+        var obj = { email: email.value };
+        var body = JSON.stringify(obj);
+
+        try {
+            const response = await fetch(bp.buildPath('api/requestPasswordChange'),
+            {
+                method: 'POST',
+                body: body,
+                headers: { 'Content-Type': 'application/json'}
+            });
+
+            const res = await response.json();
+
+            if (response.status === 200) {
+                setMessage("Email sent");
+                setAction("Change Password");
+            } else {
+                setMessage(res.error);
+            }
+        } catch (e) {
+            alert(e.toString());
+        }
+    };
+
+    const doPasswordChange = async event => {
+        event.preventDefault();
+
+        const verificationCode = "" + digit1.value + digit2.value + digit3.value + digit4.value
+            + digit5.value;
+
+        if (verificationCode.length != 5) {
+            hasCode = false;
+            setCode(false);
+        }
+        else {
+            hasCode = true;
+            setCode(true);
+        }
+
+        if (!hasCapital || !hasSpecialChar || !hasNum || !has8) {
+            hasPassword = false;
+            setPassword(false);
+        }
+        else {
+            hasPassword = true;
+            setPassword(true);
+        }
+
+        if (!hasCode || !hasPassword)
+            return;
+
+        var obj = { token: verificationCode, newPassword: password.value }
+        var body = JSON.stringify(obj);
+
+        try {
+            const response = await fetch(bp.buildPath('api/changePassword'),
+            {
+                method: 'POST',
+                body: body,
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const res = await response.json();
+
+            if (response.status === 200)
+                setMessage("Password change successful, you may now login");
+            else
+                setMessage(res.error);
+
+        } catch (e) {
+
+        }
+    };
+
     return (
         <div className={isLogin ? "container hide" : "container show"}>
             <div className='inputBox'>
@@ -283,12 +385,20 @@ export default function Register(props) {
                         className={
                             action === "Login" ? 'loginTxt':
                             action === "Sign Up" ? 'signUpTxt':
-                            'verifyTxt'
+                            action === "Verify" ? 'verifyTxt':
+                            action === "Send Email" ? 'sendEmailTxt':
+                            'passwordTxt'
                         }
                     >
                         {action}
                     </div>
-                    <div className="underline"></div>
+                    <div className={`underline ${
+                        action === "Login" ? '' :
+                        action === "Sign Up" ? 'underlineSU' :
+                        action === "Verify" ? 'underlineVfy' :
+                        action === "Send Email" ? 'underlineSE':
+                        'underlinePswd'
+                    }`}></div>
                 </div>
                 <div className="inputs">
                     {(action === "Login" || action === "Sign Up") ? (
@@ -340,7 +450,7 @@ export default function Register(props) {
                                 type="password"
                                 placeholder="Password"
                                 ref={(c) => password = c}
-                                onChange={(action === "Sign Up") ? handleInputChange : () => { }}
+                                onChange={(action === "Sign Up") ? handleInputChange : () => {}}
                             />
                         </div>
                         {(!hasPassword) && (
@@ -388,10 +498,10 @@ export default function Register(props) {
                                 </p>
                             </div>
                         )}
-                        </>): (
+                        </>): action === "Verify" ? (
                         <>
                             <p className='verifyMsg'>
-                                Please insert verification code sent to your email and your LeetCode username
+                                Refer to email for verification code
                             </p>
                             <div className='code'>
                                 <FontAwesomeIcon icon={faHashtag} className="faIcons"/>
@@ -439,8 +549,113 @@ export default function Register(props) {
                                     * Invalid username *
                                 </p>
                             )}
-                        </>)}
-                    </div>
+                        </>): action === "Send Email" ? (
+                        <>
+                            <p className='verifyMsg'>
+                                Provide your login email
+                            </p>
+                            <div className="input">
+                                <FontAwesomeIcon icon={faEnvelope} className="faIcons" />
+                                <input type="text" placeholder="Email" ref={(c) => email = c} />
+                            </div>
+                            {(!hasEmail) && (
+                                <p className="inputErr">
+                                    * Invalid email address *
+                                </p>
+                            )}
+                        </>): (
+                        <>
+                            <p className='verifyMsg'>
+                                Refer to email for verification code
+                            </p>
+                            <div className='code'>
+                                <FontAwesomeIcon icon={faHashtag} className="faIcons" />
+                                <input
+                                    type='text'
+                                    placeholder="0"
+                                    ref={c => digit1 = c}
+                                />
+                                <input
+                                    type='text'
+                                    placeholder="0"
+                                    ref={c => digit2 = c}
+                                />
+                                <input
+                                    type='text'
+                                    placeholder="0"
+                                    ref={c => digit3 = c}
+                                />
+                                <input
+                                    type='text'
+                                    placeholder="0"
+                                    ref={c => digit4 = c}
+                                />
+                                <input
+                                    type='text'
+                                    placeholder="0"
+                                    ref={c => digit5 = c}
+                                />
+                            </div>
+                            {(!hasCode) && (
+                                <p className="inputErr">
+                                    * Invalid code *
+                                </p>
+                            )}
+                            <div className="input">
+                                <FontAwesomeIcon icon={faLock} className="faIcons" />
+                                <input
+                                    type="password"
+                                    placeholder="New Password"
+                                    ref={(c) => password = c}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            {(!hasPassword) && (
+                                <p className="inputErr">
+                                    * Invalid password *
+                                </p>
+                            )}
+                            <div className="checks">
+                                <p>
+                                    <FontAwesomeIcon
+                                        icon={hasCapital ? faCheck : faTimes}
+                                        className={hasCapital ? "faCheck circle" : "faTimes circle"}
+                                    />
+                                    <span className={hasCapital ? "orange100" : "orange50"}>
+                                        Capital Letters
+                                    </span>
+                                </p>
+                                <p>
+                                    <FontAwesomeIcon
+                                        icon={hasSpecialChar ? faCheck : faTimes}
+                                        className={hasSpecialChar ? "faCheck circle" : "faTimes circle"}
+                                    />
+                                    <span className={hasSpecialChar ? "orange100" : "orange50"}>
+                                        Special Characters
+                                    </span>
+                                </p>
+                                <p>
+                                    <FontAwesomeIcon
+                                        icon={hasNum ? faCheck : faTimes}
+                                        className={hasNum ? "faCheck circle" : "faTimes circle"}
+                                    />
+                                    <span className={hasNum ? "orange100" : "orange50"}>
+                                        Numbers
+                                    </span>
+                                </p>
+                                <p>
+                                    <FontAwesomeIcon
+                                        icon={has8 ? faCheck : faTimes}
+                                        className={has8 ? "faCheck circle" : "faTimes circle"}
+                                    />
+                                    <span className={has8 ? "orange100" : "orange50"}>
+                                        8+ Characters
+                                    </span>
+                                </p>
+                            </div>
+                        </>)
+                    }
+                </div>
                 <div className="submit-container">
                     <input
                         className={action !== "Login" ? "submit white" : "submit"}
@@ -452,12 +667,33 @@ export default function Register(props) {
                     <input
                         className={action === "Login" ? "submit white" : "submit"}
                         type="submit"
-                        value={action === "Verify" ? "Verify": "Sign Up"}
-                        name={action === "Verify" ? 'Verify': 'Sign Up'}
+                        value={
+                            action === "Verify" ? "Verify" :
+                            action === "Change Password" ? "Change" :
+                            action === "Send Email" ? "Send" :
+                            "Sign Up"
+                        }
+                        name={
+                            action === "Verify" ? "Verify" :
+                            action === "Change Password" ? "Change" :
+                            action === "Send Email" ? "Send":
+                            "Sign Up"
+                        }
                         onClick={handleButtonClick}
                     />
                 </div>
                 <span className="inputErr">{message}</span>
+                {(action === "Login") && (
+                    <div className="forgotPassword">
+                        <button
+                            className="forgotButton"
+                            name="Send"
+                            onClick={handleButtonClick}
+                        >
+                            Forgot password?
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

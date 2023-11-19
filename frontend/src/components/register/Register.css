@@ -63,14 +63,51 @@
     font-weight: 700;
 }
 
-.underline {
+.sendEmailTxt {
+    position: relative;
+    margin-left: 5rem;
+    color: #fff;
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.passwordTxt {
+    position: relative;
+    margin-left: 0.4rem;
+    color: #fff;
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.underline, .underlineSU, .underlineVfy, .underlineSE, .underlinePswd {
     position: absolute;
     margin-top: 5rem;
-    margin-left: 12rem;
-    width: 4rem;
+    margin-left: 11.5rem;
+    width: 5rem;
     height: 0.5rem;
     background: #fff;
     border-radius: 1rem;
+    transition: width 1s, margin-left 1s;
+}
+
+.underlineSU {
+    width: 8rem;
+    margin-left: 10rem;
+}
+
+.underlineVfy {
+    width: 5.5rem;
+    margin-left: 11rem;
+}
+
+.underlineSE {
+    width: 13rem;
+    margin-left: 7rem;
+}
+
+.underlinePswd {
+    width: 16rem;
+    margin-left: 5.75rem;
 }
 
 .inputs {
@@ -144,6 +181,7 @@ input::placeholder {
 
 .verifyMsg {
     display: flex;
+    justify-content: center;
     margin-top: 1rem;
     text-align: center;
     color: #b06c27;
@@ -185,8 +223,9 @@ input::placeholder {
 .submit-container {
     display: flex;
     justify-content: center;
-    margin-top: 2rem;
     gap: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .submit {
@@ -195,7 +234,6 @@ input::placeholder {
     align-items: center;
     width: 12rem;
     height: 3.5rem;
-    margin-bottom: 2rem;
     color: #fff;
     background: #b06c27;
     border-radius: 3rem;
@@ -233,4 +271,21 @@ input::placeholder {
 
 .orange50 {
     color: rgba(176, 108, 39, 0.5);
+}
+
+.forgotPassword {
+    display: flex;
+    justify-content: center;
+}
+
+.forgotButton {
+    font-size: small;
+    color: #b06c27;
+    background-color: #3c3b39;
+}
+
+.forgotButton:hover {
+    font-size: medium;
+    text-decoration-line: underline;
+    background-color: #3c3b39;
 }
