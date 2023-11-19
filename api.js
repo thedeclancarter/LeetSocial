@@ -16,7 +16,10 @@ exports.setApp = function (app, client) {
     // Incoming: { email, password }
     // Outgoing: { firstName, lastName, id }
     app.post('/api/login', async (req, res, next) => {
-        const { email, password } = req.body;
+        let { email, password } = req.body;
+
+        // Ensure all lowercase
+        email = email.toLowerCase();
 
         const user = await db.collection('loginInfo').findOne({ email, password });
 
@@ -32,8 +35,8 @@ exports.setApp = function (app, client) {
 
         // Set the response header to include the JWT token
         const { _id: id } = user;
-        const { firstName, lastName } = nameInfo;
-        const token = require("./createJWT.js").createToken(firstName, lastName, id);
+        const { firstName, lastName, leetCodeUsername } = nameInfo;
+        const token = require("./createJWT.js").createToken(firstName, lastName, id, leetCodeUsername);
 
         res.status(200).json(token);
     });
@@ -44,7 +47,12 @@ exports.setApp = function (app, client) {
     // Incoming: { email, password, firstName, lastName }
     // Outgoing: { status }
     app.post('/api/signup', async (req, res) => {
-        const { email, password, firstName, lastName } = req.body;
+        let { email, password, firstName, lastName } = req.body;
+
+        // Ensure all lowercase
+        email = email.toLowerCase();
+        // firstName = firstName.toLowerCase();
+        // lastName = lastName.toLowerCase();
 
         // Check if the email already exists in the database
         const existingUser = await db.collection('loginInfo').findOne({ email });
@@ -58,11 +66,15 @@ exports.setApp = function (app, client) {
         let existingHash;
         do
         {
-            // Generate a random set of bytes
-            const randomBytes = crypto.randomBytes(16);
+            hash = '';
+            while (hash.length < 5) {
+                let randomValues = new Uint8Array(1);
+                crypto.getRandomValues(randomValues);
 
-            // Create a SHA-256 hash of the random bytes
-            hash = crypto.createHash('sha256').update(randomBytes).digest('hex');
+                // Convert the random byte to a string and take its last character
+                let digit = (randomValues[0] % 10).toString();
+                hash += digit;
+            }
 
             // Check if the hash exists in the database
             existingHash = await db.collection('loginInfo').findOne({ "verificationToken": hash });
@@ -106,9 +118,7 @@ exports.setApp = function (app, client) {
             // Format the email content
             var htmlContent = `
                 <h1> Hello, ${firstName}!</h1>
-                Please click on the following link to verify your email:
-                <a href="http://LeetSocial.com/verify?token=${hash}">Verify Email</a>`;
-            // <a href="http://localhost:3000/verify?token=${hash}">Verify Email</a>`;
+                Please type in the following code to verify your email: ${hash}`;
 
             await mg.messages.create('leetsocial.com', {
                 from: "Post Master General <postmaster@leetsocial.com>",
@@ -122,6 +132,7 @@ exports.setApp = function (app, client) {
             return res.status(500).json({ error: "failed to send verification email" });
         }
 
+        return res.status(201).json({ message: "Added to register Successfully / Email Verification Sent" }); // XXX
     });
 
     // *===========================================================*
@@ -154,6 +165,9 @@ exports.setApp = function (app, client) {
 
             // Update the user's verification status
             await db.collection('loginInfo').updateOne({ _id: loginInfo._id }, { $set: { "verified": true } });
+
+            // Clean the user's verification token
+            await db.collection('loginInfo').updateOne({ _id: loginInfo._id }, { $set: { "verificationToken": "" } });
         } catch (err) {
             console.error(err);
             return res.status(500).json({ error: "Failed to Update User Data" });
@@ -167,25 +181,56 @@ exports.setApp = function (app, client) {
     // *===========================================================*
     // |                Request Password Change API                |
     // *===========================================================*
-    // Incoming: { loginInfoId }
+    // Incoming: { email }
     // Outgoing: { status }
     app.post('/api/requestPasswordChange', async (req, res) => {
-        const { loginInfoId } = req.body;
+        const { email } = req.body;
 
         let document;
 
         try {
             // Verify the user's exists
-            document = await db.collection('loginInfo').findOne({ _id: new ObjectId(loginInfoId) });
+            document = await db.collection('loginInfo').findOne({ email });
             if (!document) {
-                return res.status(500).json({ error: "Failed to Find Verification Hash" });
+                return res.status(500).json({ error: "Failed to Email" });
+            }
+            else if (document.verified === false) {
+                return res.status(500).json({ error: "User Not Verified" });
             }
         } catch (err) {
             return res.status(500).json({ error: "Database error occurred" });
         }
 
-        if (document.verified === false) {
-            return res.status(500).json({ error: "User Not Verified" });
+        // Loop until a unique hash is generated
+        let hash;
+        let existingHash;
+        do {
+            hash = '';
+            while (hash.length < 5) {
+                let randomValues = new Uint8Array(1);
+                crypto.getRandomValues(randomValues);
+
+                // Convert the random byte to a string and take its last character
+                let digit = (randomValues[0] % 10).toString();
+                hash += digit;
+            }
+            // // Generate a random set of bytes
+            // hash = crypto.randomBytes(5);
+
+            // Check if the hash exists in the database
+            existingHash = await db.collection('loginInfo').findOne({ "verificationToken": hash });
+        } while (existingHash);
+
+        console.log('Document to update:', document);
+        console.log('Generated hash:', hash);
+
+        // Set Verification Token
+        try {
+            // Update the user's verification token
+            await db.collection('loginInfo').updateOne({ _id: document._id }, { $set: { "verificationToken": hash } });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Failed to Update User Data" });
         }
 
         try{
@@ -194,23 +239,22 @@ exports.setApp = function (app, client) {
             const Mailgun = require('mailgun.js');
             const mailgun = new Mailgun(formData);
             const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY });
-
+            console.log(email);
             // Format the email content
             var htmlContent = `
-                <h1> Hello! </h1>
-                Please click on the following link to reset your password:
-                <a href="http://LeetSocial.com/forgotPassword?token=${document.verificationToken}">Verify Email</a>`;
-            // <a href="http://localhost:3000/verify?token=${hash}">Verify Email</a>`;
+                <h1> Hello!</h1>
+                Please type in the following code to reset your password: ${hash}`;
 
             await mg.messages.create('leetsocial.com', {
                 from: "Post Master General <postmaster@leetsocial.com>",
-                to: [document.email],
+                to: [email],
                 subject: "Forgot Password; LeetSocial",
                 html: htmlContent
             });
 
-            return res.status(200).json({ message: "Added to Password Reset Sent" });
+            return res.status(200).json({ message: "Password Reset Sent" });
         } catch (err) {
+            console.log(err);
             return res.status(500).json({ error: "failed to send verification email" });
         }
     });
@@ -226,9 +270,15 @@ exports.setApp = function (app, client) {
 
         try {
             // Fetch the user's loginInfo
-            loginInfo = await db.collection('loginInfo').findOne({ "verificationToken": token }, { projection: { _id: 1, verified: 1 } });
+            loginInfo = await db.collection('loginInfo').findOne({ "verificationToken": token });
             if (!loginInfo) {
                 return res.status(500).json({ error: "Failed to Find Verification Hash" });
+            }
+            else if (loginInfo.verified === false) {
+                return res.status(500).json({ error: "User Not Verified" });
+            }
+            else if (loginInfo.verificationToken === "") {
+                return res.status(500).json({ error: "No Token Requested" });
             }
         } catch (err) {
             console.error(err);
@@ -347,60 +397,54 @@ exports.setApp = function (app, client) {
     });
 
     // *===========================================================*
-    // |                     Search Friend API                     |
+    // |                     Search Users API                      |
     // *===========================================================*
-    // Incoming: { userId, searchString } (FirstName, lastName, or leetCodeUsername)
-    // Outgoing: { Array of { firstName, lastName, leetCodeUsername, userId } }
-    app.post('/api/searchFriends', async (req, res) => {
-        const { userId, searchString } = req.body;
+    // Incoming: { searchString, userID } (FirstName, lastName, or leetCodeUsername, userID of the requester)
+    // Outgoing: { Array of { firstName, lastName, leetCodeUsername, userId, isFriend } }
+    app.post('/api/searchUsers', async (req, res) => {
+        const { searchString, userId } = req.body;
 
-        let userInfo;
+        // // If String is empty, return empty array
+        // if (!searchString || searchString === "") {
+        //     res.status(500).json({ error: "No Search String" });
+        //     return;
+        // }
 
-        try {
-            // Fetch the user's userInfo
-            userInfo = await db.collection('userInfo').findOne({ "loginInfoId": userId });
-            if (!userInfo) {
-                return res.status(500).json({ error: "Failed to Find User Info" });
-            }
-        } catch (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Database error occurred" });
+        // Create the search query with exclusion of the current user
+        let searchQuery = {
+            $and: [
+                { loginInfoId: { $ne: userId } }, // Exclude the current user
+                {
+                    $or: [
+                        { firstName: { $regex: searchString, $options: 'i' } },
+                        { lastName: { $regex: searchString, $options: 'i' } },
+                        { leetCodeUsername: { $regex: searchString, $options: 'i' } }
+                    ]
+                }
+            ]
+        };
+
+        // Fetch the user's userInfo
+        const usersInfo = await db.collection('userInfo').find(searchQuery).toArray();
+
+        // Optionally, fetch the friend list of the requester if userID is provided
+        let requesterFollowing = [];
+        if (userId) {
+            const requesterInfo = await db.collection('userInfo').findOne( {"loginInfoId": userId} );
+            requesterFollowing = requesterInfo ? requesterInfo.following : [];
         }
 
-        // Fetch the user's following
-        const following = userInfo.following;
-        let response;
 
-        // If the searchString is empty, return the user's following
-        if (!searchString || searchString === "") {
-            // Fetch the user's friends' info
-            const friendsInfo = await db.collection('userInfo').find({ loginInfoId: { $in: following } }).toArray();
-
-            // Format the response
-            response = friendsInfo.map((friend) => {
-                return {
-                    firstName: friend.firstName,
-                    lastName: friend.lastName,
-                    leetCodeUsername: friend.leetCodeUsername,
-                    userId: friend.loginInfoId
-                };
-            });
-        }
-        // If the searchString is not empty, return the user's following that match the searchString
-        else {
-            // Fetch the user's friends' info
-            const friendsInfo = await db.collection('userInfo').find({ $and: [{ $or: [{ firstName: { $regex: searchString, $options: 'i' } }, { lastName: { $regex: searchString, $options: 'i' } }, { leetCodeUsername: { $regex: searchString, $options: 'i' } }] }, { loginInfoId: { $in: following } }] }).toArray();
-
-            // Format the response
-            response = friendsInfo.map((friend) => {
-                return {
-                    firstName: friend.firstName,
-                    lastName: friend.lastName,
-                    leetCodeUsername: friend.leetCodeUsername,
-                    userId: friend.loginInfoId
-                };
-            });
-        }
+        // Format the response
+        const response = usersInfo.map((user) => {
+            return {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                leetCodeUsername: user.leetCodeUsername,
+                userId: user.loginInfoId,
+                isFollowing: requesterFollowing.includes(user.loginInfoId) // Check if the user is a friend
+            };
+        });
 
         res.status(200).json(response);
     });
@@ -597,9 +641,35 @@ exports.setApp = function (app, client) {
     });
 
 
+    app.post('/api/isValid', async (req, res) => {
 
+        try {
+            const { username } = req.body;
 
+            const isValidQuery = `
+                query getUserProfile($username: String!) {
+                    matchedUser(username: $username) {
+                        username
+                    }
+                }
+            `;
 
+            const response = await axios.post(leetcodeAPI, {
+                query: isValidQuery,
+                variables: { username },
+            });
+
+            if (!response.data.errors) {
+                // No errors, assume the username is valid
+                res.status(200).json({ message: 'Valid Leetcode Username' });
+            } else if (response.data.errors.length > 0) {
+                // There are errors, assume the username is invalid
+                res.status(400).json({ message: 'Invalid Leetcode Username' });
+            }
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Failed to query the API' });
+        }
+    });
     };
-
-
