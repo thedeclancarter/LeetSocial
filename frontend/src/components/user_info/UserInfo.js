@@ -73,12 +73,7 @@ export default function UserInfo() {
                     <br></br>
                     <br></br>
                     <br></br>
-                    <span id="topLanguage">Top Language: {userData.topLanguage}</span>
-                    <br></br>
-                    <br></br>
-                    <br></br>
-                    <br></br>
-                    <span id="problemsSolved"># Problems Solved: {userData.problemsSolved}</span>
+                    <span id="topLanguage">Top Language: {userData.topLanguage} - {userData.problemsSolved} Problems Solved</span>
                 </div>
             </div>
         </div>
