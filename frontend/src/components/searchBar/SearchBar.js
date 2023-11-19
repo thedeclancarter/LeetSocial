@@ -1,30 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SearchBar.css'; // Make sure to create this CSS file
 import addFriendIcon from '../../assets/add-friend.png'; // Path to your add-friend icon
 import checkMarkIcon from '../../assets/white-checkmark-in-circle-md.png'; // Path to your checkmark icon
+import axios from 'axios';
+var bp = require('../../path.js');
 
 function SearchBar({ onSearch }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [showResults, setShowResults] = useState(false);
     const [isMouseInside, setIsMouseInside] = useState(false);
+    const [searchData, setSearchData] = useState([]);
+
+    // Get UserID
+    var _ud = sessionStorage.getItem('user_data');
+    var ud = JSON.parse(_ud);
+    var userId = ud.id;
 
     // Initialize searchData with objects containing name and clicked properties
-    const [searchData, setSearchData] = useState([
-        { name: "Profile", clicked: false },
-        { name: "Home", clicked: false },
-        { name: "Settings", clicked: false },
-        { name: "Friends", clicked: false },
-        { name: "Logout", clicked: false },
-        { name: "Log1", clicked: false },
-        { name: "Log2", clicked: false },
-        { name: "Log3", clicked: false },
-        { name: "Log4", clicked: false },
-        { name: "Log5", clicked: false },
-        { name: "Log6", clicked: false },
-        { name: "Log7", clicked: false },
-        { name: "Log8", clicked: false },
-        { name: "Log9", clicked: false },
-    ]);
+    useEffect(() => {
+        const fetchData = async () => {
+            if (searchTerm.trim()) {
+                try {
+                    const response = await axios.post(bp.buildPath('api/searchUsers'), { searchString: searchTerm, userId });
+                    setSearchData(response.data.map(user => ({
+                        ...user,
+                        name: `${user.firstName} ${user.lastName} (${user.leetCodeUsername})`
+                    })));
+                } catch (error) {
+                    console.error('Error fetching search data', error);
+                }
+            } else {
+                setSearchData([]);
+            }
+        };
+
+        fetchData();
+    }, [searchTerm, userId]);
+
+    const updateFriendStatus = async (friendId, isFollowing) => {
+        try {
+            const apiPath = isFollowing ? 'api/removeFriend' : 'api/addFriend';
+            await axios.post(bp.buildPath(apiPath), { userId, friendId });
+            // Update clicked state locally for immediate UI response
+            const updatedSearchData = searchData.map(item =>
+                item.userId === friendId ? { ...item, isFollowing: !isFollowing } : item
+            );
+            setSearchData(updatedSearchData);
+        } catch (error) {
+            console.error('Error updating friend status', error);
+        }
+    };
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -47,23 +72,11 @@ function SearchBar({ onSearch }) {
         }
     };
 
-    const handleMouseEnter = () => {
-        setIsMouseInside(true);
-    };
+    const handleMouseEnter = () => setIsMouseInside(true);
+    const handleMouseLeave = () => setIsMouseInside(false);
 
-    const handleMouseLeave = () => {
-        setIsMouseInside(false);
-        // if (!searchTerm) {
-        //     setShowResults(false);
-        // }
-    };
-
-    const handleIconClick = (itemName) => {
-        const updatedSearchData = searchData.map(item =>
-            item.name === itemName ? { ...item, clicked: !item.clicked } : item
-        );
-        setSearchData(updatedSearchData);
-        // Here you can also call your API
+    const handleIconClick = (userId, isFollowing) => {
+        updateFriendStatus(userId, isFollowing);
     };
 
     return (
@@ -85,10 +98,10 @@ function SearchBar({ onSearch }) {
                 >
                     {searchData.filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
                                .map((item, index) => (
-                                   <div key={index} className="search-item" onClick={() => handleIconClick(item.name)}>
+                                   <div key={index} className="search-item" onClick={() => handleIconClick(item.userId, item.isFollowing)}>
                                        <span>{item.name}</span>
                                        <img
-                                           src={item.clicked ? checkMarkIcon : addFriendIcon}
+                                           src={item.isFollowing ? checkMarkIcon : addFriendIcon}
                                            alt="icon"
                                            className="icon"
                                        />
