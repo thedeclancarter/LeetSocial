@@ -20,37 +20,37 @@ const LoginScreen = () => {
     const [isError, setIsError] = useState(false);
         // ... additional state fields as needed
 
-        const handleLogin = () => {
-                const payload = {
+    const handleLogin = () => {
+            const payload = {
                     email:email,
                     password:password,
                 };
-                fetch('http://localhost:5102/api/login',{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                })
-                .then (async res => {
-                    try{
-                        const jsonRes = await res.json();
-                        if (res.status != 200){
-                            setIsError(true);
-                            setMessage(jsonRes.error);
-                        }
-                        else {
-                            setIsError(false);
-                            navigate('LoginSuccess', {data: jsonRes});
-                        }
-                    }catch (err){
-                        console.log(err);
-                    };
-                })
-                .catch(err => {
+            fetch('http://localhost:5102/api/login',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+            .then (async res => {
+                try{
+                    const jsonRes = await res.json();
+                    if (res.status != 200){
+                        setIsError(true);
+                        setMessage(jsonRes.error);
+                    }
+                    else {
+                        setIsError(false);
+                        navigate('LoginSuccess', {data: jsonRes});
+                    }
+                }catch (err){
                     console.log(err);
-                });
-            };
+                };
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        };
     
     
     const handleSignUp = () => {

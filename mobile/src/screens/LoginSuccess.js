@@ -2,6 +2,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import ProfileButton from '../components/profileButton';
+import Leaderboard from '../components/leaderBoard';
 
 const LoginSuccess = ({ route, navigation }) => {
     const { data } = route.params;
@@ -11,6 +12,8 @@ const LoginSuccess = ({ route, navigation }) => {
         <ProfileButton navigation={navigation}/>
         <Text style={styles.text}>Login Successful!</Text>
         <Text>{JSON.stringify(data)}</Text>
+        <Text>{data.leetCodeUsername}</Text>
+        <Leaderboard /> 
     </View>
   );
 };

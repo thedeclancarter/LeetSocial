@@ -3,17 +3,17 @@ import { StyleSheet, SafeAreaView, Text, View} from "react-native";
 import GradientBackground from "../components/gradientBackground";
 import GridBackground from "../components/gridBackground";
 import TextAnimation from "../components/logo";
-import LoginForm from "../components/loginForm";
+import Leaderboard from "../components/leaderBoard";
+
 const TestPage = () => {
     return (
-        <GradientBackground >
-        <GridBackground />
+
             <SafeAreaView style={styles.container}>
                 <TextAnimation />
                 <Text style={styles.text}>what the fuck</Text>
+                <Leaderboard />
             </SafeAreaView>
 
-        </GradientBackground>
     );
 };
 
@@ -21,8 +21,9 @@ const TestPage = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'transparent',
+        backgroundColor: '#1a1a1a',
         justifyContent: 'center',
+
     },
     text: {
         color: 'white',
