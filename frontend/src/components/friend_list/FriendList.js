@@ -53,28 +53,36 @@ export default function FriendList() {
     }, [searchTerm, userId]);
 
     const removeFriend = async (friendId) => {
-        try {
-            const apiPath = 'api/removeFriend';
-            await axios.post(bp.buildPath(apiPath), { userId, friendId });
+        if (window.confirm('Are you sure you want to remove this friend?'))
+        {
+            console.log("Friend removed.");
+            try {
+                const apiPath = 'api/removeFriend';
+                await axios.post(bp.buildPath(apiPath), { userId, friendId });
 
-            // Fetch the updated data after removal
-            const updatedResponse = await fetch('https://leet-social-2e5f98883d68.herokuapp.com/api/searchFriends', {
-                method: 'POST',
-                body: js,
-                headers: { 'Content-Type': 'application/json' },
-            });
+                // Fetch the updated data after removal
+                const updatedResponse = await fetch('https://leet-social-2e5f98883d68.herokuapp.com/api/searchFriends', {
+                    method: 'POST',
+                    body: js,
+                    headers: { 'Content-Type': 'application/json' },
+                });
 
-            if (!updatedResponse.ok) {
-                throw new Error('Network response was not ok');
+                if (!updatedResponse.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const updatedRes = await updatedResponse.json();
+                setSearchData(updatedRes.map(user => ({
+                    ...user,
+                    name: `${user.firstName} ${user.lastName} (${user.leetCodeUsername})`
+                })));
+            } catch (error) {
+                console.error('Error updating friend status', error);
             }
-
-            const updatedRes = await updatedResponse.json();
-            setSearchData(updatedRes.map(user => ({
-                ...user,
-                name: `${user.firstName} ${user.lastName} (${user.leetCodeUsername})`
-            })));
-        } catch (error) {
-            console.error('Error updating friend status', error);
+        }
+        else
+        {
+            console.log("Operation cancelled.");
         }
 
     };
