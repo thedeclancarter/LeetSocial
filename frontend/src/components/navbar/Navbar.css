@@ -37,7 +37,7 @@ body {
     padding-left: .2rem;
     padding-right: .2rem;
     display: block;
-    margin: auto auto;
+    margin: auto 15px;
 }
 
 /* .site-title::after {

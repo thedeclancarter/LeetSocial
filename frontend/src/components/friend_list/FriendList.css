@@ -69,3 +69,31 @@ td {
     background-color: #de9348;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* Styles the scrollbar track */
+.friendList::-webkit-scrollbar-track {
+    background-color: #2A2A2A;
+    /* A dark track color */
+}
+
+/* Styles the scrollbar thumb */
+.friendList::-webkit-scrollbar-thumb {
+    background-color: white;
+    /* An orange thumb color */
+    border-radius: 10px;
+    /* Rounded corners for the thumb */
+    border: 3px solid #2A2A2A;
+    /* A dark border for the thumb */
+}
+
+/* Styles the scrollbar itself */
+.friendList::-webkit-scrollbar {
+    width: 12px;
+    /* The width of the scrollbar */
+}
+
+/* Optional: Styles the scrollbar buttons */
+.friendList::-webkit-scrollbar-button {
+    background-color: #2A2A2A;
+    /* An orange color */
+}
