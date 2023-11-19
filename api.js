@@ -568,7 +568,6 @@ exports.setApp = function (app, client) {
             res.json(maxSolvedLanguage);
 
         } catch (error) {
-            console.error(error);
             res.status(500).json({ error: 'Failed to query the API' });
         }
     });
@@ -630,7 +629,6 @@ exports.setApp = function (app, client) {
             res.json(answer);
 
         } catch (error) {
-            console.error(error);
             res.status(500).json({ error: 'Failed to query the API' });
         }
     });
@@ -663,7 +661,6 @@ exports.setApp = function (app, client) {
             }
 
         } catch (error) {
-            console.error(error);
             res.status(500).json({ error: 'Failed to query the API' });
         }
     });

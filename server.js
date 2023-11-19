@@ -54,3 +54,5 @@ api.setApp( app, client );
 app.listen(PORT, () => {
     // console.log('Server listening on port ' + PORT); // Debugging
 });
+
+module.exports = app;
