@@ -4,6 +4,8 @@ import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from 'reac
 import { useState } from 'react';
 import QuestionPieChart from '../components/questionPieChart';
 import HeaderLogo from '../components/header';
+import GridBackground from '../components/gridBackground';
+import GradientBackground from '../components/gradientBackground';
 
 const Profile = ({route, navigation}) => {
     const { id } = route.params;
@@ -49,7 +51,9 @@ const Profile = ({route, navigation}) => {
 
 
     return (
+        <GradientBackground>
         <View style={styles.container}>
+        <GridBackground />
         <HeaderLogo />
         {isLoading ? (
         <>
@@ -81,6 +85,7 @@ const Profile = ({route, navigation}) => {
         </>
         )}
     </View>
+    </GradientBackground>
     );
 };
 
@@ -89,7 +94,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#3c4749', // or any color you like
     color: 'white',
   },
     ProfileContainer: {
@@ -113,7 +117,9 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   button: {
-    backgroundColor: 'black',
+    backgroundColor: 'grey',
+    borderColor: 'rgba(176, 108, 39, 1)',
+    borderWidth: 1,
     borderRadius: 5,
     textAlign: 'center',
     color: 'white',

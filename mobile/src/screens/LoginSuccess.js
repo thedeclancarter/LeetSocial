@@ -3,6 +3,9 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import ProfileButton from '../components/profileButton';
 import Leaderboard from '../components/leaderBoard';
+import GradientBackground from '../components/gradientBackground';
+import GridBackground from '../components/gridBackground';
+import HeaderLogo from '../components/header';
 
 const LoginSuccess = ({ route, navigation }) => {
   const { userData } = route.params;
@@ -15,13 +18,17 @@ const LoginSuccess = ({ route, navigation }) => {
 
 
   return (
+    <GradientBackground>
       <View style={styles.container}>
-        <TouchableOpacity onPress={handleLogout}><Text>Logout</Text></TouchableOpacity>
+        <GridBackground />
+        <HeaderLogo />
+        <TouchableOpacity onPress={handleLogout} style={styles.button}><Text style={styles.buttonText}>Logout</Text></TouchableOpacity>
         <ProfileButton navigation={navigation} route={{ params: { id } }} />
         <Text style={styles.text}>Welcome {userData.firstName} {userData.lastName}!</Text>
-        <Text>{JSON.stringify(userData)}</Text>
+        <Text style={styles.text}>{JSON.stringify(userData)}</Text>
         <Leaderboard /> 
     </View>
+    </GradientBackground>
   );
 };
 
@@ -30,12 +37,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#3c4749', // or any color you like
   },
   text: {
     fontSize: 24,
     marginBottom: 20,
+    color: 'white',
   },
+  button: {
+    paddingHorizontal: 20,
+    backgroundColor: 'rgba(176, 108, 39, 1)',
+    borderRadius: 5,
+    color: 'white',
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 20,
+  }
 });
 
 

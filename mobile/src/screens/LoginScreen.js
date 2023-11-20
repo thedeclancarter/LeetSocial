@@ -5,6 +5,8 @@ import { navigate } from "../../App";
 // import jwtDecode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { storeToken, getToken, removeToken } from "../functions/storage";
+import GradientBackground from "../components/gradientBackground";
+import GridBackground from "../components/gridBackground";
 
 
 const apiBaseUrl = 'http://www.leetsocial.com';
@@ -108,7 +110,9 @@ const LoginScreen = () => {
 
 
     return (
+        <GradientBackground>
         <SafeAreaView style={styles.container}>
+            <GridBackground />
                     <View style={styles.centeredView}>
                         <TextAnimation />
                     </View>
@@ -174,12 +178,12 @@ const LoginScreen = () => {
                         </TouchableOpacity>
                     </View>
             </SafeAreaView>
+        </GradientBackground>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#3c4749',
         flex: 1,
     },
     centeredView: {

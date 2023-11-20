@@ -10,11 +10,14 @@ import HeaderLogo from "../components/header";
 const TestPage = () => {
     return (
 
+            <GradientBackground>
             <SafeAreaView style={styles.container}>
+                    <GridBackground />
                 <HeaderLogo />
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 </View>
             </SafeAreaView>
+            </GradientBackground>
 
     );
 };
