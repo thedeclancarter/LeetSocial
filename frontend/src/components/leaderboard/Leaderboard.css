@@ -56,7 +56,7 @@ td {
     font-size: large;
 }
 
-.tableButton {
+.filterButton, .active {
     padding: 0.8rem 1.4rem;
     font-size: 1.2rem;
     text-align: center;
@@ -69,7 +69,7 @@ td {
     cursor: pointer;
 }
 
-.tableButton:hover {
+.filterButton:hover {
     background-color: #b06c27;
 }
 

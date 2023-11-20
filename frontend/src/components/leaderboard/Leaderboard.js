@@ -178,7 +178,7 @@ export default function Leaderboard(props) {
                             <ul>
                                 <button
                                     className={
-                                        difficulty === 0 ? 'tableButton active': 'tableButton'
+                                        difficulty === 0 ? 'filterButton active': 'tableButton'
                                     }
                                     name='All'
                                     onClick={filterTable}
@@ -187,7 +187,7 @@ export default function Leaderboard(props) {
                                 </button>
                                 <button
                                     className={
-                                        difficulty === 1 ? 'tableButton active' : 'tableButton'
+                                        difficulty === 1 ? 'filterButton active' : 'tableButton'
                                     }
                                     name='Hard'
                                     onClick={filterTable}
@@ -196,7 +196,7 @@ export default function Leaderboard(props) {
                                 </button>
                                 <button
                                     className={
-                                        difficulty === 2 ? 'tableButton active' : 'tableButton'
+                                        difficulty === 2 ? 'filterButton active' : 'tableButton'
                                     }
                                     name='Medium'
                                     onClick={filterTable}
@@ -205,7 +205,7 @@ export default function Leaderboard(props) {
                                 </button>
                                 <button
                                     className={
-                                        difficulty === 3 ? 'tableButton active' : 'tableButton'
+                                        difficulty === 3 ? 'filterButton active' : 'tableButton'
                                     }
                                     name='Easy'
                                     onClick={filterTable}
