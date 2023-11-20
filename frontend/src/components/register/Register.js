@@ -8,7 +8,7 @@ import decode from "jwt-decode";
 var bp = require('../../path.js');
 
 export default function Register() {
-    var [action, setAction] = useState("Login");
+    var [action, setAction] = useState("Verify");
     var [hasCapital, setCapital] = useState(false);
     var [hasSpecialChar, setSpecialChar] = useState(false);
     var [hasNum, setNum] = useState(false);
@@ -258,38 +258,50 @@ export default function Register() {
             setCode(true);
         }
 
-        if (leetCodeUsername.value === "") {
-            hasUsername = false;
-            setUsername(false);
-        } else {
-            hasUsername = true;
-            setUsername(true);
-        }
-
-        if (!hasCode || !hasUsername)
+        if (!hasCode)
             return;
 
-        var obj = { token: verificationCode, leetCodeUsername: leetCodeUsername.value };
+        var obj = { username: leetCodeUsername.value };
         var body = JSON.stringify(obj);
 
         try {
-            const response = await fetch(bp.buildPath('api/verify'),
+            const response = await fetch(bp.buildPath('api/isValid'),
             {
                 method: 'POST',
                 body: body,
                 headers: { 'Content-Type': 'application/json' }
             });
 
-            const res = await response.json();
+            if (response.status === 400) {
+                hasUsername = false;
+                setUsername(false);
+            } else {
+                var obj = { token: verificationCode, leetCodeUsername: leetCodeUsername.value };
+                var body = JSON.stringify(obj);
 
-            if (response.status === 200)
-                setMessage("Verification successful, you may now login")
-            else
-                setMessage(res.error);
+                try {
+                    const response = await fetch(bp.buildPath('api/verify'),
+                        {
+                            method: 'POST',
+                            body: body,
+                            headers: { 'Content-Type': 'application/json' }
+                        });
 
+                    const res = await response.json();
+
+                    if (response.status === 200)
+                        setMessage("Verification successful, you may now login")
+                    else
+                        setMessage(res.error);
+
+                } catch (e) {
+                    alert(e.toString());
+                }
+            }
         } catch (e) {
             alert(e.toString());
         }
+
     };
 
     const doSendEmail = async event => {
