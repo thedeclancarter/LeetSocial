@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import GridBackground from '../components/gridBackground';
 import GradientBackground from '../components/gradientBackground';
 import HeaderLogo from '../components/header';
@@ -8,13 +8,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 function VerifyPage({ navigation }) {
     const [leetCodeUsername, setUsername] = useState('');
     const [token, setToken] = useState('');
-
+    
     const handleSubmit = () => {
       const payload = {
           token: token,
           leetCodeUsername: leetCodeUsername,
       };
-          fetch(apiBaseUrl+'/api/login',{
+          fetch('http://leetsocial.com/api/verify',{
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
@@ -24,6 +24,7 @@ function VerifyPage({ navigation }) {
           .then (async res => {
               try{
                   const jsonRes = await res.json();
+                  console.log(jsonRes);
                   if (res.status != 200){
                       console.log('Error: ' + jsonRes.error);
                   }
@@ -60,6 +61,7 @@ function VerifyPage({ navigation }) {
                     onChangeText={setUsername}
                     placeholder='LeetCode Username'
                     placeholderTextColor='white'
+                    autoCapitalize='none'
                 />
                 <TouchableOpacity onPress={handleSubmit} style={styles.button}><Text style={styles.buttonText}>Submit</Text></TouchableOpacity>
             </View>

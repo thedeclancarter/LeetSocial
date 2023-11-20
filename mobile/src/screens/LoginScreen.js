@@ -33,15 +33,15 @@ const validatePassword = (password) => {
 
 
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
     const [isSignUp, setIsSignUp] = useState(false);
-    const [email, setEmail] = useState('testing@test.com'); //remove later this is for testing
-    // const [email, setEmail] = useState(''); 
+    // const [email, setEmail] = useState('testing@test.com'); //remove later this is for testing
+    const [email, setEmail] = useState(''); 
     const [confirmPassword, setConfirmPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [password, setPassword] = useState('password'); //remove later this is for testing
-    // const [password, setPassword] = useState('');
+    // const [password, setPassword] = useState('password'); //remove later this is for testing
+    const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
         // ... additional state fields as needed
@@ -71,7 +71,7 @@ const LoginScreen = () => {
                         const token = jsonRes.accessToken;
                         await storeToken(token);
                         const decoded = jwtDecode(token);
-                        navigate('UserHome', {userData:decoded});
+                        navigation.navigate('UserHome', {userData:decoded});
                     }
                 }catch (err){
                     console.log(err);
@@ -138,17 +138,17 @@ const LoginScreen = () => {
             .then (async res => {
                 try{
                     const jsonRes = await res.json();
-                    if (res.status = 409){
-                        setMessage('Error: ' + jsonRes.error);
+                    if (res.status === 409){
+                        setMessage('Email already Exists');
                         setIsError(true);
                     }
                     if (res.status != 201){
                         setIsError(true);
-                        setMessage('Error: ' + jsonRes.error);
+                        setMessage(jsonRes.error);
                     }
-                    else {
+                    else{
                         setIsError(false);
-                        navigate('SignUpSuccess', {data: jsonRes});
+                        navigation.navigate('VerifyPage');
                     }
                 }catch (err){
                     console.log(err);
