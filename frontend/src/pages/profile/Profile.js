@@ -5,14 +5,15 @@ import FriendList from '../../components/friend_list/FriendList';
 import { useNavigate } from "react-router-dom";
 
 
-const Profile = () => {
+const Profile = ({ isUpdate }) => {
     const navigate = useNavigate();
 
     return (
         <div>
             <UserInfo />
-            <FriendList />
+            <FriendList isUpdate={isUpdate} />
         </div>
     );
 };
+
 export default Profile;
