@@ -216,7 +216,7 @@ input::placeholder {
 }
 
 .forgotButton {
-    font-size: small;
+    font-size: medium;
     color: #b06c27;
     background-color: #3c3b39;
     border: none;
