@@ -7,7 +7,7 @@ import GradientBackground from '../components/gradientBackground';
 import GridBackground from '../components/gridBackground';
 import HeaderLogo from '../components/header';
 
-const LoginSuccess = ({ route, navigation }) => {
+const UserHome = ({ route, navigation }) => {
   const { userData } = route.params;
   const id = userData.userId;
   const handleLogout = () =>{
@@ -25,7 +25,6 @@ const LoginSuccess = ({ route, navigation }) => {
         <TouchableOpacity onPress={handleLogout} style={styles.button}><Text style={styles.buttonText}>Logout</Text></TouchableOpacity>
         <ProfileButton navigation={navigation} route={{ params: { id } }} />
         <Text style={styles.text}>Welcome {userData.firstName} {userData.lastName}!</Text>
-        <Text style={styles.text}>{JSON.stringify(userData)}</Text>
         <Leaderboard /> 
     </View>
     </GradientBackground>
@@ -58,4 +57,4 @@ const styles = StyleSheet.create({
 
 
 
-export default LoginSuccess;
+export default UserHome;

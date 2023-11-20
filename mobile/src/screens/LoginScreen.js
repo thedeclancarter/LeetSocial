@@ -32,13 +32,13 @@ const validatePassword = (password) => {
 
 const LoginScreen = () => {
     const [isSignUp, setIsSignUp] = useState(false);
-    // const [email, setEmail] = useState('testing@test.com'); //remove later this is for testing
-    const [email, setEmail] = useState(''); 
+    const [email, setEmail] = useState('testing@test.com'); //remove later this is for testing
+    // const [email, setEmail] = useState(''); 
     const [confirmPassword, setConfirmPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    // const [password, setPassword] = useState('password'); //remove later this is for testing
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState('password'); //remove later this is for testing
+    // const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
         // ... additional state fields as needed
@@ -63,11 +63,12 @@ const LoginScreen = () => {
                         setMessage(jsonRes.error);
                     }
                     else {
+                        setMessage('');
                         setIsError(false);
                         const token = jsonRes.accessToken;
                         await storeToken(token);
                         const decoded = jwtDecode(token);
-                        navigate('LoginSuccess', {userData:decoded});
+                        navigate('UserHome', {userData:decoded});
                     }
                 }catch (err){
                     console.log(err);
@@ -146,7 +147,7 @@ const LoginScreen = () => {
 
 
     const getMessage = () => {
-        const status = isError ? 'Error: ' : 'Success: ';
+        const status = isError ? 'Error: ' : '';
         return status + message;
     }
 
@@ -262,9 +263,10 @@ const styles = StyleSheet.create({
     toggleButton: {
         marginTop: 20,
       },
-      toggleButtonText: {
+    toggleButtonText: {
         color: '#3797EF',
-      },
+        alignSelf: 'center',
+    },
     button: {
         marginTop: 20,
         paddingHorizontal: 20,
@@ -280,6 +282,11 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         fontSize: 20,
+    },
+    message: {
+        fontSize: 20,
+        textAlign: 'center',
+        marginBottom: 20,
     },
 });
 
