@@ -10,6 +10,10 @@ function App() {
   const [isLogin, setLogin] = useState(false);
   const [isUpdate, setUpdate] = useState(false);
 
+  const handleFriendAdded = () => {
+    setUpdate(!isUpdate);
+  };
+
   return (
     <>
       <div className='grid-background'>
@@ -31,7 +35,7 @@ function App() {
           path='/home'
           element={<Home isLogin={isLogin} setLogin={setLogin} isUpdate={isUpdate} />}
         />
-        <Route path='/profile' element={<Profile />} />
+        <Route path='/profile' element={<Profile isUpdate={isUpdate} onFriendAdded={handleFriendAdded} />} />
       </Routes>
     </>
   );

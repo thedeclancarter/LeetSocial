@@ -6,7 +6,7 @@ var bp = require('../../path.js');
 
 
 
-export default function FriendList() {
+export default function FriendList({ isUpdate }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [showResults, setShowResults] = useState(false);
     const [isMouseInside, setIsMouseInside] = useState(false);
@@ -50,7 +50,7 @@ export default function FriendList() {
             }
         };
         fetchData();
-    }, [searchTerm, userId]);
+    }, [searchTerm, userId, isUpdate]);
 
     const removeFriend = async (friendId) => {
         if (window.confirm('Are you sure you want to remove this friend?'))
