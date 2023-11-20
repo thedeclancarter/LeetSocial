@@ -695,4 +695,33 @@ exports.setApp = function (app, client) {
             res.status(500).json({ error: 'Failed to query the API' });
         }
     });
+
+    app.post('/api/recentAC', async (req, res) => {
+        try {
+            const { username } = req.body;
+            const limit = 5;
+
+            const recentACQuery = `
+                query recentAcSubmissions($username: String!, $limit: Int!) {
+                    recentAcSubmissionList(username: $username, limit: $limit) {
+                        id
+                        title
+                        titleSlug
+                        timestamp
+                    }
+                }
+            `;
+
+            const response = await axios.post(leetcodeAPI, {
+                query: recentACQuery,
+                variables: { username, limit }
+            });
+
+            const recentlySolved = response.data.data.recentAcSubmissionList;
+
+            res.json(recentlySolved);
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to query the API' });
+        }
+    });
     };
