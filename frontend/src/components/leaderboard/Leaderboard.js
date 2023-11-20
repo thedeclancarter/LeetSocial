@@ -122,7 +122,7 @@ export default function Leaderboard(props) {
                 setInfoArr(sortedArr);
             });
         }
-    }, [isLogin, isUpdate, difficulty]);
+    }, [isUpdate, difficulty]);
 
     const filterTable = event => {
         event.preventDefault();

@@ -5,7 +5,6 @@ import Login from './pages/login/Login';
 import Home from './pages/home/Home';
 import Profile from './pages/profile/Profile';
 import Verify from './pages/verify/Verify';
-import Leaderboard from './components/leaderboard/Leaderboard';
 import Navbar from './components/navbar/Navbar';
 import AddFriend from './pages/add_friend/AddFriend';
 
@@ -26,11 +25,13 @@ function App() {
             setUpdate={setUpdate}
           />
         )}
-        {isHome && (<Leaderboard isLogin={isLogin} isUpdate={isUpdate} />)}
       </div>
       <Routes>
-        <Route path='/' element={<Login isLogin={isLogin} setLogin={setLogin} />} />
-        <Route path='/home' element={<Home />} />
+        <Route
+          path='/'
+          element={<Login isLogin={isLogin} setLogin={setLogin} isUpdate={isUpdate} />}
+          />
+        <Route path='/home' element={<Home isLogin={isLogin} isUpdate={isUpdate} />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/verify' element={<Verify />} />
         <Route path='/addfriend' element={<AddFriend />} />

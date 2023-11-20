@@ -6,8 +6,7 @@
     height: 100%;
     padding-bottom: 0px;
     transition: width 2s;
-    /* border: solid black; */
-    margin-top: 8rem;
+    border: solid #fff;
 }
 
 .tableContainer {
