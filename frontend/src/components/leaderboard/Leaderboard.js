@@ -1,6 +1,6 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Leaderboard.css";
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 
 var bp = require('../../path.js');
@@ -56,7 +56,6 @@ export default function Leaderboard(props) {
 
     function handleNavClick(buttonName)
     {
-console.log(buttonName);
         if (buttonName === "Backwards")
             if (tableNum === 1)
                 return;
@@ -64,13 +63,13 @@ console.log(buttonName);
                 setTableNum(tableNum - 1);
         else if (buttonName === "Forwards")
         {
-            console.log(69);
             if (tableNum === Math.ceil(infoArr.length / 5))
                 return;
             else
                 setTableNum(tableNum + 1);
         }
     }
+
     async function getFriendStats() {
         var _ud = sessionStorage.getItem('user_data');
         var ud = JSON.parse(_ud);

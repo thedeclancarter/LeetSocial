@@ -1,6 +1,7 @@
 .homePage {
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 .logoContainer {
@@ -17,6 +18,7 @@
 .homeContainer {
     position: relative;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100vw;
+    gap: 5rem;
 }

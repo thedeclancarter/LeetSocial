@@ -220,12 +220,18 @@ export default function Register() {
             var userId = ud.userId;
             var firstName = ud.firstName;
             var lastName = ud.lastName;
+            var leetCodeUsername = ud.leetCodeUsername;
 
             if (userId === -1) {
                 setMessage('User/Password combination incorrect');
             }
             else {
-                var user = { id: userId, firstName: firstName, lastName: lastName };
+                var user = {
+                    id: userId,
+                    firstName: firstName,
+                    lastName: lastName,
+                    leetCodeUsername: leetCodeUsername
+                };
                 window.sessionStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');

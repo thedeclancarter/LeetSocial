@@ -2,6 +2,7 @@ import './Home.css';
 import React, { useEffect } from 'react';
 import Leaderboard from '../../components/leaderboard/Leaderboard';
 import Logo from '../../components/logo/Logo';
+import ACTable from '../../components/acTable/ACTable';
 
 export default function Home(props) {
     const { isLogin, setLogin, isUpdate } = props;
@@ -17,6 +18,7 @@ export default function Home(props) {
             </div>
             <div className='homeContainer'>
                 <Leaderboard isLogin={isLogin} isUpdate={isUpdate} />
+                <ACTable isUpdate={isUpdate} />
             </div>
         </div>
     );
