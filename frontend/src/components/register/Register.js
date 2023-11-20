@@ -273,11 +273,10 @@ export default function Register() {
             });
 
             if (response.status === 400) {
-                hasUsername = false;
                 setUsername(false);
             } else {
-                var obj = { token: verificationCode, leetCodeUsername: leetCodeUsername.value };
-                var body = JSON.stringify(obj);
+                var obj2 = { token: verificationCode, leetCodeUsername: obj.username };
+                var body = JSON.stringify(obj2);
 
                 try {
                     const response = await fetch(bp.buildPath('api/verify'),
@@ -293,10 +292,11 @@ export default function Register() {
                         setMessage("Verification successful, you may now login")
                     else
                         setMessage(res.error);
-
                 } catch (e) {
                     alert(e.toString());
                 }
+
+                setUsername(true);
             }
         } catch (e) {
             alert(e.toString());
