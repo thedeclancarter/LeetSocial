@@ -1,63 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 
-const Leaderboard = () => {
+const Leaderboard = ({ friendData }) => {
     const [filter, setFilter] = useState('all');
+    const [transformedData, setTransformedData] = useState([]);
 
-    const data = [
-        {
-            pos: "1st",
-            un: "Dr. Lienecker",
-            numSolved: "236",
-            hard: "236",
-            medium: "0",
-            easy: "0",
-        },
-        {
-            pos: "2nd",
-            un: "Dr. Szumlanski",
-            numSolved: "214",
-            hard: "200",
-            medium: "13",
-            easy: "1",
-        },
-        {
-            pos: "3rd",
-            un: "Dr. Steinberg",
-            numSolved: "197",
-            hard: "128",
-            medium: "64",
-            easy: "5",
-        },
-        {
-            pos: "4th",
-            un: "Dr. Ahmed",
-            numSolved: "181",
-            hard: "59",
-            medium: "100",
-            easy: "22",
-        },
-        {
-            pos: "5th",
-            un: "Dr. Guha",
-            numSolved: "1",
-            hard: "0",
-            medium: "0",
-            easy: "1",
-        },
-    ];
+    useEffect(() => {
+        transformData(friendData);
+    }, [friendData]);
+
+    useEffect(() => {
+        // Re-transform data when filter changes
+        transformData(friendData);
+    }, [filter]);
+
+    const transformData = (data) => {
+        if (data && data.length > 0) {
+            // Sort and transform the data based on the current filter
+            const sortedData = [...data].sort((a, b) => b[filter] - a[filter]);
+            const transformed = sortedData.map((friend, index) => ({
+                pos: `${index + 1}st`,
+                un: friend.leetCodeUsername,
+                numSolved: friend[filter].toString(),
+                hard: friend.hard.toString(),
+                medium: friend.medium.toString(),
+                easy: friend.easy.toString(),
+            }));
+            setTransformedData(transformed);
+        }
+    };
 
     const getFilteredData = () => {
-        switch (filter) {
-            case 'hard':
-                return data.filter(item => item.hard > 0);
-            case 'medium':
-                return data.filter(item => item.medium > 0);
-            case 'easy':
-                return data.filter(item => item.easy > 0);
-            default:
-                return data;
-        }
+        return transformedData || [];
     };
 
     const filteredData = getFilteredData();

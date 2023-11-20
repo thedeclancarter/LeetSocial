@@ -35,7 +35,6 @@ const Profile = ({route, navigation}) => {
                         console.log('Error: ' + jsonRes.error);
                     }
                     else {
-                        console.log(jsonRes);
                         setProfileData(jsonRes);
                         setLoading(false);
                     }

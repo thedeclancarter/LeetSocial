@@ -1,5 +1,5 @@
 // Login successful screen
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import ProfileButton from '../components/profileButton';
 import Leaderboard from '../components/leaderBoard';
@@ -10,12 +10,86 @@ import HeaderLogo from '../components/header';
 const UserHome = ({ route, navigation }) => {
   const { userData } = route.params;
   const id = userData.userId;
+  const [friendList, setFriendList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    loadFriends().then((updatedFriendList) => {
+      setFriendList(updatedFriendList);
+      setIsLoading(false);
+    })
+}, []);
+  
   const handleLogout = () =>{
     const remove = require('../functions/storage');
     remove.removeToken();
     navigation.navigate('Login');
   }
 
+  const loadFriends = async () => {
+    const payload = {
+      userId: id,
+      searchString: "",
+    };
+  
+    try {
+      const res = await fetch('http://www.leetsocial.com/api/searchFriends', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      const jsonRes = await res.json();
+      if (res.status === 200) {
+        const updatedFriendList = await loadData(jsonRes);
+        return updatedFriendList;
+      } else {
+        console.error('Error: ' + jsonRes.error);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+const loadData = async (friendList) => {
+  const fetchPromises = friendList.map(async (friend) => {
+    const payload = {
+      username: friend.leetCodeUsername,
+    };
+
+    try {
+      const response = await fetch('http://www.leetsocial.com/api/userSolvedCount', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const jsonRes = await response.json();
+      return { ...friend, ...jsonRes }; // Merge the friend object with the response
+    } catch (err) {
+      console.error(err);
+      return friend; // In case of an error, return the original friend object
+    }
+  });
+
+  return Promise.all(fetchPromises); // Wait for all fetch requests to complete
+};
+
+  if(isLoading){
+    return (
+      <GradientBackground>
+        <View style={styles.container}>
+          <GridBackground />
+          <HeaderLogo />
+          <Text style={styles.text}>Loading...</Text>
+        </View>
+      </GradientBackground>
+    );
+  }
 
   return (
     <GradientBackground>
@@ -25,7 +99,7 @@ const UserHome = ({ route, navigation }) => {
         <TouchableOpacity onPress={handleLogout} style={styles.button}><Text style={styles.buttonText}>Logout</Text></TouchableOpacity>
         <ProfileButton navigation={navigation} route={{ params: { id } }} />
         <Text style={styles.text}>Welcome {userData.firstName} {userData.lastName}!</Text>
-        <Leaderboard /> 
+        <Leaderboard friendData={friendList}/> 
     </View>
     </GradientBackground>
   );
