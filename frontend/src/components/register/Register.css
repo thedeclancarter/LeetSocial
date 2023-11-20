@@ -281,6 +281,7 @@ input::placeholder {
     font-size: small;
     color: #b06c27;
     background-color: #3c3b39;
+    border: none;
 }
 
 .forgotButton:hover {

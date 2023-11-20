@@ -1,45 +1,47 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Leaderboard.css";
 import React, { useEffect, useState } from 'react';
+import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 
 var bp = require('../../path.js');
 
 const sampleData = [
     {
         pos: "1st",
-        un: "Dr. Lienecker",
-        numSolved: "236",
+        leetCodeUsername: "Ilham",
+        all: "236",
         hard: "236",
         medium: "0",
         easy: "0",
     },
     {
         pos: "2nd",
-        un: "Dr. Szumlanski",
-        numSolved: "214",
+        leetCodeUsername: "Michael",
+        all: "214",
         hard: "200",
         medium: "13",
         easy: "1",
     },
     {
         pos: "3rd",
-        un: "Dr. Steinberg",
-        numSolved: "197",
+        leetCodeUsername: "Victoria",
+        all: "197",
         hard: "128",
         medium: "64",
         easy: "5",
     },
     {
         pos: "4th",
-        un: "Dr. Ahmed",
-        numSolved: "181",
+        leetCodeUsername: "Tyler",
+        all: "181",
         hard: "59",
         medium: "100",
         easy: "22",
     },
     {
         pos: "5th",
-        un: "Dr. Guha",
-        numSolved: "1",
+        leetCodeUsername: "Kevin",
+        all: "1",
         hard: "0",
         medium: "0",
         easy: "1",
@@ -49,9 +51,27 @@ const sampleData = [
 export default function Leaderboard(props) {
     const { isLogin, isUpdate } = props;
     var [difficulty, setDifficulty] = useState(0);
-    var [infoArr, setInfoArr] = useState([]);
-    var [sampleArr, setSampleArr] = useState([...sampleData]);
+    var [infoArr, setInfoArr] = useState([...sampleData]);
+    var [firstTime, setFirstTime] = useState(true);
+    var [tableNum, setTableNum] = useState(1);
 
+    function handleNavClick(buttonName)
+    {
+console.log(buttonName);
+        if (buttonName === "Backwards")
+            if (tableNum === 1)
+                return;
+            else
+                setTableNum(tableNum - 1);
+        else if (buttonName === "Forwards")
+        {
+            console.log(69);
+            if (tableNum === Math.ceil(infoArr.length / 5))
+                return;
+            else
+                setTableNum(tableNum + 1);
+        }
+    }
     async function getFriendStats() {
         var _ud = sessionStorage.getItem('user_data');
         var ud = JSON.parse(_ud);
@@ -101,28 +121,42 @@ export default function Leaderboard(props) {
     };
 
     useEffect(() => {
-        if (isLogin === false)
-        {
-            let sortedArr = [...sampleData];
-            difficulty === 0 ? sortedArr.sort((a, b) => b.numSolved - a.numSolved) :
-                difficulty === 1 ? sortedArr.sort((a, b) => b.hard - a.hard) :
-                    difficulty === 2 ? sortedArr.sort((a, b) => b.medium - a.medium) :
-                        sortedArr.sort((a, b) => b.easy - a.easy);
+        if (firstTime === true)
+            return;
 
-            setSampleArr(sortedArr);
-        }
-        else {
+        let sortedArr = [];
+
+        if (isLogin === true)
+            sortedArr = [...infoArr];
+        else
+            sortedArr = [...sampleData];
+
+        difficulty === 0 ? sortedArr.sort((a, b) => b.all - a.all) :
+            difficulty === 1 ? sortedArr.sort((a, b) => b.hard - a.hard) :
+                difficulty === 2 ? sortedArr.sort((a, b) => b.medium - a.medium) :
+                    sortedArr.sort((a, b) => b.easy - a.easy);
+
+        setInfoArr(sortedArr);
+    }, [difficulty]);
+
+    useEffect(() => {
+        if (isLogin === false) {
+            setDifficulty(0);
+            return;
+        } else {
             getFriendStats().then(response => {
                 let sortedArr = [...response];
+
                 difficulty === 0 ? sortedArr.sort((a, b) => b.all - a.all) :
                     difficulty === 1 ? sortedArr.sort((a, b) => b.hard - a.hard) :
                         difficulty === 2 ? sortedArr.sort((a, b) => b.medium - a.medium) :
                             sortedArr.sort((a, b) => b.easy - a.easy);
 
                 setInfoArr(sortedArr);
+                setFirstTime(false);
             });
         }
-    }, [isUpdate, difficulty]);
+    }, [isLogin, isUpdate]);
 
     const filterTable = event => {
         event.preventDefault();
@@ -185,20 +219,30 @@ export default function Leaderboard(props) {
                                     Easy
                                 </button>
                             </ul>
+                            <div className="navButtons">
+                                <button onClick={() => handleNavClick("Backwards")}>
+                                    <FontAwesomeIcon className="faIcon" icon={faCaretLeft} />
+                                </button>
+                                <button onClick={() => handleNavClick("Forwards")}>
+                                    <FontAwesomeIcon className="faIcon" icon={faCaretRight} />
+                                </button>
+                            </div>
                         </div>
                     </td>
                 </tr>
                 {
-                    isLogin ?
-                    infoArr.map((userObj, idx) => (
-                        <tr className="row">
+                    infoArr.slice(5 * (tableNum - 1), 5 * (tableNum - 1) + 5)
+                    .map((userObj, idx) => (
+                        <tr className="row" key={idx}>
                             <td className="position">
-                                <p>{
-                                    idx === 0 ? "1st":
-                                    idx === 1 ? "2nd":
-                                    idx === 2 ? "3rd":
-                                    idx + 1 + "th"
-                                }</p>
+                                <p>
+                                    {
+                                        idx + (tableNum - 1) * 5 === 0 ? "1st":
+                                            idx + (tableNum - 1) * 5 === 1 ? "2nd":
+                                                idx + (tableNum - 1) * 5 === 2 ? "3rd":
+                                                    idx + (tableNum - 1) * 5 + 1 + "th"
+                                    }
+                                </p>
                             </td>
                             <td className="username">
                                 <p>{userObj.leetCodeUsername}</p>
@@ -206,32 +250,9 @@ export default function Leaderboard(props) {
                             <td className="numSolved">
                                 <p>{
                                     difficulty === 0 ? userObj.all :
-                                    difficulty === 1 ? userObj.hard :
-                                    difficulty === 2 ? userObj.medium :
-                                    userObj.easy
-                                }</p>
-                            </td>
-                        </tr>
-                    )):
-                    sampleArr.map((sample, idx) => (
-                        <tr className="row">
-                            <td className="position">
-                                <p>{
-                                    idx === 0 ? "1st" :
-                                        idx === 1 ? "2nd" :
-                                            idx === 2 ? "3rd" :
-                                                idx + 1 + "th"
-                                }</p>
-                            </td>
-                            <td className="username">
-                                <p>{sample.un}</p>
-                            </td>
-                            <td className="numSolved">
-                                <p>{
-                                    difficulty === 0 ? sample.numSolved:
-                                    difficulty === 1 ? sample.hard:
-                                    difficulty === 2 ? sample.medium:
-                                    sample.easy
+                                        difficulty === 1 ? userObj.hard :
+                                            difficulty === 2 ? userObj.medium :
+                                                userObj.easy
                                 }</p>
                             </td>
                         </tr>

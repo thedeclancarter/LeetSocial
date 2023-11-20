@@ -5,7 +5,7 @@ import Logo from '../logo/Logo'
 import SearchBar from '../searchBar/SearchBar';
 
 export default function Navbar(props) {
-    const { isLogin, setLogin, setHome, isUpdate, setUpdate } = props;
+    const { isLogin, setLogin, isUpdate, setUpdate } = props;
     var _ud = sessionStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
     var userId = ud.id;
@@ -18,28 +18,18 @@ export default function Navbar(props) {
             <Link
                 to="/home"
                 className="site-title"
-                onClick={() => setHome(true)}
             >
                 LeetSocial
             </Link>
             <ul>
                 <CustomLink
                     to="/home"
-                    onClick={() => setHome(true)}
                     style={{ color: '#FFFFFF', textDecoration: 'none' }}
                 >
                     Home
                 </CustomLink>
-                {/* <CustomLink
-                    to="/addfriend"
-                    onClick={() => setHome(false)}
-                    style={{ color: '#FFFFFF', textDecoration: 'none' }}
-                >
-                    Add Friend
-                </CustomLink> */}
                 <CustomLink
                     to="/profile"
-                    onClick={() => setHome(false)}
                     style={{ color: '#FFFFFF', textDecoration: 'none' }}
                 >
                     Profile
@@ -47,7 +37,6 @@ export default function Navbar(props) {
                 <CustomLink
                     to="/"
                     onClick={() => {
-                        setHome(true);
                         setLogin(false);
                         sessionStorage.clear();
                     }}

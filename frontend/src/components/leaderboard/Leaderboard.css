@@ -69,6 +69,7 @@ td {
     font-size: 1.2rem;
     text-align: center;
     text-decoration: none;
+    color: #fff;
     border-radius: 1.4rem;
     background-color: #3c3b39;
     border: solid 0.1rem #fff;
@@ -82,4 +83,23 @@ td {
 
 .active {
     background-color: #b06c27;
+}
+
+.navButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    color: #b06c27;
+}
+
+.navButtons button {
+    border: none;
+    background-color: #3c3b39;
+}
+
+.faIcon {
+    height: 3rem;
+    color: #b06c27;
+    background-color: #3c3b39;
+    cursor: pointer;
 }
