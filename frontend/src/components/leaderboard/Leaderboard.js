@@ -52,7 +52,6 @@ export default function Leaderboard(props) {
     const { isLogin, isUpdate } = props;
     var [difficulty, setDifficulty] = useState(0);
     var [infoArr, setInfoArr] = useState([...sampleData]);
-    var [firstTime, setFirstTime] = useState(true);
     var [tableNum, setTableNum] = useState(1);
 
     function handleNavClick(buttonName)
@@ -121,9 +120,6 @@ console.log(buttonName);
     };
 
     useEffect(() => {
-        if (firstTime === true)
-            return;
-
         let sortedArr = [];
 
         if (isLogin === true)
@@ -153,7 +149,6 @@ console.log(buttonName);
                             sortedArr.sort((a, b) => b.easy - a.easy);
 
                 setInfoArr(sortedArr);
-                setFirstTime(false);
             });
         }
     }, [isLogin, isUpdate]);

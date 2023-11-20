@@ -1,15 +1,23 @@
-import Leaderboard from '../../components/leaderboard/Leaderboard';
 import './Home.css';
 import React, { useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import Leaderboard from '../../components/leaderboard/Leaderboard';
+import Logo from '../../components/logo/Logo';
 
 export default function Home(props) {
-    const { isLogin, isUpdate } = props;
-    const navigate = useNavigate();
+    const { isLogin, setLogin, isUpdate } = props;
+
+    useEffect(() => {
+        setTimeout(() => setLogin(true), 500);
+    }, []);
 
     return (
-        <div className='homeContainer'>
-            <Leaderboard isLogin={isLogin} isUpdate={isUpdate} />
+        <div className='homePage'>
+            <div className='logoContainer hide'>
+                <Logo />
+            </div>
+            <div className='homeContainer'>
+                <Leaderboard isLogin={isLogin} isUpdate={isUpdate} />
+            </div>
         </div>
     );
 }

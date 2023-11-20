@@ -7,8 +7,7 @@ import decode from "jwt-decode";
 
 var bp = require('../../path.js');
 
-export default function Register(props) {
-    const { isLogin, setLogin } = props;
+export default function Register() {
     var [action, setAction] = useState("Login");
     var [hasCapital, setCapital] = useState(false);
     var [hasSpecialChar, setSpecialChar] = useState(false);
@@ -230,8 +229,7 @@ export default function Register(props) {
                 window.sessionStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
-                setLogin(true);
-                setTimeout(() => navigate('/home'), 2000);
+                navigate('/home');
             }
         }
         catch (e) {
@@ -378,27 +376,17 @@ export default function Register(props) {
     };
 
     return (
-        <div className={isLogin ? "container hide" : "container show"}>
+        <div className='container'>
             <div className='inputBox'>
-                <div className="header">
-                    <div
-                        className={
-                            action === "Login" ? 'loginTxt':
-                            action === "Sign Up" ? 'signUpTxt':
-                            action === "Verify" ? 'verifyTxt':
-                            action === "Send Email" ? 'sendEmailTxt':
-                            'passwordTxt'
-                        }
-                    >
-                        {action}
-                    </div>
+                <div className='heady'>
+                    {action}
                     <div className={`underline ${
-                        action === "Login" ? '' :
-                        action === "Sign Up" ? 'underlineSU' :
-                        action === "Verify" ? 'underlineVfy' :
-                        action === "Send Email" ? 'underlineSE':
-                        'underlinePswd'
-                    }`}></div>
+                            action === "Sign Up" ? 'underlineSU' :
+                                action === "Change Password" ? 'underlinePswd' :
+                                    action === "Send Email" ? 'underlineSE' :
+                                        ''
+                        }`}
+                    ></div>
                 </div>
                 <div className="inputs">
                     {(action === "Login" || action === "Sign Up") ? (

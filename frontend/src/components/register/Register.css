@@ -1,112 +1,51 @@
 .container {
-    position: absolute;
     display: flex;
-    flex-direction: column;
+    flex: 1;
+    justify-content: center;
     align-items: center;
-    height: 100%;
-    width: 50%;
     right: 0;
-    border: solid #fff;
-}
-
-.show {
-    opacity: 1;
-}
-
-.hide {
-    opacity: 0;
-    display: none;
 }
 
 .inputBox {
     height: auto;
     width: auto;
-    margin-top: 3.6rem;
-    padding: 2.5%;
+    padding: 1rem;
     background-color: #3c3b39;
     border: solid #fff;
     border-radius: 1rem;
 }
 
-.header {
+.heady {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     width: 100%;
-    height: auto;
-    margin-top: 2rem;
-    margin-right: 100%;
-}
-
-.loginTxt {
-    position: relative;
-    margin-left: 9.5rem;
-    color: #fff;
-    font-size: 48px;
-    font-weight: 700;
-}
-
-.signUpTxt {
-    position: relative;
-    margin-left: 8rem;
-    color: #fff;
-    font-size: 48px;
-    font-weight: 700;
-}
-
-.verifyTxt {
-    position: relative;
-    margin-left: 9.75rem;
-    color: #fff;
-    font-size: 48px;
-    font-weight: 700;
-}
-
-.sendEmailTxt {
-    position: relative;
-    margin-left: 5rem;
+    gap: 0.5rem;
     color: #fff;
     font-size: 3rem;
     font-weight: 700;
 }
 
-.passwordTxt {
-    position: relative;
-    margin-left: 0.4rem;
-    color: #fff;
-    font-size: 3rem;
-    font-weight: 700;
-}
-
-.underline, .underlineSU, .underlineVfy, .underlineSE, .underlinePswd {
-    position: absolute;
-    margin-top: 5rem;
-    margin-left: 11.5rem;
+.underline, .underlineSU, .underlineSE, .underlinePswd {
+    display: flex;
     width: 5rem;
     height: 0.5rem;
     background: #fff;
     border-radius: 1rem;
-    transition: width 1s, margin-left 1s;
+    transition: width 1s;
 }
 
 .underlineSU {
     width: 8rem;
-    margin-left: 10rem;
-}
-
-.underlineVfy {
-    width: 5.5rem;
-    margin-left: 11rem;
 }
 
 .underlineSE {
-    width: 13rem;
-    margin-left: 7rem;
+    width: 12rem;
 }
 
 .underlinePswd {
-    width: 16rem;
-    margin-left: 5.75rem;
+    width: 20rem;
 }
 
 .inputs {
@@ -181,7 +120,6 @@ input::placeholder {
 .verifyMsg {
     display: flex;
     justify-content: center;
-    margin-top: 1rem;
     text-align: center;
     color: #b06c27;
 }
@@ -288,4 +226,5 @@ input::placeholder {
     font-size: medium;
     text-decoration-line: underline;
     background-color: #3c3b39;
+    cursor: pointer;
 }

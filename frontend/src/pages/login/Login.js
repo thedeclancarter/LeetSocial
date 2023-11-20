@@ -5,16 +5,16 @@ import Logo from '../../components/logo/Logo';
 import Leaderboard from '../../components/leaderboard/Leaderboard';
 
 export default function Login(props) {
-    const { isLogin, setLogin, isUpdate } = props;
+    const { isLogin, isUpdate } = props;
 
     return (
         <div className='loginPage'>
-            <div className={isLogin ? 'logoContainer hide': 'logoContainer show'}>
+            <div className='logoContainer'>
                 <Logo />
             </div>
             <div className='registerContainer'>
                 <Leaderboard isLogin={isLogin} isUpdate={isUpdate} />
-                <Register isLogin={isLogin} setLogin={setLogin} />
+                <Register />
             </div>
         </div>
     );

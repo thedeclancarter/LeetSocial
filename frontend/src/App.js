@@ -25,9 +25,12 @@ function App() {
       <Routes>
         <Route
           path='/'
-          element={<Login isLogin={isLogin} setLogin={setLogin} isUpdate={isUpdate} />}
+          element={<Login isLogin={isLogin} isUpdate={isUpdate} />}
         />
-        <Route path='/home' element={<Home isLogin={isLogin} isUpdate={isUpdate} />} />
+        <Route
+          path='/home'
+          element={<Home isLogin={isLogin} setLogin={setLogin} isUpdate={isUpdate} />}
+        />
         <Route path='/profile' element={<Profile />} />
       </Routes>
     </>
