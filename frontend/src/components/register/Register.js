@@ -8,7 +8,7 @@ import decode from "jwt-decode";
 var bp = require('../../path.js');
 
 export default function Register() {
-    var [action, setAction] = useState("Verify");
+    var [action, setAction] = useState("Login");
     var [hasCapital, setCapital] = useState(false);
     var [hasSpecialChar, setSpecialChar] = useState(false);
     var [hasNum, setNum] = useState(false);
