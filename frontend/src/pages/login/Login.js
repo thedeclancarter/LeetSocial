@@ -2,17 +2,19 @@ import './Login.css';
 import React from 'react';
 import Register from '../../components/register/Register';
 import Logo from '../../components/logo/Logo';
+import Leaderboard from '../../components/leaderboard/Leaderboard';
 
 export default function Login(props) {
-    const { isLogin, setLogin } = props;
+    const { isLogin, isUpdate } = props;
 
     return (
         <div className='loginPage'>
-            <div className={isLogin ? 'logoContainer hide': 'logoContainer show'}>
+            <div className='logoContainer'>
                 <Logo />
             </div>
             <div className='registerContainer'>
-                <Register isLogin={isLogin} setLogin={setLogin} />
+                <Leaderboard isLogin={isLogin} isUpdate={isUpdate} />
+                <Register />
             </div>
         </div>
     );

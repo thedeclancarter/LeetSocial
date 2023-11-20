@@ -1,11 +1,13 @@
-import React from 'react';
 import './Profile.css';
-import Navbar from '../../components/navbar/Navbar';
+import React, { useEffect } from 'react';
 import UserInfo from '../../components/user_info/UserInfo';
 import FriendList from '../../components/friend_list/FriendList';
+import { useNavigate } from "react-router-dom";
 
 
 const Profile = () => {
+    const navigate = useNavigate();
+
     return (
         <div>
             <UserInfo />
