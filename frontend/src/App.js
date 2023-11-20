@@ -13,6 +13,10 @@ function App() {
   const [isHome, setHome] = useState(true);
   const [isUpdate, setUpdate] = useState(false);
 
+  const handleFriendAdded = () => {
+    setUpdate(!isUpdate);
+  };
+
   return (
     <BrowserRouter>
       <div className='grid-background'>
@@ -30,9 +34,9 @@ function App() {
         <Route
           path='/'
           element={<Login isLogin={isLogin} setLogin={setLogin} isUpdate={isUpdate} />}
-          />
+        />
         <Route path='/home' element={<Home isLogin={isLogin} isUpdate={isUpdate} />} />
-        <Route path='/profile' element={<Profile />} />
+        <Route path='/profile' element={<Profile isUpdate={isUpdate} onFriendAdded={handleFriendAdded} />} />
         <Route path='/verify' element={<Verify />} />
         <Route path='/addfriend' element={<AddFriend />} />
       </Routes>
