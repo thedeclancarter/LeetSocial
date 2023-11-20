@@ -380,7 +380,7 @@ export default function Register(props) {
     return (
         <div className={isLogin ? "container hide" : "container show"}>
             <div className='inputBox'>
-                <div className="header">
+                <div className="header2">
                     <div
                         className={
                             action === "Login" ? 'loginTxt':

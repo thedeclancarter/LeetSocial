@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Orbitron:400,700&display=swap');
 
 .glow {
-    padding-top: 50px;
+    padding-top: 30px;
+    padding-bottom: 45px;
     display: flex;
     justify-content: center;
-    height: 100vh;
     font-family: 'Orbitron', sans-serif;
     font-size: 45px;
     font-weight: 400;
@@ -23,7 +23,7 @@
         0 0 50px #ffaa00; /* Even bigger outer glow */
         animation: breathe 1.5s infinite alternate; /* Breathing animation */
     }
-    
+
     @keyframes breathe {
         0% {
             text-shadow:

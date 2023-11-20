@@ -146,7 +146,7 @@ export default function Leaderboard(props) {
                 <tr className="row">
                     <td colSpan={3}>
                         <div className='header'>
-                            <p>Problems Solved</p>
+                            <p>Problems <br></br>Solved</p>
                             <ul>
                                 <button
                                     className={

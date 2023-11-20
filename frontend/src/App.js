@@ -20,7 +20,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className='grid-background'>
-        {isLogin && (
+      {isLogin && (
           <Navbar
             isLogin={isLogin}
             setLogin={setLogin}

@@ -1,12 +1,14 @@
 .container {
-    position: absolute;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100%;
-    width: 50%;
+    width: auto;
+    max-width: 35%;
     right: 0;
-    border: solid #fff;
+    /* border: solid #fff; */
+    margin-right: 5rem;
 }
 
 .show {
@@ -20,27 +22,30 @@
 
 .inputBox {
     height: auto;
-    width: auto;
-    margin-top: 3.6rem;
+    width: 100%;
+    /* margin-top: 3.6rem; */
+    /* margin-right: 100%; */
     padding: 2.5%;
     background-color: #3c3b39;
     border: solid #fff;
     border-radius: 1rem;
 }
 
-.header {
+.header2 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 100%;
     height: auto;
-    margin-top: 2rem;
-    margin-right: 100%;
 }
 
 .loginTxt {
     position: relative;
-    margin-left: 9.5rem;
+    align-items: center;
+    margin: auto auto;
+    text-align: center;
+    justify-content: center;
     color: #fff;
     font-size: 48px;
     font-weight: 700;
@@ -48,7 +53,10 @@
 
 .signUpTxt {
     position: relative;
-    margin-left: 8rem;
+    align-items: center;
+    margin: auto auto;
+    text-align: center;
+    justify-content: center;
     color: #fff;
     font-size: 48px;
     font-weight: 700;
@@ -79,9 +87,8 @@
 }
 
 .underline, .underlineSU, .underlineVfy, .underlineSE, .underlinePswd {
-    position: absolute;
-    margin-top: 5rem;
-    margin-left: 11.5rem;
+    position: relative;
+    margin-top: .3rem;
     width: 5rem;
     height: 0.5rem;
     background: #fff;
@@ -90,8 +97,7 @@
 }
 
 .underlineSU {
-    width: 8rem;
-    margin-left: 10rem;
+    width: 12rem;
 }
 
 .underlineVfy {
@@ -130,7 +136,7 @@
 .input input {
     margin-left: 1rem;
     height: 3rem;
-    width: 24rem;
+    width: 100%;
     outline: none;
     color: #181817;
     font-size: 1.5rem;
@@ -141,7 +147,7 @@
 .names input {
     margin-left: 1rem;
     height: 3rem;
-    width: 9.5rem;
+    width: 100%;
     outline: none;
     color: #181817;
     font-size: 1.5rem;
@@ -278,7 +284,7 @@ input::placeholder {
 }
 
 .forgotButton {
-    font-size: small;
+    font-size: medium;
     color: #b06c27;
     background-color: #3c3b39;
 }
