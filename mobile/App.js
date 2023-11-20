@@ -3,7 +3,7 @@ import { NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './src/screens/LoginScreen';
 import LoginSuccess from './src/screens/LoginSuccess';
-import SignUpSucces from './src/screens/SignUpSucces';
+import VerifyPage from './src/screens/Verify';
 import Profile from './src/screens/Profile';
 import TestPage from './src/screens/Testing';
 
@@ -16,7 +16,7 @@ function App() {
       <Stack.Navigator>
         {/* <Stack.Screen name="Test" component={TestPage} options={{headerShown: false}}/> */}
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="SignUpSuccess" component={SignUpSucces} />
+        <Stack.Screen name="VerifyPage" component={VerifyPage} />
         <Stack.Screen name="LoginSuccess" component={LoginSuccess} options={{headerShown: false}}/>
         <Stack.Screen 
           name="Profile" 

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { SafeAreaView, View, StyleSheet, StatusBar , TextInput, Button,TouchableOpacity, Text, Alert, LogBox} from "react-native";
+import { SafeAreaView, View, StyleSheet, StatusBar , TextInput, Button,TouchableOpacity, Text, Alert, LogBox, Keyboard, KeyboardAvoidingView} from "react-native";
 import TextAnimation from "../components/logo"; // Make sure the path is correct
 import { navigate } from "../../App";
 // import jwtDecode from "jwt-decode";
@@ -11,25 +11,43 @@ import GridBackground from "../components/gridBackground";
 
 const apiBaseUrl = 'http://www.leetsocial.com';
 const jwtDecode = require('jwt-decode');
-   
+
+const isValidEmail = (email) => {
+    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return re.test(email);
+};
+
+const validatePassword = (password) => {
+    return {
+        hasUpperCase: /[A-Z]/.test(password),
+        hasLowerCase: /[a-z]/.test(password),
+        hasNumbers: /\d/.test(password),
+        hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+        isLongEnough: password.length >= 8
+    };
+};
+
+
+
+
 const LoginScreen = () => {
     const [isSignUp, setIsSignUp] = useState(false);
-    const [email, setEmail] = useState('testing@test.com'); //remove later this is for testing
-    // const [email, setEmail] = useState(''); 
+    // const [email, setEmail] = useState('testing@test.com'); //remove later this is for testing
+    const [email, setEmail] = useState(''); 
     const [confirmPassword, setConfirmPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [password, setPassword] = useState('password'); //remove later this is for testing
-    // const [password, setPassword] = useState('');
+    // const [password, setPassword] = useState('password'); //remove later this is for testing
+    const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
         // ... additional state fields as needed
 
     const handleLogin = () => {
-            const payload = {
-                    email:email,
-                    password:password,
-                };
+        const payload = {
+            email:email,
+            password:password,
+        };
             fetch(apiBaseUrl+'/api/login',{
                 method: 'POST',
                 headers: {
@@ -62,11 +80,32 @@ const LoginScreen = () => {
     
     
     const handleSignUp = () => {
+        if (!isValidEmail(email)) {
+            setMessage("Valid email required");
+            setIsError(true);
+            return;
+        }
+
+        const passwordValidation = validatePassword(password);
+        const passwordErrors = [];
+        if (!passwordValidation.hasUpperCase) passwordErrors.push("an uppercase letter");
+        if (!passwordValidation.hasLowerCase) passwordErrors.push("a lowercase letter");
+        if (!passwordValidation.hasNumbers) passwordErrors.push("a number");
+        if (!passwordValidation.hasSpecialChar) passwordErrors.push("a special character");
+        if (!passwordValidation.isLongEnough) passwordErrors.push("minimum 8 characters");
+    
+        if (passwordErrors.length > 0) {
+            const errorString = "Password must contain " + passwordErrors.join(", ") + ".";
+            setMessage(errorString);
+            setIsError(true);
+            return;
+        }
+    
         if (password !== confirmPassword) {
             setMessage("Passwords don't match");
             setIsError(true);
-        } else {
-
+            return;
+        }
         const payload = {
             email:email,
             password:password,
@@ -83,6 +122,10 @@ const LoginScreen = () => {
             .then (async res => {
                 try{
                     const jsonRes = await res.json();
+                    if (res.status = 409){
+                        setMessage('Error: ' + jsonRes.error);
+                        setIsError(true);
+                    }
                     if (res.status != 201){
                         setIsError(true);
                         setMessage('Error: ' + jsonRes.error);
@@ -98,7 +141,6 @@ const LoginScreen = () => {
             .catch(err => {
                 console.log(err);
             });
-        }
         };
 
 
@@ -112,6 +154,7 @@ const LoginScreen = () => {
     return (
         <GradientBackground>
         <SafeAreaView style={styles.container}>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
             <GridBackground />
                     <View style={styles.centeredView}>
                         <TextAnimation />
@@ -141,7 +184,7 @@ const LoginScreen = () => {
                             placeholder="Email"
                             placeholderTextColor={'black'}
                             value={email}
-                            // onChangeText={newText => setEmail(newText)}
+                            onChangeText={newText => setEmail(newText)}
                             autoCapitalize="none"
                         />
                         <TextInput
@@ -150,7 +193,7 @@ const LoginScreen = () => {
                             placeholderTextColor={'black'}
                             // secureTextEntry
                             value={password}
-                            // onChangeText={newText => setPassword(newText)}
+                            onChangeText={newText => setPassword(newText)}
                             autoCapitalize="none"
                         />
                         {isSignUp && (
@@ -164,10 +207,11 @@ const LoginScreen = () => {
                             />
                         
                         )}
-                        <Button
-                            title={isSignUp ? "Sign Up" : "Login"}
-                            onPress={isSignUp ? handleSignUp : handleLogin}
-                        />
+                        <TouchableOpacity onPress={isSignUp ? handleSignUp : handleLogin} style={styles.button}>
+                            <Text style={styles.buttonText}>
+                                {isSignUp ? "Sign Up" : "Login"}
+                            </Text>
+                        </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => setIsSignUp(!isSignUp)}
                             style={styles.toggleButton}
@@ -177,6 +221,7 @@ const LoginScreen = () => {
                             </Text>
                         </TouchableOpacity>
                     </View>
+            </KeyboardAvoidingView>
             </SafeAreaView>
         </GradientBackground>
     );
@@ -193,7 +238,7 @@ const styles = StyleSheet.create({
     loginContainer: {
         margin: 20,
         padding: 20,
-        backgroundColor: '#2e2f38', // Darker grey background for the form
+        backgroundColor: '#333', // Darker grey background for the form
         borderRadius: 5,
         elevation: 10, // Elevation for Android (adds shadow effect)
         // For iOS shadow
@@ -201,6 +246,8 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
+        borderWidth: 2,
+        borderColor: 'white',
     },
     input: {
         height: 40,
@@ -218,6 +265,22 @@ const styles = StyleSheet.create({
       toggleButtonText: {
         color: '#3797EF',
       },
+    button: {
+        marginTop: 20,
+        paddingHorizontal: 20,
+        backgroundColor: 'rgba(176, 108, 39, 1)',
+        borderRadius: 5,
+        color: 'white',
+        width: 'auto',
+        alignSelf: 'center',
+        borderWidth: 2,
+        borderColor: 'white',
+    },
+    buttonText: {
+        color: 'white',
+        textAlign: 'center',
+        fontSize: 20,
+    },
 });
 
 
