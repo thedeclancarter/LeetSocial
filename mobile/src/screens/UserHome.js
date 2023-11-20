@@ -117,12 +117,17 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   button: {
-    paddingHorizontal: 20,
     backgroundColor: 'rgba(176, 108, 39, 1)',
     borderRadius: 5,
     color: 'white',
+    borderWidth: 2,
+    borderColor: 'white',
+    position: 'absolute',
+    top: 60,
+    left: 10,
   },
   buttonText: {
+    padding: 5,
     color: 'white',
     textAlign: 'center',
     fontSize: 20,

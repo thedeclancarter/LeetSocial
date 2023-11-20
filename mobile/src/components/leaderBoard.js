@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
     tableContainer: {
         flex: 0.5,
         justifyContent: 'center',
-        paddingBottom: 0,
         marginTop: 80, // React Native uses pixel values, 8rem might be approximated to 80
         marginHorizontal: 10,
         width: '95%', // React Native does not support vw, use percentage
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
     },
     button: {
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: 'white',
         backgroundColor: 'transparent',

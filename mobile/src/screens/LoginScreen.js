@@ -16,6 +16,9 @@ const isValidEmail = (email) => {
     const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return re.test(email);
 };
+const isValidName = (name) => {
+    return name && name.trim().length > 1;
+};
 
 const validatePassword = (password) => {
     return {
@@ -83,6 +86,18 @@ const LoginScreen = () => {
     const handleSignUp = () => {
         if (!isValidEmail(email)) {
             setMessage("Valid email required");
+            setIsError(true);
+            return;
+        }
+        
+        if (!isValidName(firstName)) {
+            setMessage("Invalid first name");
+            setIsError(true);
+            return;
+        }
+    
+        if (!isValidName(lastName)) {
+            setMessage("Invalid last name");
             setIsError(true);
             return;
         }
@@ -192,7 +207,7 @@ const LoginScreen = () => {
                             style={styles.input}
                             placeholder="Password"
                             placeholderTextColor={'black'}
-                            // secureTextEntry
+                            secureTextEntry
                             value={password}
                             onChangeText={newText => setPassword(newText)}
                             autoCapitalize="none"

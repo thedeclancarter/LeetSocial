@@ -23,6 +23,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 50,
     right: 20,
+    borderWidth: 2,
+    borderColor: 'white',
   },
   text: {
     color: 'white',
