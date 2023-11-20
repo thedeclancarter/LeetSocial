@@ -58,22 +58,28 @@ export default function UserInfo() {
             <div className="userInfo">
                 <div className="info">
                     {/* <br></br> */}
-                    <span id="firstName">First Name: {userData.firstName}</span>
+                    <span id="firstName" style={{fontStyle:'italic'}}>First Name: </span>
+                    <span style={{fontWeight:'bold'}}>{userData.firstName}</span>
                     <br></br>
                     <br></br>
                     <br></br>
                     <br></br>
-                    <span id="lastName">Last Name: {userData.lastName}</span>
+                    <span id="lastName" style={{fontStyle:'italic'}}>Last Name: </span>
+                    <span style={{fontWeight:'bold'}}>{userData.lastName}</span>
                     <br></br>
                     <br></br>
                     <br></br>
                     <br></br>
-                    <span id="leetCode">LeetCode Username: {userData.username}</span>
+                    <span id="leetCode" style={{fontStyle:'italic'}}>LeetCode Username: </span>
+                    <span style={{fontWeight:'bold'}}>{userData.username}</span>
                     <br></br>
                     <br></br>
                     <br></br>
                     <br></br>
-                    <span id="topLanguage">Top Language: {userData.topLanguage} - {userData.problemsSolved} Problems Solved</span>
+                    <span id="topLanguage" style={{fontStyle:'italic'}}>Top Language: </span>
+                    <span style={{fontWeight:'bold'}}>{userData.topLanguage} - {userData.problemsSolved} Problem(s) Solved</span>
+                    <br></br>
+                    <br></br>
                 </div>
             </div>
         </div>
