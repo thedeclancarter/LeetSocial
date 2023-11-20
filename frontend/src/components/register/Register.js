@@ -502,26 +502,31 @@ export default function Register() {
                                 <input
                                     type='text'
                                     placeholder="0"
+                                    maxlength="1"
                                     ref={c => digit1 = c}
                                 />
                                 <input
                                     type='text'
                                     placeholder="0"
+                                    maxlength="1"
                                     ref={c => digit2 = c}
                                 />
                                 <input
                                     type='text'
                                     placeholder="0"
+                                    maxlength="1"
                                     ref={c => digit3 = c}
                                 />
                                 <input
                                     type='text'
                                     placeholder="0"
+                                    maxlength="1"
                                     ref={c => digit4 = c}
                                 />
                                 <input
                                     type='text'
                                     placeholder="0"
+                                    maxlength="1"
                                     ref={c => digit5 = c}
                                 />
                             </div>
@@ -567,26 +572,31 @@ export default function Register() {
                                 <input
                                     type='text'
                                     placeholder="0"
+                                    maxlength="1"
                                     ref={c => digit1 = c}
                                 />
                                 <input
                                     type='text'
                                     placeholder="0"
+                                    maxlength="1"
                                     ref={c => digit2 = c}
                                 />
                                 <input
                                     type='text'
                                     placeholder="0"
+                                    maxlength="1"
                                     ref={c => digit3 = c}
                                 />
                                 <input
                                     type='text'
                                     placeholder="0"
+                                    maxlength="1"
                                     ref={c => digit4 = c}
                                 />
                                 <input
                                     type='text'
                                     placeholder="0"
+                                    maxlength="1"
                                     ref={c => digit5 = c}
                                 />
                             </div>
